@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8888/'
+    baseURL: 'http://localhost:8080/'
 });
 
 
@@ -77,7 +77,7 @@ instance.interceptors.response.use(function (response) {
             toast.error(errorMessage)
             break;
         case 503:
-errorMessage = 'Service Unavailable: The server is currently unable to handle the request.';
+            errorMessage = 'Service Unavailable: The server is currently unable to handle the request.';
             toast.error(errorMessage)
             break;
         default:
