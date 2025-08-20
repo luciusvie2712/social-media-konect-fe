@@ -1,29 +1,11 @@
-
 @import "tailwindcss";
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* body {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
+body {
+  background-color: #000000;
 }
-
-.app-container {
-  flex: 1;
-}
-
-.app-switch-bgr {
-  position: absolute;
-  right: 0%;
-  cursor: pointer;
-  font-size: 15px;
-  padding-bottom: 5px;
-  padding-right: 10px;
-
-} */

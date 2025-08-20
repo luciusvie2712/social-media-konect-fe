@@ -1,18 +1,17 @@
 import { Routes, Route } from "react-router-dom"
 import AuthPage from "../../views/auth/AuthPage"
-import UserHomePage from "../../views/user/UserHomePage"
+import HomePage from "../../views/user/HomePage"
 
 
-const DisplayUserPage = () => {
+const Display = () => {
     return (
         <div className="max-w-100vw flex h-screen items-center ">
             <Routes>
-                <Route path="/" element={<UserHomePage />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/auth" element={<AuthPage />} />
             </Routes>
-
         </div>
     )
 }
 
-export default DisplayUserPage
+export default Display
