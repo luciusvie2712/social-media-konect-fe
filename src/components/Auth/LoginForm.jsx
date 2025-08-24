@@ -12,7 +12,7 @@ const LoginForm = ({ setFormType }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
-  console.log(user);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
