@@ -26,3 +26,7 @@ export const loginUserRedux = (email, password) => {
     }
   };
 };
+
+export const logoutUser = () => ({
+  type: actiontypes.USER_LOGOUT
+})

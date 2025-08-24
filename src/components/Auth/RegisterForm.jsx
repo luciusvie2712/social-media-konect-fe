@@ -3,7 +3,7 @@ import { toast } from "react-toastify"
 import { createUserAPI } from "../../utils/api.customize"
 import { useNavigate } from "react-router-dom"
 
-const RegisterForm = () => {
+const RegisterForm = ({ setFormType }) => {
     const [ name, setName ] = useState('')
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
@@ -62,7 +62,16 @@ const RegisterForm = () => {
                     />
                 </div>
                 <div className="flex justify-between text-[14px]">
-                    <p>You have account </p>
+                    <p>
+                        You have account 
+                        <button
+                            type="button"
+                            onClick={() => setFormType("login")}
+                            className="text-blue-500 underline"
+                        >
+                            Login
+                        </button>
+                    </p>
                     <p>Forgot password?</p>
                 </div>
             </div>

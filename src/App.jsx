@@ -1,13 +1,20 @@
 import "./App.css";
-import Display from "./components/Display/Display";
-import SideBar from "./components/SideBar"
+import { Routes, Route } from "react-router-dom";
+import PrivateRoute from "./utils/PrivateRoute";
+import AuthPage from "./views/auth/AuthPage";
+import HomePage from "./views/user/HomePage";
+
 
 function App() {
-  return (
-    <div className="gap-5 max-w-[100vw] h-screen flex bg-[#000000]">
-      <SideBar />
-      <Display />
-    </div>
+  return ( 
+    <Routes>
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/" element={
+        <PrivateRoute>
+          <HomePage />
+        </PrivateRoute>
+      }/>
+    </Routes>
   )
 }
 

@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as action from "../../store/Export";
-const LoginForm = () => {
+
+const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -61,7 +62,16 @@ const LoginForm = () => {
           />
         </div>
         <div className="flex justify-between text-[14px]">
-          <p>You haven't account </p>
+          <p>
+            You haven't account
+            <button
+              type="button"
+              onClick={() => setFormType("register")}
+              className="text-blue-500 underline"
+            >
+              Register
+            </button>
+          </p>
           <p>Forgot password?</p>
         </div>
       </div>

@@ -40,6 +40,12 @@ const UserReducer = (state = INITIAL_STATE, action) => {
         account: null,
         isauthentic: false,
       };
+    case actiontypes.USER_LOGOUT:
+      return {
+        ...state,
+        account: null,
+        isauthentic: false,
+      };
     default:
       return state;
   }

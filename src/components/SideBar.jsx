@@ -5,16 +5,17 @@ import avatar from '../assets/download.png'
 import '../assets/styles/SideBar.scss'
 import bigLogo from '../assets/image/big_logo.jpg'
 import smallLogo from '../assets/image/small_logo.jpg'
+import * as action from '../store/Export'
 
 const SideBar = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { account, isauthentic } = useSelector((state) => state.user)
 
-    // const handleLogout = () => {
-    //     dispatch({type: actiontypes.USER_LOGOUT})
-    //     navigate("/")
-    // }
+    const handleLogout = () => {
+        dispatch(action.logoutUser)
+        navigate("/login")
+    }
 
     return (
         <div className="sidebar-container">
@@ -39,14 +40,15 @@ const SideBar = () => {
                 <div className="sidebar__menu-option">
                     <img 
                         onClick={() => navigate('/user')}
-                        src={account.avatar ||  avatar} 
+                        src={account?.avatar ||  avatar} 
                         className="avatar-user"
                     />
                     <div className="option-title">Trang cá nhân</div>
                 </div>
                <div className="sidebar__menu-option">
                     <i className="fa-solid fa-bars w-[25px]"></i>
-                    <div className="option-title">Tùy chọn</div>
+                    {/* <div className="option-title">Tùy chọn</div> */}
+                    <button onClick={handleLogout}>logout</button>
                </div>
             </div>
             
