@@ -8,8 +8,8 @@ const Display = () => {
     return (
         <div className="max-w-100vw flex h-screen items-center ">
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginForm />} />
+                
+                
             </Routes>
         </div>
     )

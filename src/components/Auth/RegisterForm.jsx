@@ -13,13 +13,12 @@ const RegisterForm = ({ setFormType }) => {
         e.preventDefault()
         try {
             const res = await createUserAPI(name, email, password)
-            console.log(res.data)
-            if (res.data.Ec === 0) {
-                console.log('done here')
+            console.log(res )
+            if (res.Ec === 0) {
                 toast.success('Register account success')
-                navigate('/auth', { state: { formType: 'login' } })
+                setFormType("login")
             } else {
-                toast.error(res.data.Mes) 
+                toast.warning(res?.Mes) 
             }
         } catch (error) {
             toast.error("Something went wrong!")
