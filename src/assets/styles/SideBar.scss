@@ -36,6 +36,8 @@
             width: 100%;
             padding-block: 10px;
             padding-inline: 5px;
+            text-decoration: none;
+            color: #ffffff;
             
             &:hover {
                 background-color: #242424;
@@ -58,6 +60,8 @@
             width: 100%;
             padding-inline: 5px;
             padding-block: 10px;
+            text-decoration: none;
+            color: #ffffff;
             cursor: pointer;
             .avatar-user{
                 width: 25px;

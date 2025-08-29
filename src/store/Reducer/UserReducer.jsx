@@ -41,6 +41,7 @@ const UserReducer = (state = INITIAL_STATE, action) => {
         isauthentic: false,
       };
     case actiontypes.USER_LOGOUT:
+      console.log("yamate")
       return {
         ...state,
         account: null,

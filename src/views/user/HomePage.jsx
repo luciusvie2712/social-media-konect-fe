@@ -1,9 +1,9 @@
 import SideBar from "../../components/SideBar"
 import Display from "../../components/Display/Display"
 
-const HomePage = ( ) => {
+const HomePage = () => {
     return (
-        <div className="flex flex-col w-[100%] h-full">
+        <div className="flex w-screen h-full">
             <SideBar />
             <Display />
         </div>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import actiontypes from "../store/Action/ActionTypes"
 import avatar from '../assets/download.png'
 import '../assets/styles/SideBar.scss'
@@ -13,8 +13,8 @@ const SideBar = () => {
     const { account, isauthentic } = useSelector((state) => state.user)
 
     const handleLogout = () => {
-        dispatch(action.logoutUser)
-        navigate("/login")
+        dispatch(action.logoutUser())
+        navigate("/auth")
     }
 
     return (
@@ -26,29 +26,42 @@ const SideBar = () => {
                         <img src={bigLogo} alt="Logo" className="logo" />
                     </picture>
                 </div>
-                <div className="sidebar__option-item">
+                <NavLink to={`/home`} className="sidebar__option-item">
                     <i className="fa-solid fa-house w-[25px]"></i>
                     <div className="option-title">Trang chủ</div>
-                </div>
+                </NavLink>
                 <div className="sidebar__option-item">
                     <i className="fa-solid fa-users w-[25px]"></i>
                     <div className="option-title">Bạn bè</div>
                 </div>
-                <div className="sidebar__option-item">Chuc nang 4</div>
+                <div className="sidebar__option-item">
+                    <i className="fa-solid fa-magnifying-glass w-[25px]"></i>
+                    <div className="option-title">Tìm kiếm</div>
+                </div>
+                <div className="sidebar__option-item">
+                    <i className="fa-solid fa-bell w-[25px]"></i>
+                    <div className="option-title">Thông báo</div>
+                </div>
+                <div className="sidebar__option-item">
+                    <i className="fa-solid fa-paper-plane w-[25px]"></i>
+                    <div className="option-title">Tin nhắn</div>
+                </div>
+                <div className="sidebar__option-item">
+                    <i className="fa-regular fa-square-plus w-[25px]"></i>
+                    <div className="option-title">Tạo mới</div>
+                </div>
             </div>
             <div className="sidebar__menu">
-                <div className="sidebar__menu-option">
+                <NavLink to={`/profile/${account?.id}`} className="sidebar__menu-option">
                     <img 
-                        onClick={() => navigate('/user')}
                         src={account?.avatar ||  avatar} 
                         className="avatar-user"
                     />
                     <div className="option-title">Trang cá nhân</div>
-                </div>
+                </NavLink>
                <div className="sidebar__menu-option">
                     <i className="fa-solid fa-bars w-[25px]"></i>
-                    {/* <div className="option-title">Tùy chọn</div> */}
-                    <button onClick={handleLogout}>logout</button>
+                    <div className="option-title" onClick={handleLogout}>Tùy chọn</div>
                </div>
             </div>
             

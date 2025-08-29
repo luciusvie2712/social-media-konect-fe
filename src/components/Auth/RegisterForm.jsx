@@ -71,7 +71,7 @@ const RegisterForm = ({ setFormType }) => {
                             Login
                         </button>
                     </p>
-                    <p>Forgot password?</p>
+                    
                 </div>
             </div>
             <div className="w-full flex justify-center mb-5">

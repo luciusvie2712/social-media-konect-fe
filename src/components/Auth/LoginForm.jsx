@@ -24,7 +24,7 @@ const LoginForm = ({ setFormType }) => {
   useEffect(() => {
     if (user?.isauthentic === true) {
       toast.success(`Welcome ${user.account.email} to home`);
-      navigate("/");
+      navigate("/home");
     }
   }, [user]);
   return (
@@ -67,12 +67,12 @@ const LoginForm = ({ setFormType }) => {
             <button
               type="button"
               onClick={() => setFormType("register")}
-              className="text-blue-500 underline"
+              className="text-blue-500 underline mx-1"
             >
               Register
             </button>
           </p>
-          <p>Forgot password?</p>
+          <p onClick={() => navigate('/forgot-password')} className="text-gray-700 hover:text-black cursor-pointer ">Forgot password?</p>
         </div>
       </div>
       <div className="w-full flex justify-center mb-5">
