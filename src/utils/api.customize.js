@@ -24,8 +24,6 @@ const getAUserByIdAPI = (id) => {
     return axios.get(API_URL)
 }
 
-
-
 const forgotPasswordAPI = (email) => {
     const API_URL = '/api/forgot-password'
     console.log(email)
@@ -37,7 +35,7 @@ const resetPasswordAPI = (newPass) => {
     return axios.post(API_URL, newPass)
 }
 
-const createPostAPI =  ( authorId, caption, visibility, files ) {
+const createPostAPI =  ( authorId, caption, visibility, files ) => {
     const API_URL = `/api/create-post`
     const formData = new FormData()
     formData.append('author', authorId)
