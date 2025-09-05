@@ -30,13 +30,13 @@ const LoginForm = ({ setFormType }) => {
   return (
     <form
       onSubmit={handleLogin}
-      className="w-[max(40vw,400px)] bg-white rounded"
+      className="w-[max(30vw,400px)] bg-white rounded pt-2 pb-4"
     >
-      <div className="flex items-center justify-center pt-4 pb-2">
+      <div className="flex items-center justify-center pt-3 pb-2">
         <div className="h-full font-semibold text-2xl">LOGIN ACCOUNT</div>
       </div>
       <hr />
-      <div className="flex flex-col gap-4 mt-5 px-4 mb-4">
+      <div className="flex flex-col gap-4 mt-5 px-4 mb-2">
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-envelope w-2"></i>
           <input
@@ -61,23 +61,33 @@ const LoginForm = ({ setFormType }) => {
             required
           />
         </div>
-        <div className="flex justify-between text-[14px]">
-          <p>
-            You haven't account
-            <button
-              type="button"
-              onClick={() => setFormType("register")}
-              className="text-blue-500 underline mx-1"
-            >
-              Register
-            </button>
-          </p>
-          <p onClick={() => navigate('/forgot-password')} className="text-gray-700 hover:text-black cursor-pointer ">Forgot password?</p>
+        <div className="flex justify-end text-[14px]">
+          <p onClick={() => navigate('/forgot-password')} className="text-gray-700  hover:text-black hover:underline cursor-pointer ">Forgot password?</p>
         </div>
       </div>
-      <div className="w-full flex justify-center mb-5">
-        <button className="w-[150px] py-2 bg-amber-100 rounded font-medium text-[20px]">
+      <div className="w-full flex justify-center mb-4 text-[20px]">
+        <button className="w-[250px] py-2 bg-amber-100 rounded font-semibold">
           Login
+        </button>
+      </div>
+      <div className="flex items-center w-full justify-center">
+        <div className="h-[1px] bg-[rgba(85,85,85,0.52)] w-[70px]"></div>
+        <div className="text-[rgba(31,30,30,0.64)] px-4">OR</div>
+        <div className="h-[1px] bg-[rgba(85,85,85,0.52)] w-[70px]"></div>
+      </div>
+      <div className="flex justify-center mt-3">
+        <button className=" w-[50px] h-[50px] ">
+          <i className="fa-brands fa-google text-[40px] rounded-full border-[rgba(85,85,85,0.52)] border-1 py-1 px-1"></i>
+        </button>
+      </div>
+      <div className="flex w-full justify-center mt-3">
+        Don't have an account? 
+        <button
+          type="button"
+          onClick={() => setFormType("register")}
+          className="text-blue-500 underline mx-1"
+        >
+          Register
         </button>
       </div>
     </form>
