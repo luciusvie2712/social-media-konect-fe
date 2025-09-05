@@ -27,6 +27,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+    "colorthief": "^2.6.0",
     "date-fns": "^4.1.0",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
