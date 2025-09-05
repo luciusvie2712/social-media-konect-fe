@@ -31,7 +31,7 @@ const DisplayProfile = () => {
     }, [user?.id])
 
     return (
-        <div className="display-profile__content" style={{background: `linear-gradient(to bottom, rgba(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]}, 0.8),rgba(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]}, 0.3), rgba(0,0,0,0.9))`}}>
+        <div className="display-profile__content" style={{background: `linear-gradient(to bottom, rgba(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]}, 0.4), rgba(0,0,0,0.9))`}}>
             {userData ? (
                 <>
                     <div className="display-profile__header-profile" >
