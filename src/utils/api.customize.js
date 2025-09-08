@@ -27,7 +27,7 @@ const getAUserByIdAPI = (id) => {
 const forgotPasswordAPI = (email) => {
     const API_URL = '/api/forgot-password'
     console.log(email)
-    return axios.post(API_URL, {email})
+    return axios.post(API_URL, { email })
 }
 
 const resetPasswordAPI = (newPass) => {
@@ -35,7 +35,7 @@ const resetPasswordAPI = (newPass) => {
     return axios.post(API_URL, newPass)
 }
 
-const createPostAPI =  ( authorId, caption, visibility, files ) => {
+const createPostAPI = (authorId, caption, visibility, files) => {
     const API_URL = `/api/create-post`
     const formData = new FormData()
     formData.append('author', authorId)
@@ -58,5 +58,5 @@ export {
     getAUserByIdAPI,
     forgotPasswordAPI,
     resetPasswordAPI,
-    createPostAPI
+    createPostAPI,
 }
