@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as action from "../../store/Export";
+import { faLandmarkFlag } from "@fortawesome/free-solid-svg-icons";
 
 const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const LoginForm = ({ setFormType }) => {
   };
   useEffect(() => {
     if (user?.isauthentic === true) {
-      toast.success(`Welcome ${user.account.email} to home`);
+      toast.success(`Welcome ${user.account.name} to home`);
       navigate("/home");
     }
   }, [user]);

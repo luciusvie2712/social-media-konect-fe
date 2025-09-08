@@ -6,15 +6,22 @@ import '../assets/styles/SideBar.scss'
 import bigLogo from '../assets/image/big_logo.jpg'
 import smallLogo from '../assets/image/small_logo.jpg'
 import * as action from '../store/Export'
+import { useState } from "react"
+import CreatePostModal from "../components/Modal/createPost.modal"
 
 const SideBar = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { account, isauthentic } = useSelector((state) => state.user)
+    const [ isOpen, setIsOpen ] = useState(false)
 
     const handleLogout = () => {
         dispatch(action.logoutUser())
         navigate("/auth")
+    }
+
+    const openModalCreatePost = () => {
+        setIsOpen(true)
     }
 
     return (
@@ -46,7 +53,7 @@ const SideBar = () => {
                     <i className="fa-solid fa-paper-plane w-[25px]"></i>
                     <div className="option-title">Tin nhắn</div>
                 </div>
-                <div className="sidebar__option-item">
+                <div className="sidebar__option-item" onClick={openModalCreatePost}>
                     <i className="fa-regular fa-square-plus w-[25px]"></i>
                     <div className="option-title">Tạo mới</div>
                 </div>
@@ -64,8 +71,9 @@ const SideBar = () => {
                     <div className="option-title" onClick={handleLogout}>Tùy chọn</div>
                </div>
             </div>
-            
+            {isOpen && <CreatePostModal isOpen={isOpen} setIsOpen={setIsOpen} account={account} />}
         </div>
+        
     )
 }
 
