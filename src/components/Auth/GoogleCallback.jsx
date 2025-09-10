@@ -1,7 +1,7 @@
 const GoogleCallback = () => {
   return (
     <>
-      <div>2l3h12kg3b2k</div>
+      <div className="text-[100px]">Chị dựng hông có nổi em ơi</div>
     </>
   );
 };

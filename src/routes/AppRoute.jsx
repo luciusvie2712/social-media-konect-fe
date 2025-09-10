@@ -7,8 +7,7 @@ import ResetPassword from "../views/auth/ResetPassword"
 import DisplayLayout from "../components/layout/DisplayLayout"
 import HomePage from "../views/user/HomePage"
 import ProfilePage from "../views/user/ProfilePage"
-
-
+import GoogleCallback from "../components/Auth/GoogleCallback"
 
 
 const AppRoute = () => {
@@ -18,7 +17,8 @@ const AppRoute = () => {
             <Route element={<AuthLayout />}>
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/forgot-password" element={<ForgotPage />} />
-                <Route path="/auth" element={<ResetPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/google/callback/:session_id" element={<GoogleCallback />} />
             </Route>
 
             {/* User routes */}

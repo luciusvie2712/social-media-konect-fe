@@ -29,6 +29,7 @@ const LoginForm = ({ setFormType }) => {
     }
   }, [user]);
   const apiGoogle = import.meta.env.VITE_URL_GOOGLE;
+  console.log(apiGoogle)
 
   const handleLoginGoogle = async () => {
     window.location.href = apiGoogle;
