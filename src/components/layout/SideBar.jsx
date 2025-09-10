@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink, useNavigate } from "react-router-dom"
-import actiontypes from "../store/Action/ActionTypes"
-import avatar from '../assets/download.png'
-import '../assets/styles/SideBar.scss'
-import bigLogo from '../assets/image/big_logo.jpg'
-import smallLogo from '../assets/image/small_logo.jpg'
-import * as action from '../store/Export'
+import actiontypes from "../../store/Action/ActionTypes"
+import avatar from '../../assets/download.png'
+import '../../assets/styles/SideBar.scss'
+import bigLogo from '../../assets/image/big_logo.jpg'
+import smallLogo from '../../assets/image/small_logo.jpg'
+import * as action from '../../store/Export'
 import { useState } from "react"
-import CreatePostModal from "../components/Modal/createPost.modal"
+import CreatePostModal from "../Modal/createPost.modal"
 
 const SideBar = () => {
     const navigate = useNavigate()

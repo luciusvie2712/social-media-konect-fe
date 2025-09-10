@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAUserByIdAPI } from "../../utils/api.customize";
 import { toast } from "react-toastify";
@@ -7,7 +7,7 @@ import "../../assets/styles/Profile.scss";
 import bgImage from "../../assets/image/bg_image_profile_2.jpg";
 import ColorThief from "colorthief";
 
-const DisplayProfile = () => {
+const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const user = useSelector((state) => state.user.account);
   const [bgColor, setBgColor] = useState([0, 0, 0]);
@@ -100,4 +100,4 @@ const DisplayProfile = () => {
   );
 };
 
-export default DisplayProfile;
+export default ProfilePage;

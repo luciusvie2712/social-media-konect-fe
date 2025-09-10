@@ -1,4 +1,4 @@
-import StoryCard from "./StoryCard"
+import StoryCard from "../Post/StoryCard"
 
 const StoryList = () => {
     return (
