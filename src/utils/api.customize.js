@@ -35,23 +35,16 @@ const resetPasswordAPI = (newPass) => {
     return axios.post(API_URL, newPass)
 }
 
-const createPostAPI = (authorId, caption, visibility, files) => {
-    const API_URL = `/api/create-post`
-    const formData = new FormData()
-    formData.append('author', authorId)
-    formData.append('caption', caption)
-    formData.append('visibility', visibility)
-    files.forEach((file) => {
-        formData.append("media", file)
-    });
-
-    return axios.post(API_URL, formData, {
+const createPostAPI = (formData) => {
+    return axios.post("/api/create-post", formData, {
         headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    })
+            "Content-Type": "multipart/form-data",
+        },
+    });
 }
-
+const getDataUserLoginGoogle = (sessionId) => {
+    return axios.get(`/data/user/redis?session_id=${sessionId}`)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -59,4 +52,5 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
+    getDataUserLoginGoogle
 }

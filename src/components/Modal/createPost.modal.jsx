@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import avatar from "../../assets/download.png";
+import { createPostAPI } from "../../utils/api.customize";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const createPost = ({ isOpen, setIsOpen, account }) => {
   if (!isOpen) return null;
+  const userId = useSelector((state) => state.user.account.id);
+  useEffect(() => {
+    if (userId) {
+      setFormCreate({
+        ...formCreate,
+        author: userId,
+      });
+    }
+  }, [userId]);
   const [formCreate, setFormCreate] = useState({
-    author: "",
+    author: userId,
     caption: "",
     media: [],
     mediaPreview: [],
@@ -44,7 +56,21 @@ const createPost = ({ isOpen, setIsOpen, account }) => {
       media: mediaArray,
     }));
   };
-  console.log(formCreate);
+  const handleCreatePost = async () => {
+    let res = await createPostAPI(formData);
+    if (res?.Ec === 0) {
+      toast.success(res.Mes);
+      setFormCreate({
+        ...formCreate,
+        caption: "",
+        visibility: "",
+        media: [],
+        mediaPreview: [],
+      });
+    } else {
+      toast.error(res?.Mes);
+    }
+  };
   return (
     <div className="w-screen h-screen flex justify-center items-center z-10 bg-[rgba(0,0,0,0.5)] fixed top-0 left-0">
       <div
@@ -97,6 +123,8 @@ const createPost = ({ isOpen, setIsOpen, account }) => {
               name="media"
               id="media"
               className="hidden"
+              accept="image/*, video/*"
+              multiple
               onChange={handleOnchangeFile}
             />
             <label htmlFor="media">
@@ -106,6 +134,7 @@ const createPost = ({ isOpen, setIsOpen, account }) => {
         </div>
         <div className="w-full flex justify-center items-center">
           <button
+            onClick={handleCreatePost}
             type="button"
             className="bg-[#2f2f2fca] px-3 py-2 font-semibold rounded"
           >
