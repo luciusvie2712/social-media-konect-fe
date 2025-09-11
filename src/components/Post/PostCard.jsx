@@ -1,16 +1,16 @@
-import avatar from "../../assets/download.png"
-import imagePost from "../../assets/image/image_post.jpg"
 
-const PostCard = () => {
+
+const PostCard = ({ post, index }) => {
+    console.log(">>>> Post Card: ", post)
     return (
-        <div className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2">
+        <div key={index} className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2">
             <div className="w-full flex items-center gap-3">
                 <div className="flex justify-center items-center">
-                    <img src={avatar} className="rounded-full w-8" />
+                    <img src={post.avatar} className="rounded-full w-8" />
                 </div>
                 <div className="flex flex-col gap-1">
                     <div className="font-semibold text-white">
-                        <div className="">Theanh88</div>
+                        <div className="">{post.name}</div>
                         <div className="flex items-center gap-2">
                             <span>2 giờ</span>
                             <i className="fa-solid fa-earth-americas"></i>
@@ -20,10 +20,10 @@ const PostCard = () => {
             </div>
             <div className="w-full flex flex-col gap-2 mt-2">
                 <div className="text-[14px]">
-                    Con Thiên An chó 
+                    {post.caption}
                 </div>
                 <div className="">
-                    <img src={imagePost} className=""/>
+                    <img src={post.media} className=""/>
                 </div>
             </div>
             <hr />
