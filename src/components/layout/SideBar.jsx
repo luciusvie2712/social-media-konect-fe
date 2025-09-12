@@ -66,9 +66,13 @@ const SideBar = () => {
                     />
                     <div className="option-title">Trang cá nhân</div>
                 </NavLink>
-               <div className="sidebar__menu-option">
+                <div className="sidebar__menu-option">
                     <i className="fa-solid fa-bars w-[25px]"></i>
-                    <div className="option-title" onClick={handleLogout}>Tùy chọn</div>
+                    <div className="option-title">Cài đặt</div>
+               </div>
+               <div className="sidebar__menu-option">
+                    <i className="fa-solid fa-right-from-bracket w-[25px]"></i>
+                    <div className="option-title" onClick={handleLogout}>Đăng xuất</div>
                </div>
             </div>
             {isOpen && <CreatePostModal isOpen={isOpen} setIsOpen={setIsOpen} account={account} />}

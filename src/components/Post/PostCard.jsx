@@ -4,20 +4,25 @@ const PostCard = ({ post, index }) => {
     console.log(">>>> Post Card: ", post)
     return (
         <div key={index} className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2">
-            <div className="w-full flex items-center gap-3">
-                <div className="flex justify-center items-center">
-                    <img src={post.avatar} className="rounded-full w-8" />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <div className="font-semibold text-white">
-                        <div className="">{post.name}</div>
-                        <div className="flex items-center gap-2">
-                            <span>2 giờ</span>
-                            <i className="fa-solid fa-earth-americas"></i>
-                        </div>
-                    </div>
+            <div className="w-full flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+            <div className="flex justify-center items-center">
+            <img src={post.avatar} className="rounded-full w-8" />
+            </div>
+            <div className="flex flex-col gap-1">
+            <div className="font-semibold text-white">
+                <div>{post.name}</div>
+                <div className="flex items-center gap-2">
+                <span className="opacity-80">2 giờ</span>
+                <i className="fa-solid fa-earth-americas"></i>
                 </div>
             </div>
+            </div>
+        </div>
+        <div className="cursor-pointer">
+            <i className="fa-solid fa-ellipsis w-[24px] text-[20px]"></i>
+        </div>
+        </div>
             <div className="w-full flex flex-col gap-2 mt-2">
                 <div className="text-[14px]">
                     {post.caption}

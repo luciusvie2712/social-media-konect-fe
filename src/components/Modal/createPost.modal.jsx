@@ -1,11 +1,9 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import avatar from "../../assets/download.png";
 import { createPostAPI } from "../../utils/api.customize";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { useState, useRef, useEffect } from "react";
-import avatar from "../../assets/download.png";
 import MediaGrid from "../Post/MediaGrid";
 
 const CreatePost = ({ isOpen, setIsOpen, account }) => {
