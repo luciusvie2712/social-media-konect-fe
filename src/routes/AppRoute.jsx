@@ -8,6 +8,7 @@ import DisplayLayout from "../components/layout/DisplayLayout";
 import HomePage from "../views/user/HomePage";
 import ProfilePage from "../views/user/ProfilePage";
 import GoogleCallback from "../components/Auth/GoogleCallback";
+import Message from "../components/Message/Message";
 
 const AppRoute = () => {
   return (
@@ -32,6 +33,7 @@ const AppRoute = () => {
         <Route index element={<Navigate to="home" />} />
         <Route path="home" element={<HomePage />} />
         <Route path="profile/:id" element={<ProfilePage />} />
+        <Route path="message-box" element={<Message />} />
       </Route>
     </Routes>
   );
