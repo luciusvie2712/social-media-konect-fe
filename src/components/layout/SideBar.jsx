@@ -55,10 +55,10 @@ const SideBar = () => {
             Thông báo
           </div>
         </div>
-        <div className="sidebar__option-item">
+        <NavLink to={`/message-box`} className="sidebar__option-item">
           <i className="fa-solid fa-paper-plane w-[25px]"></i>
           <div className="option-title">Tin nhắn</div>
-        </div>
+        </NavLink>
         <div className="sidebar__option-item" onClick={openModalCreatePost}>
           <i className="fa-regular fa-square-plus w-[25px]"></i>
           <div className="option-title">Tạo mới</div>

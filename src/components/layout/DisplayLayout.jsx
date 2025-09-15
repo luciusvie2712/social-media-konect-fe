@@ -6,7 +6,7 @@ const DisplayLayout = () => {
     return (
         <div className="flex w-screen h-screen">
             <SideBar />
-            <div className="w-[85%] flex flex-col bg-black text-white px-5">
+            <div className="w-[85%] flex flex-col bg-black text-white px-2">
                 <Outlet />
             </div>
         </div>
