@@ -45,6 +45,14 @@ const createPostAPI = (formData) => {
 const getDataUserLoginGoogle = (sessionId) => {
     return axios.get(`/data/user/redis?session_id=${sessionId}`)
 }
+
+const getListUserChatted = (userId) => {
+    return axios.get(`/user-chatted-byId?userId=${userId}`)
+}
+const getConversation = (senderId, receiverId) => {
+    return axios.get(`/api/get-conservation?senderId=${senderId}&&receiverId=${receiverId}`)
+}
+
 export {
     createUserAPI,
     loginUserAPI,
@@ -52,5 +60,8 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
-    getDataUserLoginGoogle
+    getDataUserLoginGoogle,
+    getListUserChatted,
+    getConversation
+
 }

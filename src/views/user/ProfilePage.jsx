@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { getAUserByIdAPI } from "../../utils/api.customize";
 import { toast } from "react-toastify";
 import avatar from "../../assets/download.png";
-import "../../assets/styles/Profile.scss";
+import "../../styles/Profile.scss";
 import bgImage from "../../assets/image/bg_image_profile_2.jpg";
 import ColorThief from "colorthief";
 
