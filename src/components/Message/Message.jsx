@@ -127,7 +127,6 @@ const Message = () => {
             </div>
           </div>
         </div>
-
         {showDetail && (
           <div className="message-content__right">
             <div className="right__header"></div>
