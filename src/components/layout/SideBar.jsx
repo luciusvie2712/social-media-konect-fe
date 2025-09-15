@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import actiontypes from "../../store/Action/ActionTypes";
 import avatar from "../../assets/download.png";
-import "../../assets/styles/SideBar.scss";
-import bigLogo from "../../assets/image/big_logo.jpg";
+import "../../styles/SideBar.scss"
+import bigLogo from "../../assets/image/big_logo-removebg-preview.png";
 import smallLogo from "../../assets/image/small_logo.jpg";
 import * as action from "../../store/Export";
 import { useState } from "react";

@@ -7,9 +7,8 @@
 }
 
 body {
-  background-color: #000000;
+  background-image: radial-gradient(circle, #001f4d, #1f1436, #200d21, #180611, #000000);
 }
-
 ::-webkit-scrollbar{
     display: none;
 }
