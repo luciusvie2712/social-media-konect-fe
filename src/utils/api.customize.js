@@ -53,6 +53,15 @@ const getConversation = (senderId, receiverId) => {
     return axios.get(`/api/get-conservation?senderId=${senderId}&&receiverId=${receiverId}`)
 }
 
+const sendMessage = (formData) => {
+    return axios.post('/api/send-message', formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    }
+    )
+
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -62,6 +71,7 @@ export {
     createPostAPI,
     getDataUserLoginGoogle,
     getListUserChatted,
-    getConversation
+    getConversation,
+    sendMessage,
 
 }
