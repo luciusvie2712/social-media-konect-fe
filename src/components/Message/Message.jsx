@@ -1,9 +1,13 @@
 import "../../styles/Message.scss";
 import avatar from "../../assets/download.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { getConversation, getListUserChatted } from "../../utils/api.customize";
-import { assign } from "lodash";
+import {
+  getConversation,
+  getListUserChatted,
+  sendMessage,
+} from "../../utils/api.customize";
+import _, { assign } from "lodash";
 import { toast } from "react-toastify";
 import { createSocket } from "../../socket/socket";
 
@@ -14,6 +18,38 @@ const Message = () => {
   const [listUserChat, setListUserChat] = useState();
   const [messageSegment, setMessageSegment] = useState([]);
   const [currentReceiverId, setCurrentReceiverId] = useState("");
+  const [formSendMess, setFormSendMess] = useState({
+    message: "",
+    media: [],
+    senderId: "",
+    receiverId: "",
+  });
+  const chatBodyRef = useRef(null);
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      requestAnimationFrame(() => {
+        chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+      });
+    }
+  }, [messageSegment]);
+
+  useEffect(() => {
+    if (userId && currentReceiverId) {
+      setFormSendMess((prev) => ({
+        ...prev,
+        senderId: userId,
+        receiverId: currentReceiverId,
+      }));
+    }
+  }, [userId, currentReceiverId]);
+  const formData = new FormData();
+  formData.append("senderId", formSendMess.senderId);
+  formData.append("message", formSendMess.message);
+  formData.append("receiverId", formSendMess.receiverId);
+  formSendMess.media.forEach((file) => {
+    formData.append("media", file);
+  });
+
   useEffect(() => {
     if (userId) {
       getListUser();
@@ -51,7 +87,7 @@ const Message = () => {
       const update = {
         userId: chatPartnerId,
         name: existing?.name,
-        avatar: existing?.avatar || sample,
+        avatar: existing?.avatar || avatar,
         lastMessage: message.message,
         time: new Date().toISOString(),
       };
@@ -67,7 +103,35 @@ const Message = () => {
       toast.error(res?.Mes);
     }
   };
-  console.log("hahaha", messageSegment);
+  const handleSendMessage = async () => {
+    if (!_.isEmpty(formSendMess.message) || !_.isEmpty(formSendMess.media)) {
+      let res = await sendMessage(formData);
+      if (res?.Ec === 0) {
+        setFormSendMess((prev) => ({
+          ...prev,
+          message: "",
+          media: [],
+        }));
+      } else {
+        toast.error(res?.Mes);
+      }
+    }
+  };
+  const chooseFileSendMess = async (e) => {
+    if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
+      const files = e.target.files;
+      const mediaArray = [];
+      Array.from(files).forEach((file) => {
+        mediaArray.push(file);
+      });
+      setFormSendMess((prev) => ({
+        ...prev,
+        media: mediaArray,
+      }));
+    }
+  };
+
+  console.log("formSendMess", formSendMess);
   return (
     <div className="message-container">
       <div className="message-content">
@@ -94,6 +158,7 @@ const Message = () => {
                 return (
                   <>
                     <div
+                      key={item._id}
                       className="chatted-card"
                       onClick={() => clickViewMessageSegment(item.userId)}
                     >
@@ -154,7 +219,7 @@ const Message = () => {
           </div>
           {messageSegment && messageSegment.length > 0 ? (
             <>
-              <div className="center__frame-chat">
+              <div className="center__frame-chat" ref={chatBodyRef}>
                 {messageSegment.slice().map((msg, index) => (
                   <div
                     key={msg._id}
@@ -197,17 +262,47 @@ const Message = () => {
                   </div>
                 ))}
               </div>
-              <div className="center__send">
+              <div
+                className="center__send"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSendMessage();
+                  }
+                }}
+              >
                 <div className="input-frame">
                   <div className="icon-message">
                     <i className="fa-solid fa-envelope"></i>
                   </div>
-                  <input type="text" placeholder="Tin nhắn ...." />
+                  <input
+                    type="text"
+                    placeholder="Tin nhắn ...."
+                    value={formSendMess["message"]}
+                    onChange={(e) =>
+                      setFormSendMess((prev) => ({
+                        ...prev,
+                        message: e.target.value,
+                      }))
+                    }
+                  />
                   <div className="button-add-img">
-                    <i className="fa-solid fa-image"></i>
+                    <input
+                      type="file"
+                      hidden
+                      id="file-mess"
+                      multiple
+                      onClick={(e) => chooseFileSendMess(e)}
+                    />
+                    <label
+                      className="fa-solid fa-image"
+                      htmlFor="file-mess"
+                    ></label>
                   </div>
                   <div className="button-send">
-                    <i className="fa-solid fa-paper-plane"></i>
+                    <i
+                      className="fa-solid fa-paper-plane"
+                      onClick={handleSendMessage}
+                    ></i>
                   </div>
                 </div>
               </div>

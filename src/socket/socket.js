@@ -3,7 +3,9 @@ import { io } from "socket.io-client";
 let socket;
 const urlBackend = import.meta.env.URL_BACKEND
 export const createSocket = (userId) => {
-    socket = io(urlBackend, {
+
+    socket = io('http://localhost:8080', {
+
         withCredentials: true,
         auth: {
             userId,

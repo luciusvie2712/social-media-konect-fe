@@ -29,7 +29,6 @@ const LoginForm = ({ setFormType }) => {
     }
   }, [user]);
   const apiGoogle = import.meta.env.VITE_URL_GOOGLE;
-  console.log(apiGoogle)
 
   const handleLoginGoogle = async () => {
     window.location.href = apiGoogle;
@@ -89,7 +88,10 @@ const LoginForm = ({ setFormType }) => {
           <div className="h-[1px] bg-[rgba(85,85,85,0.52)] w-[70px]"></div>
         </div>
         <div className="flex justify-center mt-3">
-          <div className=" w-[50px] h-[50px] cursor-pointer" onClick={handleLoginGoogle}>
+          <div
+            className=" w-[50px] h-[50px] cursor-pointer"
+            onClick={handleLoginGoogle}
+          >
             <i className="fa-brands fa-google text-[40px] rounded-full border-[rgba(85,85,85,0.52)] border-1 py-1 px-1"></i>
           </div>
         </div>

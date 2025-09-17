@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import avatar from "../../assets/download.png";
 import { createPostAPI } from "../../utils/api.customize";
@@ -26,6 +25,13 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     visibility: "public",
   });
 
+  const formData = new FormData();
+  formData.append("author", formCreate.author);
+  formData.append("caption", formCreate.caption);
+  formData.append("visibility", formCreate.visibility);
+  formCreate.media.forEach((file) => {
+    formData.append("media", file);
+  });
   const fileRef = useRef(null);
   const addMoreRef = useRef(null);
 
@@ -39,7 +45,10 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     const mediaPreviewArray = [];
     const mediaArray = [];
     Array.from(files).forEach((file) => {
-      mediaPreviewArray.push({ url: URL.createObjectURL(file), type: file.type });
+      mediaPreviewArray.push({
+        url: URL.createObjectURL(file),
+        type: file.type,
+      });
       mediaArray.push(file);
     });
     if (append) {
@@ -82,7 +91,6 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     });
   };
 
-
   useEffect(() => {
     if (!isOpen) {
       formCreate.mediaPreview.forEach((p) => {
@@ -90,7 +98,13 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
           URL.revokeObjectURL(p.url);
         } catch (e) {}
       });
-      setFormCreate({ author: "", caption: "", media: [], mediaPreview: [], visibility: "public" });
+      setFormCreate({
+        author: "",
+        caption: "",
+        media: [],
+        mediaPreview: [],
+        visibility: "public",
+      });
     }
   }, [isOpen]);
 
@@ -103,17 +117,24 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
         <i className="fa-solid fa-xmark opacity-70"></i>
       </div>
 
-      <form className="bg-[#242424] text-white w-full max-w-[700px] max-h-[90vh] rounded-lg overflow-hidden flex flex-col shadow-lg" onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="bg-[#242424] text-white w-full max-w-[700px] max-h-[90vh] rounded-lg overflow-hidden flex flex-col shadow-lg"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <div className="sticky top-0 z-20 bg-[#242424] border-b px-4 py-3 flex items-center justify-between">
           <div className="text-lg font-semibold">Tạo bài viết</div>
-          <div className="text-sm text-gray-300">{formCreate.mediaPreview.length} media</div>
+          <div className="text-sm text-gray-300">
+            {formCreate.mediaPreview.length} media
+          </div>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto">
           <div className="flex gap-3 items-center mb-3">
             <img src={avatar} className="rounded-full w-10 h-10" />
             <div className="flex flex-col">
-              <div className="font-semibold text-sm sm:text-base">{account.name}</div>
+              <div className="font-semibold text-sm sm:text-base">
+                {account.name}
+              </div>
               <select
                 className="bg-black rounded cursor-pointer text-sm px-2 py-1 mt-1"
                 name="visibility"
@@ -136,14 +157,25 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
           />
 
           <div className="mb-4">
-            <input ref={fileRef} type="file" id="media" accept="image/*,video/*" className="hidden" multiple onChange={(e) => handleOnchangeFile(e, false)} />
-            <label htmlFor="media" className="inline-block cursor-pointer text-sm sm:text-base px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a]">
+            <input
+              ref={fileRef}
+              type="file"
+              id="media"
+              accept="image/*,video/*"
+              className="hidden"
+              multiple
+              onChange={(e) => handleOnchangeFile(e, false)}
+            />
+            <label
+              htmlFor="media"
+              className="inline-block cursor-pointer text-sm sm:text-base px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a]"
+            >
               Chọn ảnh/video (thay thế)
             </label>
             <span className="text-xs text-gray-400 ml-2">hoặc kéo & thả</span>
           </div>
 
-         {formCreate.mediaPreview.length > 0 && (
+          {formCreate.mediaPreview.length > 0 && (
             <MediaGrid
               mediaPreview={formCreate.mediaPreview}
               onRemove={handleRemoveMedia}
@@ -153,13 +185,28 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
 
         <div className="sticky bottom-0 z-20 bg-[#242424] border-t px-4 py-3 flex gap-3 items-center">
           <div className="flex-1">
-            <input ref={addMoreRef} type="file" className="hidden" accept="image/*,video/*" multiple onChange={(e) => handleOnchangeFile(e, true)} />
-            <button type="button" onClick={() => addMoreRef.current.click()} className="px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a] text-sm">
+            <input
+              ref={addMoreRef}
+              type="file"
+              className="hidden"
+              accept="image/*,video/*"
+              multiple
+              onChange={(e) => handleOnchangeFile(e, true)}
+            />
+            <button
+              type="button"
+              onClick={() => addMoreRef.current.click()}
+              className="px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a] text-sm"
+            >
               Thêm ảnh/video
             </button>
           </div>
           <div className="w-1/2">
-            <button type="button" className="w-full bg-[#2f2f2fca] px-4 py-2 font-semibold rounded hover:bg-[#3a3a3a]" onClick={handleCreatePost}>
+            <button
+              type="button"
+              className="w-full bg-[#2f2f2fca] px-4 py-2 font-semibold rounded hover:bg-[#3a3a3a]"
+              onClick={handleCreatePost}
+            >
               Đăng bài viết
             </button>
           </div>
