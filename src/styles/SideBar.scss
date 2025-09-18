@@ -13,6 +13,13 @@
     padding-left: 14px;
     padding-right: 14px;
     margin-left: 18px;
+    transition: all 0.3s ease;
+    &.full {
+        width: 15%;
+    }
+    &.compact {
+        width: 5%;
+    }
     
     .sidebar__option {
         display: flex;
@@ -40,6 +47,20 @@
             padding-inline: 5px;
             text-decoration: none;
             color: #ffffff;
+            &.full {
+                .option-title {
+                    display: block;
+                }
+            }
+            &.compact {
+                justify-content: center;
+                i {
+                    font-size: 20px;
+                }
+                .option-title {
+                    display: none;
+                }
+            }
             
             &:hover {
                 background-color: #494949;
@@ -81,7 +102,22 @@
             .option-title {
                 display: block;
             }
+            &.full {
+                .option-title {
+                    display: block;
+                }
+            }
+            &.compact {
+                justify-content: center;
+                i {
+                    font-size: 20px;
+                }
+                .option-title {
+                    display: none;
+                }
+            }
         }
+        
     }
 }
 

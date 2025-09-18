@@ -4,7 +4,6 @@ import '../../styles/FriendPage.scss'
 import { friendRequest } from '../../assets/fake.data'
 
 const FriendPage = () => {
-
     return (
         <div className="container">
             <div className="navbar-left">

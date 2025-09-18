@@ -10,6 +10,7 @@ import ProfilePage from "../views/user/ProfilePage";
 import GoogleCallback from "../components/Auth/GoogleCallback";
 import Message from "../components/Message/Message";
 import FriendPage from "../views/user/FriendPage";
+import FriendDetail from "../views/user/FriendDetail";
 
 const AppRoute = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoute = () => {
         <Route path="profile/:id" element={<ProfilePage />} />
         <Route path="message-box" element={<Message />} />
         <Route path="friends" element={<FriendPage />} />
+        <Route path="friends/:type" element={<FriendDetail />} />
       </Route>
     </Routes>
   );

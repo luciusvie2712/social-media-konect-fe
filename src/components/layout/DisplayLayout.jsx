@@ -1,12 +1,15 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import SideBar from "./SideBar"
 
 
 const DisplayLayout = () => {
+    const location = useLocation();
+    const isFriendList = /^\/friends\/(request|suggestion)/.test(location.pathname);
+
     return (
         <div className="flex w-screen h-screen">
             <SideBar />
-            <div className="w-[85%] flex flex-col text-white px-2">
+            <div className={`flex flex-col text-white px-2 ${isFriendList ? "w-[95%]" : "w-[85%]"}`}>
                 <Outlet />
             </div>
         </div>
