@@ -9,6 +9,7 @@ import HomePage from "../views/user/HomePage";
 import ProfilePage from "../views/user/ProfilePage";
 import GoogleCallback from "../components/Auth/GoogleCallback";
 import Message from "../components/Message/Message";
+import FriendPage from "../views/user/FriendPage";
 
 const AppRoute = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoute = () => {
         <Route path="home" element={<HomePage />} />
         <Route path="profile/:id" element={<ProfilePage />} />
         <Route path="message-box" element={<Message />} />
+        <Route path="friends" element={<FriendPage />} />
       </Route>
     </Routes>
   );

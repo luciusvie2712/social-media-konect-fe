@@ -308,7 +308,7 @@ const Message = () => {
               </div>
             </>
           ) : (
-            <span>deo co cac gi</span>
+            <span>Nứng quá thì ghi tên anh vào</span>
           )}
         </div>
         {showDetail && (

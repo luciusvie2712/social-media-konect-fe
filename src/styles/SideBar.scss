@@ -3,7 +3,7 @@
     width: 15%;
     height: 100vh;
     display: flex;
-    background-color: rgba(50, 50, 50, 0.225);
+    background-color: rgba(50, 50, 50, 0.5);
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -42,7 +42,7 @@
             color: #ffffff;
             
             &:hover {
-                background-color: #242424;
+                background-color: #494949;
                 border-radius: 5px;
             }
         }

@@ -38,10 +38,10 @@ const SideBar = () => {
           <i className="fa-solid fa-house w-[25px]"></i>
           <div className="option-title">Trang chủ</div>
         </NavLink>
-        <div className="sidebar__option-item">
+        <NavLink to={`/friends`} className="sidebar__option-item">
           <i className="fa-solid fa-users w-[25px]"></i>
           <div className="option-title">Bạn bè</div>
-        </div>
+        </NavLink>
         <div className="sidebar__option-item">
           <i className="fa-solid fa-magnifying-glass w-[25px]"></i>
           <div className="option-title">Tìm kiếm</div>

@@ -25,6 +25,18 @@ export const friendRequest = [
         name: "Trinh Tran Phuong Size",
         avatar: avatarImg,
         mutualFriends: 97
+    },
+    {
+        id: 5,
+        name: "Trinh Tran Phuong Size",
+        avatar: avatarImg,
+        mutualFriends: 97
+    },
+    {
+        id: 6,
+        name: "Trinh Tran Phuong Size",
+        avatar: avatarImg,
+        mutualFriends: 97
     }
 ]
 
