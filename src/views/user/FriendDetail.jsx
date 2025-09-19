@@ -2,12 +2,16 @@ import { useNavigate, useParams } from "react-router-dom"
 import ShowListFriends from "../../components/Friends/ShowListFriends"
 import '../../styles/FriendDetail.scss'
 import { friendRequest } from "../../assets/fake.data"
+import { useState } from "react"
+import Profile from "../../components/Profile/Profile"
 
 const FriendDetail = () => {
     const { type } = useParams() 
     console.log(">>> ", type)
     const navigate = useNavigate()
     const dataFriends = friendRequest
+    const [selectedFriend, setSelectedFriend] = useState(null)
+
     return (
         <div className="container">
             <div className="nav-left">
@@ -19,14 +23,18 @@ const FriendDetail = () => {
                 </div>
                 <div className="show-list">
                     {type === "request" ? dataFriends.map((item, index) => (
-                        <ShowListFriends typeList={type} key={index} item={item}/>
+                        <ShowListFriends typeList={type} key={index} item={item} onSelect={() => setSelectedFriend(item)} />
                     )) : dataFriends.map((item, index) => (
-                        <ShowListFriends typeList={type} key={index} item={item}/>
+                        <ShowListFriends typeList={type} key={index} item={item} onSelect={() => setSelectedFriend(item)} />
                     ))}
                 </div>
             </div>
             <div className="display">
-                Profile
+                {selectedFriend ? (
+                    <Profile data={selectedFriend} />
+                ) : (
+                    <span className="">Vui long chon nguoi ban muon xem truoc trang ca nhan</span>
+                )}
             </div>
 
         </div>
