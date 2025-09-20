@@ -4,7 +4,7 @@ import actiontypes from "../../store/Action/ActionTypes";
 import avatar from "../../assets/download.png";
 import "../../styles/SideBar.scss"
 import bigLogo from "../../assets/image/big_logo-removebg-preview.png";
-import smallLogo from "../../assets/image/small_logo.jpg";
+import smallLogo from "../../assets/image/small_logo-removebg-preview.png";
 import * as action from "../../store/Export";
 import { useState } from "react";
 import CreatePostModal from "../Modal/createPost.modal";

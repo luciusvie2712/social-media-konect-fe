@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Profile = ({data}) => {
+const Profile = ({data, typeProfile}) => {
     const [active, setActive] = useState("BÀI VIẾT")
     const tabs = ["BÀI VIẾT", "ẢNH", "GIỚI THIỆU", "VIDEO"]
     return (
@@ -16,8 +16,18 @@ const Profile = ({data}) => {
                     <div className=""><b>Đang theo dõi</b> 100 </div>
                 </div>
                 <div className="flex items-center gap-5 mt-4">
-                    <button className="font-medium text-[15px] bg-[#5f7cfd] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-user-check"></i>Xác nhận</button>
-                    <button className="font-medium text-[15px] bg-[#494949] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-message"></i>Nhắn tin</button>
+                    {typeProfile === "request" ? (
+                        <>
+                            <button className="font-medium text-[15px] bg-[#5f7cfd] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-user-check"></i>Xác nhận</button>
+                            <button className="font-medium text-[15px] bg-[#494949] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-message"></i>Nhắn tin</button>
+                        </>
+                    ) : (
+                        <>
+                            <button className="font-medium text-[15px] bg-[#5f7cfd] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-user-plus"></i>Thêm bạn bè</button>
+                            <button className="font-medium text-[15px] bg-[#494949] px-4 py-1 rounded flex gap-2 items-center"><i className="fa-solid fa-message"></i>Nhắn tin</button>
+                        </>
+                    )}
+                    
                 </div>
             </div>
             <div className="w-full flex items-center justify-center gap-10">

@@ -7,7 +7,6 @@ import Profile from "../../components/Profile/Profile"
 
 const FriendDetail = () => {
     const { type } = useParams() 
-    console.log(">>> ", type)
     const navigate = useNavigate()
     const dataFriends = friendRequest
     const [selectedFriend, setSelectedFriend] = useState(null)
@@ -31,7 +30,7 @@ const FriendDetail = () => {
             </div>
             <div className="display">
                 {selectedFriend ? (
-                    <Profile data={selectedFriend} />
+                    <Profile data={selectedFriend} typeProfile={type} />
                 ) : (
                     <span className="">Vui long chon nguoi ban muon xem truoc trang ca nhan</span>
                 )}
