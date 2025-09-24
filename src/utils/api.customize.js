@@ -60,7 +60,9 @@ const sendMessage = (formData) => {
         }
     }
     )
-
+}
+const GetfriendSuggestion = (id) => {
+    return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
 export {
     createUserAPI,
@@ -73,5 +75,5 @@ export {
     getListUserChatted,
     getConversation,
     sendMessage,
-
+    GetfriendSuggestion
 }
