@@ -1,6 +1,5 @@
 import axios from "./axios.customize"
 
-
 const createUserAPI = (name, email, password) => {
     const API_URL = 'api/CreateUser'
     return axios.post(API_URL, {
@@ -64,6 +63,9 @@ const sendMessage = (formData) => {
 const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
+const sendFriendRequest = (requesteId, recipientId) => {
+    return axios.post(`/api/send-friend-request`, {requesteId, recipientId})
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -75,5 +77,6 @@ export {
     getListUserChatted,
     getConversation,
     sendMessage,
-    GetfriendSuggestion
+    GetfriendSuggestion,
+    sendFriendRequest
 }
