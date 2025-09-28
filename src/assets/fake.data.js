@@ -45,28 +45,28 @@ export const postList = [
         authorId: 1,
         avatar: avatarImg,
         name: "Theanh69",
-        caption: "Con chó Thiên An",
+        caption: "Dramma",
         media: imagePost1
     },
     {
         authorId: 2,
         avatar: avatarImg,
         name: "Trinh Tran Phuong Trang",
-        caption: "Đụ má nó mất dạy quá rồi grrrrrr",
+        caption: "ABC",
         media: imagePost1
     },
     {
         authorId: 3,
         avatar: avatarImg,
         name: "VTV News",
-        caption: "Giống như một vở kịch buồn, em dạng nằm cả 2 chân",
+        caption: "Giống như một vở kịch buồn",
         media: imagePost1
     },
     {
         authorId: 4,
         avatar: avatarImg,
         name: "Báo Đời",
-        caption: "Sự mất dạy của một con đàn bà mặt dày, giả tạo",
+        caption: "Giả tạo",
         media: imagePost1
     },
 ]

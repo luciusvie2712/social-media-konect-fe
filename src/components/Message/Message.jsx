@@ -308,7 +308,7 @@ const Message = () => {
               </div>
             </>
           ) : (
-            <span>Nứng quá thì ghi tên anh vào</span>
+            <span>Flop quá thì ghi tên anh vào</span>
           )}
         </div>
         {showDetail && (

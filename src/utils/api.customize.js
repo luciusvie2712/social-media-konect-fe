@@ -63,8 +63,11 @@ const sendMessage = (formData) => {
 const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
-const sendFriendRequest = (requesteId, recipientId) => {
-    return axios.post(`/api/send-friend-request`, {requesteId, recipientId})
+const sendFriendRequest = (requesterId, recipientId) => {
+    return axios.post(`/api/send-friend-request`, {requesterId, recipientId})
+}
+const rejectFriendRequest = (requesterId, recipientId) => {
+    return axios.post(`/api/reject-friend-request`, {requesterId, recipientId})
 }
 export {
     createUserAPI,
@@ -78,5 +81,6 @@ export {
     getConversation,
     sendMessage,
     GetfriendSuggestion,
-    sendFriendRequest
+    sendFriendRequest,
+    rejectFriendRequest
 }

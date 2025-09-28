@@ -24,12 +24,22 @@ const SuggestionCard = ({index, item}) => {
                 <span className="text-[13px] px-2 opacity-50">{item.mutualFriends} bạn chung</span>
             </div>
             <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">
-                <button 
-                    onClick={onSendRequest}
-                    className={` font-semibold py-1 rounded w-full hover:bg-[#6751c95b]  ${status === "success" ? "bg-[#242424] text-white" : "bg-[#3416bc43] text-blue-400"}`}
-                >
-                    {status === "success" ? <>Hủy lời mời</> : <>Thêm bạn bè</>}
-                </button>
+                
+                {status === "idle" ? (
+                    <button 
+                        onClick={onSendRequest}
+                        className="font-semibold py-1 rounded w-full hover:bg-[#6751c95b] bg-[#3416bc43] text-blue-400"
+                    >
+                        Thêm bạn bè
+                    </button>
+                ) :  (
+                    <button 
+                        onClick={onSendRequest}
+                        className="font-semibold py-1 rounded w-full hover:bg-[#76767686] bg-[#242424] text-white"
+                    >
+                        Hủy lời mời
+                    </button>
+                )}
                 <button className="bg-[#4c4c4c86] font-semibold py-1 rounded w-full hover:bg-[#76767686]">
                     Gỡ/Xóa
                 </button>
