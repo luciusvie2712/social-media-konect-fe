@@ -3,9 +3,8 @@ import { useFriendRequest } from "../../hook/useFriendRequest";
 
 const SuggestionCard = ({index, item}) => {
     const user = useSelector((state) => state.user.account);
-    console.log(">>> USER: ", user.id)
     const { status, handleSendFriendRequest } = useFriendRequest();
-    const requesterId = user.id
+    const requesterId = user?.id
 
     const onSendRequest = async () => {
         try {

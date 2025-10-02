@@ -69,6 +69,10 @@ const sendFriendRequest = (requesterId, recipientId) => {
 const rejectFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/reject-friend-request`, {requesterId, recipientId})
 }
+const getFriendRequest = (userId) => {
+    return axios.get(`/api/get-accept-request?userId=${userId}`)
+}
+
 export {
     createUserAPI,
     loginUserAPI,
@@ -82,5 +86,6 @@ export {
     sendMessage,
     GetfriendSuggestion,
     sendFriendRequest,
-    rejectFriendRequest
+    rejectFriendRequest,
+    getFriendRequest
 }

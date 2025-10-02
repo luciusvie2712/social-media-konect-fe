@@ -1,15 +1,38 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ShowListFriends from "../../components/Friends/ShowListFriends";
 import "../../styles/FriendDetail.scss";
-import { friendRequest } from "../../assets/fake.data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Profile from "../../components/Profile/Profile";
+import { useSelector } from "react-redux";
+import { getFriendRequest } from "../../utils/api.customize";
 
 const FriendDetail = () => {
   const { type } = useParams();
   const navigate = useNavigate();
-  const dataFriends = friendRequest;
+  const [ friendRequest, setFriendRequest ] = useState([])
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const user = useSelector((state) => state.user.account)
+
+  const handleGetFriendRequest = async () => {
+    try {
+      const dataRequest = await getFriendRequest(user?.id)
+      if (dataRequest.Ec === 0) {
+        setFriendRequest(dataRequest.data)
+      } else {
+        console.log(dataRequest?.Mes)
+      }
+    } catch (error) {
+      console.log(">>> Loi cmnr: ", error)
+    }
+  }
+  console.log(">>>", friendRequest)
+
+  useEffect(() => {
+    if (user.id) {
+      handleGetFriendRequest()
+    }
+  }, [])
+
 
   return (
     <div className="container">
@@ -26,7 +49,7 @@ const FriendDetail = () => {
         </div>
         <div className="show-list">
           {type === "request"
-            ? dataFriends.map((item, index) => (
+            ? friendRequest.map((item, index) => (
                 <ShowListFriends
                   typeList={type}
                   key={index}
@@ -34,7 +57,7 @@ const FriendDetail = () => {
                   onSelect={() => setSelectedFriend(item)}
                 />
               ))
-            : dataFriends.map((item, index) => (
+            : friendRequest.map((item, index) => (
                 <ShowListFriends
                   typeList={type}
                   key={index}
