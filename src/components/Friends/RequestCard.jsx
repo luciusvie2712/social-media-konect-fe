@@ -1,20 +1,39 @@
+import { useSelector } from "react-redux"
+import { useAcceptRequest } from "../../hook/useAcceptRequest"
 
 
 const RequestCard = ({index, item}) => {
+    const user = useSelector((state) => state.user.account)
+    const { status, handleAcceptFriendRequest } = useAcceptRequest()
+
+    const onAcceptRequest = async () => {
+        try {
+            await handleAcceptFriendRequest(item.requester._id, user.id) 
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div className="w-[180px] border-1 border-[#474747] rounded flex flex-col items-center cursor-pointer bg-[#29252520]">
-            <img src={item.avatar} className="rounded-t-[4px]"/>
+            <img src={item.requester.avatar} className="rounded-t-[4px]"/>
             <div className="w-full flex flex-col item-center pt-2">
-                <span className="text-[15px] font-semibold px-2">{item.name}</span>
+                <span className="text-[15px] font-semibold px-2">{item.requester.name}</span>
                 <span className="text-[13px] px-2 opacity-50">{item.mutualFriends} bạn chung</span>
             </div>
             <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">
-                <button className="bg-[#2200b978] font-semibold py-1 rounded w-full hover:bg-[#5136ca79]">
-                    Xác nhận
-                </button>
-                <button className="bg-[#4c4c4c86] font-semibold py-1 rounded w-full hover:bg-[#76767686]">
-                    Từ chối
-                </button>
+                {status === 'idle' ? (
+                    <>
+                        <button onClick={onAcceptRequest} className="bg-[#2200b978] font-semibold py-1 rounded w-full hover:bg-[#5136ca79]">
+                            Xác nhận
+                        </button>
+                        <button className="bg-[#4c4c4c86] font-semibold py-1 rounded w-full hover:bg-[#76767686]">
+                            Từ chối
+                        </button>
+                    </>
+                ) : (
+                    <span>Đã là bạn bè</span>
+                )}
             </div>
         </div>
     )

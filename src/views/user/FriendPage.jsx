@@ -1,9 +1,17 @@
 import NavBar from "../../components/Friends/NavBar";
 import ShowGridFriend from "../../components/Friends/ShowGridFriend";
 import "../../styles/FriendPage.scss";
-import { friendRequest } from "../../assets/fake.data";
+import { useSelector } from "react-redux";
+import { useFriendList } from "../../hook/useFriendList";
 
 const FriendPage = () => {
+  const user = useSelector((state) => state.user.account)
+
+  const { friends: friendRequest, loading: loadingRequest } = useFriendList("request", user?.id)
+  const { friends: friendSuggestion, loading: loadingSuggestion } = useFriendList("suggestion", user?.id)
+  const safeRequest = Array.isArray(friendRequest) ? friendRequest : [];
+  const safeSuggestion = Array.isArray(friendSuggestion) ? friendSuggestion : [];
+
   return (
     <div className="container">
       <div className="navbar-left">
@@ -13,12 +21,20 @@ const FriendPage = () => {
         <div className="title">
           <p>Lời mời kết bạn</p>
         </div>
-        <ShowGridFriend data={friendRequest} type="request" />
+        {loadingRequest ?  (
+          <span>Loading ... </span>
+        ) : (
+          <ShowGridFriend data={safeRequest} type="request" />
+        )}
         <hr />
         <div className="title">
           <p>Gợi ý kết bạn</p>
         </div>
-        <ShowGridFriend data={friendRequest} type="suggestion" />
+        {loadingSuggestion ? (
+          <span>Loading ...</span>
+        ) : (
+          <ShowGridFriend data={safeSuggestion} type="suggestion" />
+        )}
       </div>
     </div>
   );

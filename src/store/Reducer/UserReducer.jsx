@@ -1,4 +1,3 @@
-import { isNil } from "lodash";
 import actiontypes from "../Action/ActionTypes";
 
 const INITIAL_STATE = {
@@ -41,7 +40,6 @@ const UserReducer = (state = INITIAL_STATE, action) => {
         isauthentic: false,
       };
     case actiontypes.USER_LOGOUT:
-      console.log("yamate")
       return {
         ...state,
         account: null,

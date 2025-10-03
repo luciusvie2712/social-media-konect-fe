@@ -9,7 +9,7 @@ const ShowListFriends = ({item, typeList, index, onSelect}) => {
                     <div className="opacity-45">2 tuần</div>
                 </div>
                 <div className="flex items-center w-full gap-2 text-[15px]">
-                    {typeList === "request" ? (
+                    {typeList === "request" && (
                         <>
                             <button className="w-[calc(100%/2)] bg-[#4a4aef] rounded">
                                 Xác nhận
@@ -19,7 +19,8 @@ const ShowListFriends = ({item, typeList, index, onSelect}) => {
                             </button>
                         </>
                         
-                    ) : (
+                    )} 
+                    {typeList === "suggestion" && (
                         <>
                             <button className="w-[calc(100%/2)] bg-[#4a4aef] rounded">
                                 Thêm bạn bè
@@ -28,6 +29,9 @@ const ShowListFriends = ({item, typeList, index, onSelect}) => {
                                 Từ chối
                             </button>
                         </>
+                    )}
+                    {typeList === "all" && (
+                        <></>
                     )}
 
                 </div>

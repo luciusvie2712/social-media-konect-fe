@@ -2,7 +2,6 @@ import RequestCard from "./RequestCard";
 import SuggestionCard from "./SuggestionCard";
 
 const ShowGridFriend = ({ data, type }) => {
-
     return (
         <div className="grid grid-cols-5 gap-3 overflow-x-auto">
             {type === "request"

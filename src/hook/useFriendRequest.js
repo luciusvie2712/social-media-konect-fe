@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { getFriendRequest, sendFriendRequest } from "../utils/api.customize"
+import { sendFriendRequest } from "../utils/api.customize"
 
 export const useFriendRequest = () => {
     const [status, setStatus] = useState('idle')

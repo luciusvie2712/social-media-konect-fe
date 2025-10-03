@@ -4,36 +4,17 @@ import "../../styles/FriendDetail.scss";
 import { useEffect, useState } from "react";
 import Profile from "../../components/Profile/Profile";
 import { useSelector } from "react-redux";
-import { getFriendRequest } from "../../utils/api.customize";
+
+import { useFriendList } from "../../hook/useFriendList";
 
 const FriendDetail = () => {
   const { type } = useParams();
   const navigate = useNavigate();
-  const [ friendRequest, setFriendRequest ] = useState([])
   const [selectedFriend, setSelectedFriend] = useState(null);
   const user = useSelector((state) => state.user.account)
 
-  const handleGetFriendRequest = async () => {
-    try {
-      const dataRequest = await getFriendRequest(user?.id)
-      if (dataRequest.Ec === 0) {
-        setFriendRequest(dataRequest.data)
-      } else {
-        console.log(dataRequest?.Mes)
-      }
-    } catch (error) {
-      console.log(">>> Loi cmnr: ", error)
-    }
-  }
-  console.log(">>>", friendRequest)
-
-  useEffect(() => {
-    if (user.id) {
-      handleGetFriendRequest()
-    }
-  }, [])
-
-
+  const { friends, loading } = useFriendList(type, user?.id)
+  console.log(friends)
   return (
     <div className="container">
       <div className="nav-left">
@@ -41,30 +22,22 @@ const FriendDetail = () => {
           <div onClick={() => navigate(-1)} className="btn-back">
             <i className="fa-solid fa-arrow-left"></i>
           </div>
-          {type === "request" ? (
-            <span>Lời mời kết bạn</span>
-          ) : (
-            <span>Gợi ý kết bạn</span>
-          )}
+          <span>
+            {type === "request" && "Lời mời kết bạn"}
+            {type === "suggestion" && "Gợi ý kết bạn"}
+            {type === "all" && "Tất cả bạn bè"}
+          </span>
         </div>
         <div className="show-list">
-          {type === "request"
-            ? friendRequest.map((item, index) => (
-                <ShowListFriends
-                  typeList={type}
-                  key={index}
-                  item={item}
-                  onSelect={() => setSelectedFriend(item)}
-                />
-              ))
-            : friendRequest.map((item, index) => (
-                <ShowListFriends
-                  typeList={type}
-                  key={index}
-                  item={item}
-                  onSelect={() => setSelectedFriend(item)}
-                />
-              ))}
+          {loading ?  (
+            <span>Loading ... </span>
+          ) : friends?.length > 0 ? (
+            friends.map((item, index) => (
+              <ShowListFriends typeList={type} key={index} item={item} onSelect={() => setSelectedFriend(item)} />
+            ))
+          ) : (
+            <span>Không có dữ liệu</span>
+          )}
         </div>
       </div>
       <div className="display">

@@ -13,7 +13,6 @@ const RegisterForm = ({ setFormType }) => {
         e.preventDefault()
         try {
             const res = await createUserAPI(name, email, password)
-            console.log(res )
             if (res.Ec === 0) {
                 toast.success('Register account success')
                 setFormType("login")

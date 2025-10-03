@@ -27,7 +27,7 @@ const SideBar = () => {
     setIsOpen(true);
   };
 
-  const isFriendList = /^\/friends\/(request|suggestion)/.test(location.pathname);
+  const isFriendList = /^\/friends\/(request|suggestion|all)/.test(location.pathname);
   const isFriendPage = /^\/friends\/.+/.test(location.pathname);
 
   return (

@@ -8,7 +8,6 @@ const createUserAPI = (name, email, password) => {
         password
     })
 }
-
 const loginUserAPI = (email, password) => {
     const API_URL = '/api/login-User'
     console.log("......a.s fas")
@@ -17,21 +16,21 @@ const loginUserAPI = (email, password) => {
         password
     })
 }
-
 const getAUserByIdAPI = (id) => {
     const API_URL = `/api/get-a-user?id=${id}`
     return axios.get(API_URL)
 }
-
 const forgotPasswordAPI = (email) => {
     const API_URL = '/api/forgot-password'
     console.log(email)
     return axios.post(API_URL, { email })
 }
-
 const resetPasswordAPI = (newPass) => {
     const API_URL = '/api/reset-password/:token'
     return axios.post(API_URL, newPass)
+}
+const getDataUserLoginGoogle = (sessionId) => {
+    return axios.get(`/data/user/redis?session_id=${sessionId}`)
 }
 
 const createPostAPI = (formData) => {
@@ -41,9 +40,6 @@ const createPostAPI = (formData) => {
         },
     });
 }
-const getDataUserLoginGoogle = (sessionId) => {
-    return axios.get(`/data/user/redis?session_id=${sessionId}`)
-}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -51,14 +47,12 @@ const getListUserChatted = (userId) => {
 const getConversation = (senderId, receiverId) => {
     return axios.get(`/api/get-conservation?senderId=${senderId}&&receiverId=${receiverId}`)
 }
-
 const sendMessage = (formData) => {
     return axios.post('/api/send-message', formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         }
-    }
-    )
+    })
 }
 const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
@@ -69,8 +63,14 @@ const sendFriendRequest = (requesterId, recipientId) => {
 const rejectFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/reject-friend-request`, {requesterId, recipientId})
 }
+const acceptFriendRequest = (requesterId, recipientId) => {
+    return axios.post(`/api/accept-friend-request`, {requesterId, recipientId})
+}
 const getFriendRequest = (userId) => {
     return axios.get(`/api/get-accept-request?userId=${userId}`)
+}
+const getListFriends = (id) => {
+    return axios.get(`/api/get-listfriend?id=${id}`)
 }
 
 export {
@@ -87,5 +87,7 @@ export {
     GetfriendSuggestion,
     sendFriendRequest,
     rejectFriendRequest,
-    getFriendRequest
+    getFriendRequest,
+    acceptFriendRequest,
+    getListFriends
 }
