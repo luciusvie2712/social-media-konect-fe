@@ -4,7 +4,7 @@ import SideBar from "./SideBar"
 
 const DisplayLayout = () => {
     const location = useLocation();
-    const isFriendList = /^\/friends\/(request|suggestion)/.test(location.pathname);
+    const isFriendList = /^\/friends\/(request|suggestion|all)/.test(location.pathname);
 
     return (
         <div className="flex w-screen h-screen">

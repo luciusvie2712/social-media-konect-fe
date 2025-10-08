@@ -1,13 +1,22 @@
 import PostCard from "./PostCard"
-import { postList } from "../../assets/fake.data"
+import { useSelector } from "react-redux"
+import { useGetPost } from "../../hook/useGetPost"
 
 const PostList = () => {
-    console.log(postList)
+    const user = useSelector((state) => state.user.account)
+    console.log(user.id)
+
+    const { posts, loading } = useGetPost(user.id)
+    console.log("Post: ", posts)
+
+    if (loading) return <p>Loading ...</p>
     return (
         <div className="w-[100%] flex flex-col items-center justify-center gap-3">
-            {postList.map((post, index) => (
-                <PostCard post={post} key={index} />
-            ))}
+            {posts?.length > 0 ? (
+                posts.map((post, index) => <PostCard post={post} key={index} />)
+            ) : (
+                <p>Không có bài viết nào</p>
+            )}
         </div>
     )
 }

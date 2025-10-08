@@ -293,7 +293,7 @@ const Message = () => {
                       multiple
                       onClick={(e) => chooseFileSendMess(e)}
                     />
-                    <label
+                    <label 
                       className="fa-solid fa-image"
                       htmlFor="file-mess"
                     ></label>

@@ -28,6 +28,12 @@ const FriendDetail = () => {
             {type === "all" && "Tất cả bạn bè"}
           </span>
         </div>
+        {type === "all" && 
+          <div className="friend-search">
+              <i className="fa-solid fa-magnifying-glass w-4 opacity-45"></i>
+              <input type="search" placeholder="Tìm kiếm bạn bè" />
+          </div>
+        }
         <div className="show-list">
           {loading ?  (
             <span>Loading ... </span>

@@ -40,6 +40,9 @@ const createPostAPI = (formData) => {
         },
     });
 }
+const getPost = (id) => {
+    return axios.get(`/api/get-post?id=${id}`)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -80,6 +83,7 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
+    getPost,
     getDataUserLoginGoogle,
     getListUserChatted,
     getConversation,

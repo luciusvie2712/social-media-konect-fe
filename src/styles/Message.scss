@@ -275,7 +275,10 @@
                         }
                     }
 
-                    div>i {
+                    .button-send {
+                        cursor: pointer;
+                    }
+                    div>label {
                         cursor: pointer;
                     }
                 }
