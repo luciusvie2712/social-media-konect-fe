@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion";
 
 
 const PostCard = ({ post, index }) => {
@@ -17,7 +18,7 @@ const PostCard = ({ post, index }) => {
     }
 
     return (
-        <div key={index} className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2">
+        <div key={index} className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2 shadow-[#4f4f4f] hover:shadow-lg transition-all duration-300">
             <div className="w-full flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div className="flex justify-center items-center">
@@ -43,37 +44,48 @@ const PostCard = ({ post, index }) => {
                         {post.caption}
                     </div>
                 }
-                {mediaList?.length > 0 && (
-                    <div className="relative w-full flex justify-center items-center mt-2">
+                 {mediaList?.length > 0 && (
+                    <div className="relative w-full flex justify-center items-center mt-2 overflow-hidden rounded-lg aspect-[3/3] bg-black">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                        key={currentIndex}
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        className="absolute w-full h-full flex justify-center items-center"
+                        >
                         {mediaList[currentIndex].type === "video" ? (
                             <video
-                                src={mediaList[currentIndex].url}
-                                controls
-                                className="max-h-[500px] w-full rounded-lg object-contain"
+                            src={mediaList[currentIndex].url}
+                            controls
+                            className="max-h-[500px] w-full rounded-lg object-contain"
                             />
-                            ) : (
+                        ) : (
                             <img
-                                src={mediaList[currentIndex].url}
-                                className="max-h-[500px] w-full rounded-lg object-contain"
+                            src={mediaList[currentIndex].url}
+                            className="max-h-[500px] w-full rounded-lg object-contain"
                             />
                         )}
+                        </motion.div>
+                    </AnimatePresence>
 
-                        {mediaList?.length > 1 && (
-                            <>
-                                <button
-                                    onClick={handlePrev}
-                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc]"
-                                >
-                                    <i className="fa-solid fa-chevron-left"></i>
-                                </button>
-                                <button
-                                    onClick={handleNext}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc]"
-                                >
-                                    <i className="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </>
-                        )}
+                    {mediaList.length > 1 && (
+                        <>
+                        <button
+                            onClick={handlePrev}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc] transition"
+                        >
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button
+                            onClick={handleNext}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc] transition"
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
+                        </>
+                    )}
                     </div>
                 )}
             </div>

@@ -7,7 +7,7 @@
 }
 
 body {
-  background-image: radial-gradient(circle, #001f4d, #1f1436, #200d21, #180611, #000000);
+  background: linear-gradient(to bottom right, #1a1a1a, #252525, #2d1b3d);
 }
 ::-webkit-scrollbar{
     display: none;
