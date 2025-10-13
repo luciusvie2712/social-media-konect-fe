@@ -1,19 +1,62 @@
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, inView } from "framer-motion";
 
 
 const PostCard = ({ post, index }) => {
     const [ currentIndex, setCurrentIndex ] = useState(0)
+    console.log(post)
     const mediaList = Array.isArray(post?.media) ? post.media.filter((m) => m?.url) : post?.media?.url ? [post.media] : []
 
-    const handlePrev = () => {
-        setCurrentIndex((prev) => 
-            prev === 0 ? mediaList.length - 1 : prev - 1
-        )
-    }
-    const handleNext = () => {
-        setCurrentIndex((prev) => 
-            prev === mediaList.length - 1 ? 0 : prev + 1
+    const renderMedia = () => {
+        if (mediaList[0]?.type === "video") {
+            const video = mediaList[0]
+            return (
+                <div className="relative w-full rounded overflow-hidden bg-black aspect-video">
+                    <video src={video.url} className="w-full h-full object-cover" controls />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="rounded-full">
+                            <i className="fa-solid fa-play text-white text-xl hover:text-orange-300"></i>
+                        </div>
+                    </div>
+                </div>
+                
+            )
+        }
+
+        if (mediaList.lenght === 1) {
+            return (
+                <div className="w-full rounded-xl overflow-hidden aspect-[3/4]">
+                    <img src={mediaList[0].url} className="w-full h-full object-cover" />
+                </div>
+            )
+        }   
+        const displayImageList = mediaList.slice(0, 9)
+        const hiddenCount = mediaList.length - 9
+        return (
+            <div
+                className={`grid ${
+                    displayImageList.length === 2 
+                    ? "grid-cols-2"
+                    : displayImageList.length === 3
+                    ? "grid-cols-3"
+                    : "grid-cols-3"
+                } gap-1 overflow-hidden`}
+            >
+                {displayImageList.map((media, index) => (
+                    <div key={index} className="relative aspect-square overflow-hidden">
+                        <img
+                            src={media.url}
+                            alt=""
+                            className="w-full h-full rounded object-cover"
+                        />
+                        {index === 8 && hiddenCount > 0 && (
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-2xl font-bold">
+                                +{hiddenCount}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
         )
     }
 
@@ -22,11 +65,11 @@ const PostCard = ({ post, index }) => {
             <div className="w-full flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div className="flex justify-center items-center">
-                        <img src={post.avatar} className="rounded-full w-8" />
+                        <img src={post?.author?.avatar} className="rounded-full w-8" />
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="font-semibold text-white">
-                            <div>{post.name}</div>
+                            <div>{post?.author?.name}</div>
                             <div className="flex items-center gap-2">
                                 <span className="opacity-80">2 giờ</span>
                                 <i className="fa-solid fa-earth-americas"></i>
@@ -44,50 +87,10 @@ const PostCard = ({ post, index }) => {
                         {post.caption}
                     </div>
                 }
-                 {mediaList?.length > 0 && (
-                    <div className="relative w-full flex justify-center items-center mt-2 overflow-hidden rounded-lg aspect-[3/3] bg-black">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                        key={currentIndex}
-                        initial={{ opacity: 0, x: 100 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="absolute w-full h-full flex justify-center items-center"
-                        >
-                        {mediaList[currentIndex].type === "video" ? (
-                            <video
-                            src={mediaList[currentIndex].url}
-                            controls
-                            className="max-h-[500px] w-full rounded-lg object-contain"
-                            />
-                        ) : (
-                            <img
-                            src={mediaList[currentIndex].url}
-                            className="max-h-[500px] w-full rounded-lg object-contain"
-                            />
-                        )}
-                        </motion.div>
-                    </AnimatePresence>
-
-                    {mediaList.length > 1 && (
-                        <>
-                        <button
-                            onClick={handlePrev}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc] transition"
-                        >
-                            <i className="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button
-                            onClick={handleNext}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#00000088] p-2 rounded-full hover:bg-[#000000cc] transition"
-                        >
-                            <i className="fa-solid fa-chevron-right"></i>
-                        </button>
-                        </>
-                    )}
-                    </div>
-                )}
+                {mediaList?.length === 0 || <div className="mt-3">
+                    {renderMedia()}
+                </div>}
+                
             </div>
             <hr />
             <div className="w-full flex items-center mb-1 justify-around text-[15px]">
