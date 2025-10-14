@@ -61,7 +61,7 @@ const PostCard = ({ post, index }) => {
     }
 
     return (
-        <div key={index} className="w-[max(35vw,400px)] rounded bg-[#3131319e] px-3 py-2 shadow-[#4f4f4f] hover:shadow-lg transition-all duration-300">
+        <div key={index} className="w-full rounded bg-[#222] px-3 py-2 border-[1px] border-[#494949]">
             <div className="w-full flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div className="flex justify-center items-center">
