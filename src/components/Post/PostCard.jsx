@@ -17,7 +17,7 @@ const PostCard = ({ post, index }) => {
   const userId = user?.id;
   useEffect(() => {
     if (post) {
-      setDataPost(post);
+      setDataPost(Array.isArray(post) ? post : [post]);
       sysnLikesStatus(dataPost);
     }
   }, []);
@@ -44,7 +44,7 @@ const PostCard = ({ post, index }) => {
         setDataPost((prevPosts) =>
           prevPosts.map((post) => {
             if (post._id === postId) {
-              alreadyLiked = post.likes.some((like) => {
+              const alreadyLiked = post.likes.some((like) => {
                 if (typeof like === "string") return like === userId.id;
                 if (typeof like === "object" && like._id)
                   return like._id === userId.id;
@@ -135,11 +135,11 @@ const PostCard = ({ post, index }) => {
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex justify-center items-center">
-            <img src={post?.author?.avatar} className="rounded-full w-8" />
+            <img src={dataPost?.author?.avatar} className="rounded-full w-8" />
           </div>
           <div className="flex flex-col gap-1">
             <div className="font-semibold text-white">
-              <div>{post?.author?.name}</div>
+              <div>{dataPost?.author?.name}</div>
               <div className="flex items-center gap-2">
                 <span className="opacity-80">2 giờ</span>
                 <i className="fa-solid fa-earth-americas"></i>
@@ -152,13 +152,16 @@ const PostCard = ({ post, index }) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2 mt-2">
-        {post.caption && <div className="text-[14px]">{post.caption}</div>}
+        {dataPost.caption && (
+          <div className="text-[14px]">{dataPost.caption}</div>
+        )}
         {mediaList?.length === 0 || <div className="mt-3">{renderMedia()}</div>}
       </div>
       <hr />
       <div className="w-full flex items-center mb-1 justify-around text-[15px]">
         <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
           <i
+            style={{ color: statusLike[post._id] ? "red" : "" }}
             className="fa-regular fa-heart w-4"
             onClick={() => handleLikePost(post._id)}
           ></i>
