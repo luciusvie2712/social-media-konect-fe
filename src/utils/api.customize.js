@@ -61,13 +61,13 @@ const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
 const sendFriendRequest = (requesterId, recipientId) => {
-    return axios.post(`/api/send-friend-request`, {requesterId, recipientId})
+    return axios.post(`/api/send-friend-request`, { requesterId, recipientId })
 }
 const rejectFriendRequest = (requesterId, recipientId) => {
-    return axios.post(`/api/reject-friend-request`, {requesterId, recipientId})
+    return axios.post(`/api/reject-friend-request`, { requesterId, recipientId })
 }
 const acceptFriendRequest = (requesterId, recipientId) => {
-    return axios.post(`/api/accept-friend-request`, {requesterId, recipientId})
+    return axios.post(`/api/accept-friend-request`, { requesterId, recipientId })
 }
 const getFriendRequest = (userId) => {
     return axios.get(`/api/get-accept-request?userId=${userId}`)
@@ -75,7 +75,9 @@ const getFriendRequest = (userId) => {
 const getListFriends = (id) => {
     return axios.get(`/api/get-listfriend?id=${id}`)
 }
-
+const LikePost = (userId, postId) => {
+    return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -93,5 +95,6 @@ export {
     rejectFriendRequest,
     getFriendRequest,
     acceptFriendRequest,
-    getListFriends
+    getListFriends,
+    LikePost
 }
