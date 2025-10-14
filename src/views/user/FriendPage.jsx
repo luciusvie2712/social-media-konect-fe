@@ -10,7 +10,7 @@ const FriendPage = () => {
   const { friends: friendRequest, loading: loadingRequest } = useFriendList("request", user?.id)
   const { friends: friendSuggestion, loading: loadingSuggestion } = useFriendList("suggestion", user?.id)
   const safeRequest = Array.isArray(friendRequest) ? friendRequest : [];
-  const safeSuggestion = Array.isArray(friendSuggestion) ? friendSuggestion : [];
+  const safeSuggestion = Array.isArray(friendSuggestion) ? friendSuggestion : []; 
 
   return (
     <div className="container">

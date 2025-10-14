@@ -51,16 +51,12 @@ const SideBar = () => {
           <i className="fa-solid fa-users"></i>
           <div className="option-title">Bạn bè</div>
         </NavLink>
-        <div className={`sidebar__option-item ${isFriendList ? "compact" : "full"}`}>
-          <i className="fa-solid fa-magnifying-glass"></i>
-          <div className="option-title">Tìm kiếm</div>
-        </div>
-        <div className={`sidebar__option-item ${isFriendList ? "compact" : "full"}`}>
-          <i className="fa-solid fa-bell"></i>
-          <div
-            className="option-title"
-            onClick={() => setOpenotification(true)}
-          >
+        <div 
+          onClick={() => setOpenotification(true)}
+          className={`sidebar__option-item ${isFriendList ? "compact" : "full"}`}
+        >
+          <i className="fa-regular fa-bell"></i>
+          <div className="option-title">
             Thông báo
           </div>
         </div>

@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 import { LikePost } from "../../utils/api.customize";
 
 const PostCard = ({ post, index }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [statusLike, setStatusLike] = useState({});
   const [dataPost, setDataPost] = useState([]);
+
+  console.log(dataPost?.author?.name)
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
     : post?.media?.url
@@ -135,11 +136,11 @@ const PostCard = ({ post, index }) => {
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex justify-center items-center">
-            <img src={dataPost?.author?.avatar} className="rounded-full w-8" />
+            <img src={post?.author?.avatar} className="rounded-full w-8" />
           </div>
           <div className="flex flex-col gap-1">
             <div className="font-semibold text-white">
-              <div>{dataPost?.author?.name}</div>
+              <div>{post?.author?.name}</div>
               <div className="flex items-center gap-2">
                 <span className="opacity-80">2 giờ</span>
                 <i className="fa-solid fa-earth-americas"></i>
@@ -152,8 +153,8 @@ const PostCard = ({ post, index }) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2 mt-2">
-        {dataPost.caption && (
-          <div className="text-[14px]">{dataPost.caption}</div>
+        {post.caption && (
+          <div className="text-[14px]">{post.caption}</div>
         )}
         {mediaList?.length === 0 || <div className="mt-3">{renderMedia()}</div>}
       </div>

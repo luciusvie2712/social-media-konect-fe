@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom"
 
 const NavBar = () => {
     return (
-        <div className="w-[100%] h-full flex flex-col items-center">
+        <div className="w-[100%] flex flex-col items-center">
             <div className="w-full text-[20px] font-medium">
                 <p>Bạn bè</p>
             </div>
