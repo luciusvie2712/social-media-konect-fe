@@ -43,6 +43,9 @@ const createPostAPI = (formData) => {
 const getPost = (id) => {
     return axios.get(`/api/get-post?id=${id}`)
 }
+const LikePost = (userId, postId) => {
+    return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -57,6 +60,7 @@ const sendMessage = (formData) => {
         }
     })
 }
+
 const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
@@ -75,9 +79,11 @@ const getFriendRequest = (userId) => {
 const getListFriends = (id) => {
     return axios.get(`/api/get-listfriend?id=${id}`)
 }
-const LikePost = (userId, postId) => {
-    return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)
+
+const getNotifications = (id) => {
+    return axios.get(`/api/get-notification-user?userId=${id}`)
 }
+
 export {
     createUserAPI,
     loginUserAPI,
@@ -96,5 +102,6 @@ export {
     getFriendRequest,
     acceptFriendRequest,
     getListFriends,
-    LikePost
+    LikePost,
+    getNotifications
 }

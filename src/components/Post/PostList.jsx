@@ -4,8 +4,6 @@ import { useGetPost } from "../../hook/useGetPost";
 
 const PostList = () => {
   const user = useSelector((state) => state.user.account);
-  console.log(user.id);
-
   const { posts, loading } = useGetPost(user.id);
 
   if (loading) return <p>Loading ...</p>;

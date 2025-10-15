@@ -8,7 +8,6 @@ const PostCard = ({ post, index }) => {
   const [statusLike, setStatusLike] = useState({});
   const [dataPost, setDataPost] = useState([]);
 
-  console.log(dataPost?.author?.name)
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
     : post?.media?.url
