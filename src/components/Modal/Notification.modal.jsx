@@ -1,33 +1,34 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getNotifications } from "../../utils/api.customize";
+import { getNotifications, maskAsReadAPI } from "../../utils/api.customize";
 
 const NotificationModal = (props) => {
   const { show, setShow } = props;
   const user = useSelector((state) => state.user.account)
   const [ notifications, setNotification ] = useState([])
   const [ error, setError ] = useState(null)
+  const [showAll, setShowAll] = useState(false);
 
-  useEffect(() => {
-    if (!show || !user?.id) return 
-    const fetchNotifications = async () => {
-      setError(null)
-      try {
-        const response = await getNotifications(user?.id)
-        console.log(">> Notifications: ",response)
-        if (response?.Ec === 0) {
-          setNotification(response?.data || [])
-        } else {
-          console.warn(response?.Mes)
-        }
-      } catch (error) {
-        console.error("Unable to load notification", error)
-        setError("Unable to load notification")
+  const fetchNotifications = async (userId) => {
+    setError(null)
+    try {
+      const response = await getNotifications(userId)
+      console.log(">> Notifications: ",response)
+      if (response?.Ec === 0) {
+        setNotification(response?.data || [])
+      } else {
+        console.warn(response?.Mes)
       }
+    } catch (error) {
+      console.error("Unable to load notification", error)
+      setError("Unable to load notification")
     }
-
-    fetchNotifications()
+  }
+  useEffect(() => {
+    if (user?.id && show === true) {
+      fetchNotifications(user?.id)
+    }
   }, [show, user?.id])
 
   const timeAgo = (createdAt) => {
@@ -42,6 +43,16 @@ const NotificationModal = (props) => {
     if (diff < 31536000) return `${Math.floor(diff / 2592000)} tháng trước`;
     return `${Math.floor(diff / 31536000)} năm trước`;
   };
+
+  const maskAsRead = async (notiId) => {
+    if (!notiId) {
+      return console.warn("Error get notiId")
+    } 
+    let res = await maskAsReadAPI(notiId)
+    if (res?.Ec === 0) {
+      fetchNotifications(user.id)
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -75,21 +86,54 @@ const NotificationModal = (props) => {
               {error ? (
                 <div className="text-center py-6 text-red-400">{error}</div>
               ) : notifications.length === 0 ? (
-                <div className="">Không có thông báo</div>
-              ) : notifications.map((n, i) => (
-                <div
-                  key={n._id || i}
-                  className="flex px-2 py-2 hover:bg-[#686868] cursor-pointer justify-between items-center h-[50px]" 
-                >
-                  <div className="flex items-center gap-2">
-                    <img src={n.senderId.avatar} className="" />
-                    <div className="">{n.senderId.name} đã {n.type} bài viết của bạn</div>
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    {timeAgo(n?.createdAt)}
-                  </div>
-                </div>
-              ))}
+                <div className="text-center py-6 text-gray-400">Không có thông báo</div>
+              ) : (
+                <>
+                  {notifications
+                    .slice(0, showAll ? notifications.length : 9)
+                    .map((n, i) => (
+                      <div
+                        key={n._id || i}
+                        className={`flex px-2 py-2 hover:bg-[#2e2e2e] cursor-pointer justify-between items-center transition ${n.isRead ? "opacity-50" : "opacity-100"}`}
+                        onClick={() => maskAsRead(n._id)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={n.senderId?.avatar || "/default-avatar.png"}
+                            alt="avatar"
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                          <div className="flex flex-col text-sm">
+                            <span>
+                              <span className="font-semibold">{n.senderId?.name}</span>{" "}
+                              {n.type === "like"
+                                ? "đã thích bài viết của bạn"
+                                : n.type === "comment"
+                                ? "đã bình luận bài viết của bạn"
+                                : n.type === "friend_request"
+                                ? "đã gửi yêu cầu kết bạn"
+                                : ""}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {timeAgo(n?.createdAt)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                  {!showAll && notifications.length > 9 && (
+                    <div className="flex justify-center mt-3">
+                      <button
+                        onClick={() => setShowAll(true)}
+                        className="text-sm text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
+                      >
+                        Xem tất cả thông báo
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </motion.div>
         </motion.div>

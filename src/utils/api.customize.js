@@ -83,6 +83,9 @@ const getListFriends = (id) => {
 const getNotifications = (id) => {
     return axios.get(`/api/get-notification-user?userId=${id}`)
 }
+const maskAsReadAPI = (notiId) => {
+    return axios.post(`/api/markAsRead-notification?notiId=${notiId}`)
+}
 
 export {
     createUserAPI,
@@ -103,5 +106,6 @@ export {
     acceptFriendRequest,
     getListFriends,
     LikePost,
-    getNotifications
+    getNotifications,
+    maskAsReadAPI
 }
