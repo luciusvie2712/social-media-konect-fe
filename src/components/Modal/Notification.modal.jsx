@@ -8,7 +8,22 @@ const NotificationModal = (props) => {
   const user = useSelector((state) => state.user.account)
   const [ notifications, setNotification ] = useState([])
   const [ error, setError ] = useState(null)
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(false)
+  useEffect(() => {
+    if (!show) return;
+    const close = (e) => {
+      if (!e.target.closest(".notification-modal")) setShow(false);
+    };
+    const timer = setTimeout(() => {
+      document.addEventListener("mousedown", close);
+    }, 0);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", close);
+    };
+  }, [show]);
+
 
   const fetchNotifications = async (userId) => {
     setError(null)
@@ -58,87 +73,80 @@ const NotificationModal = (props) => {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-start pt-20 z-50"
-          onClick={() => setShow(false)}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -10 }}
+          transition={{ duration: 0.25 }}
+          className="notification-modal fixed left-[16%] h-[95vh] rounded bg-[#222] border-[1px] border-[#494949] w-[380px] text-white flex flex-col z-50"
+          onClick={(e) => e.stopPropagation()}
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#222] border border-[#494949] rounded-2xl shadow-lg w-[380px] max-h-[70vh] overflow-y-auto text-white p-4"
-          >
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-semibold">Thông báo</h2>
-              <button
-                onClick={() => setShow(false)}
-                className="text-gray-400 hover:text-gray-200 transition"
-              >
-                <i className="fa-solid fa-xmark text-xl"></i>
-              </button>
-            </div>
-            <div className="flex flex-col divide-y divide-[#494949] overflow-auto">
-              {error ? (
-                <div className="text-center py-6 text-red-400">{error}</div>
-              ) : notifications.length === 0 ? (
-                <div className="text-center py-6 text-gray-400">Không có thông báo</div>
-              ) : (
-                <>
-                  {notifications
-                    .slice(0, showAll ? notifications.length : 9)
-                    .map((n, i) => (
-                      <div
-                        key={n._id || i}
-                        className={`flex px-2 py-2 hover:bg-[#2e2e2e] cursor-pointer justify-between items-center transition ${n.isRead ? "opacity-50" : "opacity-100"}`}
-                        onClick={() => maskAsRead(n._id)}
-                      >
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={n.senderId?.avatar || "/default-avatar.png"}
-                            alt="avatar"
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                          <div className="flex flex-col text-sm">
-                            <span>
-                              <span className="font-semibold">{n.senderId?.name}</span>{" "}
-                              {n.type === "like"
-                                ? "đã thích bài viết của bạn"
-                                : n.type === "comment"
-                                ? "đã bình luận bài viết của bạn"
-                                : n.type === "friend_request"
-                                ? "đã gửi yêu cầu kết bạn"
-                                : ""}
-                            </span>
-                            <span className="text-xs text-gray-400">
-                              {timeAgo(n?.createdAt)}
-                            </span>
-                          </div>
+          <div className="flex justify-between items-center p-4 border-b border-[#494949]">
+            <h2 className="text-lg font-semibold">Thông báo</h2>
+            <button
+              onClick={() => setShow(false)}
+              className="text-gray-400 hover:text-gray-200 transition"
+            >
+              <i className="fa-solid fa-xmark text-xl"></i>
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto divide-y divide-[#494949] p-2">
+            {error ? (
+              <div className="text-center py-6 text-red-400">{error}</div>
+            ) : notifications.length === 0 ? (
+              <div className="text-center py-6 text-gray-400">Không có thông báo</div>
+            ) : (
+              <>
+                {notifications
+                  .slice(0, showAll ? notifications.length : 9)
+                  .map((n, i) => (
+                    <div
+                      key={n._id || i}
+                      className={`flex px-2 py-2 hover:bg-[#2e2e2e] cursor-pointer justify-between items-center transition ${n.isRead ? "opacity-50" : "opacity-100"}`}
+                      onClick={() => maskAsRead(n._id)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={n.senderId?.avatar || "/default-avatar.png"}
+                          alt="avatar"
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                        <div className="flex flex-col text-sm">
+                          <span>
+                            <span className="font-semibold">{n.senderId?.name}</span>{" "}
+                            {n.type === "like"
+                              ? "đã thích bài viết của bạn"
+                              : n.type === "comment"
+                              ? "đã bình luận bài viết của bạn"
+                              : n.type === "friend_request"
+                              ? "đã gửi yêu cầu kết bạn"
+                              : ""}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {timeAgo(n?.createdAt)}
+                          </span>
                         </div>
                       </div>
-                    ))}
-
-                  {!showAll && notifications.length > 9 && (
-                    <div className="flex justify-center mt-3">
-                      <button
-                        onClick={() => setShowAll(true)}
-                        className="text-sm text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
-                      >
-                        Xem tất cả thông báo
-                      </button>
                     </div>
-                  )}
-                </>
-              )}
-            </div>
-          </motion.div>
+                  ))}
+
+                {!showAll && notifications.length > 9 && (
+                  <div className="flex justify-center mt-3">
+                    <button
+                      onClick={() => setShowAll(true)}
+                      className="text-sm text-blue-400 hover:text-blue-300 underline underline-offset-2 transition"
+                    >
+                      Xem tất cả thông báo
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
+
   );
 };
 
