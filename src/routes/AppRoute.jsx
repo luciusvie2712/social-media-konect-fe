@@ -19,7 +19,7 @@ const AppRoute = () => {
       <Route element={<AuthLayout />}>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/forgot-password" element={<ForgotPage />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/api/reset-password/:token" element={<ResetPassword />} />
         <Route path="/auth/google/callback" element={<GoogleCallback />} />
       </Route>
 
