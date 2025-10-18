@@ -4,7 +4,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 import AuthPage from "../views/auth/AuthPage";
 import ForgotPage from "../views/auth/ForgotPage";
 import ResetPassword from "../views/auth/ResetPassword";
-import DisplayLayout from "../components/layout/DisplayLayout";
+import UserLayout from "../components/layout/UserLayout";
 import HomePage from "../views/user/HomePage";
 import ProfilePage from "../views/user/ProfilePage";
 import GoogleCallback from "../components/Auth/GoogleCallback";
@@ -28,7 +28,7 @@ const AppRoute = () => {
         path="/*"
         element={
           <PrivitaRoute>
-            <DisplayLayout />
+            <UserLayout />
           </PrivitaRoute>
         }
       >

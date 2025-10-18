@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router-dom"
 import SideBar from "./SideBar"
 
 
-const DisplayLayout = () => {
+const UserLayout = () => {
     const location = useLocation();
     const isFriendList = /^\/friends\/(request|suggestion|all)/.test(location.pathname);
 
@@ -16,4 +16,4 @@ const DisplayLayout = () => {
     )
 }
 
-export default DisplayLayout
+export default UserLayout
