@@ -86,7 +86,9 @@ const getNotifications = (id) => {
 const maskAsReadAPI = (notiId) => {
     return axios.post(`/api/markAsRead-notification?notiId=${notiId}`)
 }
-
+const getAllUserTable = (limit, page) => {
+    return axios.post(`/api/get-User-table?limit=${limit}&&page=${page}`)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -107,5 +109,6 @@ export {
     getListFriends,
     LikePost,
     getNotifications,
-    maskAsReadAPI
+    maskAsReadAPI,
+    getAllUserTable
 }
