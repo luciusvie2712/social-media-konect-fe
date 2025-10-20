@@ -8,7 +8,7 @@ const ManageUser = () => {
   const [currentPages, setCurrentPages] = useState(1);
   const [listUserTable, setListUserTable] = useState();
   const [totalPages, setTotalpages] = useState(0);
-
+  const [showModal, setshowModal] = useState(false);
   useEffect(() => {
     handleGetUserTable();
   }, [currentPages]);
@@ -25,6 +25,7 @@ const ManageUser = () => {
       toast.error(response?.Mes);
     }
   };
+  const handleSetShowModal = () => setshowModal((prev) => !prev);
   return (
     <>
       <div className="manage-user-container">
@@ -34,6 +35,8 @@ const ManageUser = () => {
           setCurrentPages={setCurrentPages}
           totalPages={totalPages}
           handleGetUserTable={handleGetUserTable}
+          setShowModal={handleSetShowModal}
+          showModal={showModal}
         />
       </div>
     </>

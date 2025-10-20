@@ -1,5 +1,17 @@
-import { Divider, Space, Table, Tag } from "antd";
-import Title from "antd/es/skeleton/Title";
+import {
+  Alert,
+  Button,
+  Divider,
+  message,
+  Modal,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import { toast } from "react-toastify";
+import "./ManageUser.scss";
+import { deleteUserTable } from "../../../utils/api.customize";
+import { useState } from "react";
 const TableUser = (props) => {
   const {
     listUserTable,
@@ -7,8 +19,10 @@ const TableUser = (props) => {
     setCurrentPages,
     totalPages,
     handleGetUserTable,
+    showModal,
+    setShowModal,
   } = props;
-  console.log(totalPages);
+  const [selectedUser, setSelectedUser] = useState(null);
   const columns = [
     {
       title: "Name",
@@ -37,10 +51,13 @@ const TableUser = (props) => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>
-            Invite{" "}
+          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>Edit </a>
+          <a
+            style={{ color: "red", fontSize: "15px" }}
+            onClick={() => handleDeleteUser(record)}
+          >
+            Delete
           </a>
-          <a style={{ color: "red", fontSize: "15px" }}>Delete</a>
         </Space>
       ),
     },
@@ -50,7 +67,30 @@ const TableUser = (props) => {
     key: item._id || index,
     ...item,
   }));
-
+  const handleDeleteUser = async (user) => {
+    setShowModal();
+    setSelectedUser(user);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      let res = await deleteUserTable(selectedUser._id);
+      if (res?.EC === 0) {
+        toast.success(`user delete ${selectedUser.name}`);
+        setShowModal();
+        setSelectedUser(null);
+        handleGetUserTable();
+      } else {
+        toast.error(res?.Mes);
+      }
+    } catch (e) {
+      toast.error("Delete Error");
+    }
+  };
+  const handleCancelDelete = () => {
+    setShowModal();
+    setSelectedUser(null);
+    toast.info("Cancel action Delete");
+  };
   return (
     <>
       <h2 style={{ textAlign: "center" }}>TABLE USER</h2>
@@ -60,11 +100,42 @@ const TableUser = (props) => {
         size="larger"
         pagination={{
           current: currentPages,
-          pageSize: 10,
-          total: totalPages,
+          pageSize: 6,
+          position: ["bottomCenter"],
+          total: totalPages * 6,
           onChange: (page) => setCurrentPages(page),
         }}
       />
+      {showModal && (
+        <div className="alert-warning">
+          <Alert
+            className="alert-d"
+            message="Warning"
+            description="This is a warning notice about copywriting."
+            type="warning"
+            showIcon
+            action={
+              <Space direction="vertical">
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={handleConfirmDelete}
+                >
+                  Accept
+                </Button>
+                <Button
+                  size="small"
+                  danger
+                  ghost
+                  onClick={() => handleCancelDelete()}
+                >
+                  Decline
+                </Button>
+              </Space>
+            }
+          />
+        </div>
+      )}
     </>
   );
 };

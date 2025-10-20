@@ -89,6 +89,9 @@ const maskAsReadAPI = (notiId) => {
 const getAllUserTable = (limit, page) => {
     return axios.get(`/api/get-User-table?limit=${limit}&&page=${page}`)
 }
+const deleteUserTable = (id) => {
+    return axios.delete(`/api/DeleteUser?id=${id}`)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -110,5 +113,6 @@ export {
     LikePost,
     getNotifications,
     maskAsReadAPI,
-    getAllUserTable
+    getAllUserTable,
+    deleteUserTable
 }

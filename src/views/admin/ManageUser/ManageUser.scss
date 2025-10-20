@@ -1,4 +1,18 @@
 .manage-user-container {
     background-color: white;
     height: 100vh;
+
+}
+
+.alert-warning {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+
+    .alert-d {
+        display: flex;
+        gap: 10px;
+    }
 }
