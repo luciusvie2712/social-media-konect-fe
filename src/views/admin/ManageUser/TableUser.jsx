@@ -1,6 +1,28 @@
-import { Divider, Space, Table, Tag } from "antd";
-import Title from "antd/es/skeleton/Title";
+import {
+  Alert,
+  Button,
+  Divider,
+  message,
+  Modal,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import { toast } from "react-toastify";
+import "./ManageUser.scss";
+import { deleteUserTable } from "../../../utils/api.customize";
+import { useState } from "react";
 const TableUser = (props) => {
+  const {
+    listUserTable,
+    currentPages,
+    setCurrentPages,
+    totalPages,
+    handleGetUserTable,
+    showModal,
+    setShowModal,
+  } = props;
+  const [selectedUser, setSelectedUser] = useState(null);
   const columns = [
     {
       title: "Name",
@@ -9,94 +31,111 @@ const TableUser = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Email",
+      dataIndex: "email",
+      key: "Email",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: "Account status",
+      dataIndex: "accountStatus",
+      key: "accountStatus",
     },
+
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite </a>
-          <a>Delete</a>
+          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>Edit </a>
+          <a
+            style={{ color: "red", fontSize: "15px" }}
+            onClick={() => handleDeleteUser(record)}
+          >
+            Delete
+          </a>
         </Space>
       ),
     },
   ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
+  //tailwind 2 cai the a cho dep dum`
+  const dataWithKey = listUserTable?.map((item, index) => ({
+    key: item._id || index,
+    ...item,
+  }));
+  const handleDeleteUser = async (user) => {
+    setShowModal();
+    setSelectedUser(user);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      let res = await deleteUserTable(selectedUser._id);
+      if (res?.EC === 0) {
+        toast.success(`user delete ${selectedUser.name}`);
+        setShowModal();
+        setSelectedUser(null);
+        handleGetUserTable();
+      } else {
+        toast.error(res?.Mes);
+      }
+    } catch (e) {
+      toast.error("Delete Error");
+    }
+  };
+  const handleCancelDelete = () => {
+    setShowModal();
+    setSelectedUser(null);
+    toast.info("Cancel action Delete");
+  };
   return (
     <>
       <h2 style={{ textAlign: "center" }}>TABLE USER</h2>
-      <Table columns={columns} dataSource={data} size="larger" />
+      <Table
+        columns={columns}
+        dataSource={dataWithKey}
+        size="larger"
+        pagination={{
+          current: currentPages,
+          pageSize: 6,
+          position: ["bottomCenter"],
+          total: totalPages * 6,
+          onChange: (page) => setCurrentPages(page),
+        }}
+      />
+      {showModal && (
+        <div className="alert-warning">
+          <Alert
+            className="alert-d"
+            message="Warning"
+            description="This is a warning notice about copywriting."
+            type="warning"
+            showIcon
+            action={
+              <Space direction="vertical">
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={handleConfirmDelete}
+                >
+                  Accept
+                </Button>
+                <Button
+                  size="small"
+                  danger
+                  ghost
+                  onClick={() => handleCancelDelete()}
+                >
+                  Decline
+                </Button>
+              </Space>
+            }
+          />
+        </div>
+      )}
     </>
   );
 };
