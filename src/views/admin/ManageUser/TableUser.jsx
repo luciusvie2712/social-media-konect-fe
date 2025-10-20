@@ -1,6 +1,14 @@
 import { Divider, Space, Table, Tag } from "antd";
 import Title from "antd/es/skeleton/Title";
 const TableUser = (props) => {
+  const {
+    listUserTable,
+    currentPages,
+    setCurrentPages,
+    totalPages,
+    handleGetUserTable,
+  } = props;
+  console.log(totalPages);
   const columns = [
     {
       title: "Name",
@@ -9,94 +17,54 @@ const TableUser = (props) => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Email",
+      dataIndex: "email",
+      key: "Email",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
-      title: "Tags",
-      key: "tags",
-      dataIndex: "tags",
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: "Account status",
+      dataIndex: "accountStatus",
+      key: "accountStatus",
     },
+
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite </a>
-          <a>Delete</a>
+          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>
+            Invite{" "}
+          </a>
+          <a style={{ color: "red", fontSize: "15px" }}>Delete</a>
         </Space>
       ),
     },
   ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
+  //tailwind 2 cai the a cho dep dum`
+  const dataWithKey = listUserTable?.map((item, index) => ({
+    key: item._id || index,
+    ...item,
+  }));
+
   return (
     <>
       <h2 style={{ textAlign: "center" }}>TABLE USER</h2>
-      <Table columns={columns} dataSource={data} size="larger" />
+      <Table
+        columns={columns}
+        dataSource={dataWithKey}
+        size="larger"
+        pagination={{
+          current: currentPages,
+          pageSize: 10,
+          total: totalPages,
+          onChange: (page) => setCurrentPages(page),
+        }}
+      />
     </>
   );
 };
