@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence, inView } from "framer-motion";
 import _ from "lodash";
 import { useSelector } from "react-redux";
 import { LikePost } from "../../utils/api.customize";
+import avatar from "../../assets/download.png"
 
 const PostCard = ({ post, index }) => {
   const [statusLike, setStatusLike] = useState({});
+  const [ openComment, setOpenComment ] = useState(false)
   const [dataPost, setDataPost] = useState([]);
-
+  console.log(post)
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
     : post?.media?.url
@@ -15,13 +16,16 @@ const PostCard = ({ post, index }) => {
     : [];
   const user = useSelector((state) => state.user.account);
   const userId = user?.id;
+
   useEffect(() => {
     if (post) {
-      setDataPost(Array.isArray(post) ? post : [post]);
-      sysnLikesStatus(dataPost);
+      const postArray = Array.isArray(post) ? post : [post];
+      setDataPost(postArray);
+      syncLikesStatus(postArray);
     }
-  }, []);
-  const sysnLikesStatus = (posts) => {
+  }, [post, userId]);
+
+  const syncLikesStatus = (posts) => {
     const status = {};
     posts.forEach((item) => {
       status[item._id] = item.likes.some((like) => {
@@ -45,20 +49,20 @@ const PostCard = ({ post, index }) => {
           prevPosts.map((post) => {
             if (post._id === postId) {
               const alreadyLiked = post.likes.some((like) => {
-                if (typeof like === "string") return like === userId.id;
+                if (typeof like === "string") return like === userId;
                 if (typeof like === "object" && like._id)
-                  return like._id === userId.id;
+                  return like._id === userId;
                 return false;
               });
 
               const updateLikes = alreadyLiked
                 ? post.likes.filter((like) => {
-                    if (typeof like === "string") return like !== userId.id;
+                    if (typeof like === "string") return like !== userId;
                     if (typeof like === "object" && like._id)
-                      return like._id !== userId.id;
+                      return like._id !== userId;
                     return true;
                   })
-                : [...post.likes, userId.id];
+                : [...post.likes, userId];
               return { ...post, likes: updateLikes };
             }
             return post;
@@ -81,19 +85,19 @@ const PostCard = ({ post, index }) => {
             className="w-full h-full object-cover"
             controls
           />
-          <div className="absolute inset-0 flex items-center justify-center">
+          {/* <div className="absolute inset-0 flex items-center justify-center">
             <div className="rounded-full">
               <i className="fa-solid fa-play text-white text-xl hover:text-orange-300"></i>
             </div>
-          </div>
+          </div> */}
         </div>
       );
     }
 
-    if (mediaList.lenght === 1) {
+    if (mediaList.length === 1) {
       return (
-        <div className="w-full rounded-xl overflow-hidden aspect-[3/4]">
-          <img src={mediaList[0].url} className="w-full h-full object-cover" />
+        <div className="w-full overflow-hidden flex">
+          <img src={mediaList[0].url} className="rounded object-contain max-w-full max-h-[600px]" />
         </div>
       );
     }
@@ -127,6 +131,14 @@ const PostCard = ({ post, index }) => {
     );
   };
 
+  const handleOpenComment = () => {
+    if (openComment) {
+      setOpenComment(false)
+    } else {
+      setOpenComment(true)
+    }
+  }
+
   return (
     <div
       key={index}
@@ -135,7 +147,7 @@ const PostCard = ({ post, index }) => {
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex justify-center items-center">
-            <img src={post?.author?.avatar} className="rounded-full w-8" />
+            <img src={post?.author?.avatar || avatar} className="rounded-full w-10" />
           </div>
           <div className="flex flex-col gap-1">
             <div className="font-semibold text-white">
@@ -151,7 +163,7 @@ const PostCard = ({ post, index }) => {
           <i className="fa-solid fa-ellipsis w-[24px] text-[20px]"></i>
         </div>
       </div>
-      <div className="w-full flex flex-col gap-2 mt-2">
+      <div className="w-full flex flex-col gap-2 mt-2 !pl-[52px]">
         {post.caption && (
           <div className="text-[14px]">{post.caption}</div>
         )}
@@ -159,23 +171,87 @@ const PostCard = ({ post, index }) => {
       </div>
       <hr />
       <div className="w-full flex items-center mb-1 justify-around text-[15px]">
-        <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
+        <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded" onClick={() => handleLikePost(post._id)}>
           <i
-            style={{ color: statusLike[post._id] ? "red" : "" }}
-            className="fa-regular fa-heart w-4"
-            onClick={() => handleLikePost(post._id)}
+            style={{ color: statusLike[post._id] ? "#b15426" : "" }}
+            className={`fa-${statusLike[post._id] ? "solid" : "regular"} fa-heart w-4 transition-all duration-150`}
           ></i>
-          <span>Like</span>
+          <span>{post.likes?.length || 0}</span>
         </div>
-        <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
+        <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded" onClick={handleOpenComment}>
           <i className="fa-regular fa-comment w-4"></i>
-          <span>Bình luận</span>
+          <span>{post.comments?.length || 0} bình luận</span>
         </div>
         <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
           <i className="fa-solid fa-share w-4"></i>
           <span>Chia sẻ</span>
         </div>
       </div>
+      {openComment && (
+        <div className="w-full flex flex-col items-center">
+          <div className="w-full bg-[#494949] h-[1px] my-2"></div>
+          <div className="w-full flex items-center gap-2">
+            <input 
+              type="text" name="comment" id="comment" 
+              className="bg-[#494949] py-2 rounded w-[85%] focus:bg-[#222] focus:outline-1 outline-[#b15426] px-2" 
+              placeholder="Viết bình luận của bạn ..."
+            />
+            <div className="w-[15%] flex justify-center bg-[#b15426] py-2 rounded cursor-pointer hover:bg-[#89421e] text-white">
+              Đăng
+            </div>
+          </div>
+          <div className="w-full bg-[#494949] h-[1px] my-2"></div>
+          <div className="w-full flex flex-col gap-2 mt-2 mb-3 items-center">
+            <div className="w-full flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img src={avatar} className="w-11 rounded-full" />
+                <div className="flex flex-col">
+                  <div className="flex gap-1">
+                    <span className="font-medium text-[#b15426]">Nguyen Van Tu Vinh</span>
+                    <span className="font-light">Oh shibalomaaaa</span>
+                  </div>
+                  <div className="flex gap-2 opacity-45">
+                    <button>
+                      Thích
+                    </button>
+                    <button>
+                      Trả lời
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="px-2 cursor-pointer">
+                <i className="fa-solid fa-ellipsis"></i>
+              </div>
+            </div>
+            <div className="w-full flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <img src={avatar} className="w-11 rounded-full" />
+                <div className="flex flex-col">
+                  <div className="flex gap-1">
+                    <span className="font-medium text-[#b15426]">Nguyen Van Tu Vinh</span>
+                    <span className="font-light">Oh shibalomaaaa</span>
+                  </div>
+                  <div className="flex gap-2 opacity-45">
+                    <button>
+                      Thích
+                    </button>
+                    <button>
+                      Trả lời
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="px-2 cursor-pointer">
+                <i className="fa-solid fa-ellipsis"></i>
+              </div>
+            </div>
+          </div>
+          <div className="w-full flex items-center justify-center underline cursor-pointer   opacity-60 text-[16px] hover:opacity-80">
+            Xem tất cả bình luận
+          </div>
+        </div>
+      )}
     </div>
   );
 };

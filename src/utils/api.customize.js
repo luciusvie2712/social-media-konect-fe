@@ -46,6 +46,9 @@ const getPost = (id) => {
 const LikePost = (userId, postId) => {
     return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)
 }
+const createComment = (dataComment) => {
+    return axios.post('/api/Create-comment', dataComment)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
