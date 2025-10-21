@@ -147,11 +147,11 @@ const PostCard = ({ post, index }) => {
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex justify-center items-center">
-            <img src={post?.author?.avatar || avatar} className="rounded-full w-10" />
+            <img src={dataPost[0]?.author?.avatar || avatar} className="rounded-full w-10" />
           </div>
           <div className="flex flex-col gap-1">
             <div className="font-semibold text-white">
-              <div>{post?.author?.name}</div>
+              <div>{dataPost[0]?.author?.name}</div>
               <div className="flex items-center gap-2">
                 <span className="opacity-80">2 giờ</span>
                 <i className="fa-solid fa-earth-americas"></i>
@@ -164,7 +164,7 @@ const PostCard = ({ post, index }) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2 mt-2 !pl-[52px]">
-        {post.caption && (
+        {dataPost[0]?.caption && (
           <div className="text-[14px]">{post.caption}</div>
         )}
         {mediaList?.length === 0 || <div className="mt-3">{renderMedia()}</div>}
@@ -176,11 +176,11 @@ const PostCard = ({ post, index }) => {
             style={{ color: statusLike[post._id] ? "#b15426" : "" }}
             className={`fa-${statusLike[post._id] ? "solid" : "regular"} fa-heart w-4 transition-all duration-150`}
           ></i>
-          <span>{post.likes?.length || 0}</span>
+          <span>{dataPost[0]?.likes?.length || 0}</span>
         </div>
         <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded" onClick={handleOpenComment}>
           <i className="fa-regular fa-comment w-4"></i>
-          <span>{post.comments?.length || 0} bình luận</span>
+          <span>{dataPost[0]?.comments?.length || 0} bình luận</span>
         </div>
         <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
           <i className="fa-solid fa-share w-4"></i>
