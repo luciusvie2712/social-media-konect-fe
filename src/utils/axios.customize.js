@@ -1,15 +1,18 @@
 import axios from 'axios'
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
+import store from '../store/ReduxStore'
+import actiontypes from '../store/Action/ActionTypes';
 const instance = axios.create({
     baseURL: 'http://localhost:8080/'
 });
 
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
+    const state = store.getState();
+    const accessToken = state.user?.account?.accessToken;
+    if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
 }, function (error) {
@@ -24,29 +27,46 @@ instance.interceptors.response.use(function (response) {
 }, async function as(error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
-    if (error.status === 401) {
-        const refreshToken = localStorage.getItem('refreshToken')
-        if (refreshToken) {
-            try {
-                const res = await axios.post('/refresh-token', {}, {
-                    headers: {
-                        'Authorization': `Bearer ${refreshToken}`,
+    const state = store.getState();
+    const refreshToken = state.user?.account?.refreshToken;
+    if (error.status === 401 && refreshToken && !originalRequest._retry) {
+        originalRequest._retry = true
+        try {
+            const res = await axios.post('/refresh-token', {}, {
+                headers: {
+                    'Authorization': `Bearer ${refreshToken}`,
+                }
+            });
+            if (res?.data?.EC === 0) {
+                const newAccessToken = res.data.accessToken;
+                const newRefreshToken = res.data.newRefreshToken;
+
+                store.dispatch({
+                    type: "USER_UPDATE_TOKEN",
+                    payload: {
+                        accessToken: newAccessToken,
+                        refreshToken: newRefreshToken,
                     }
-                });
-                localStorage.setItem("token", res.accessToken);
-                error.config.headers['Authorization'] = `Bearer ${res.accessToken}`;
-                return axios(error.config);
-            } catch (e) {
-                console.log(e)
-                toast.error("Token expired. Please login again.");
-                window.location.href = '/login';
+                })
+                originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                return instance(originalRequest);
+            } else {
+                toast.error("Session expired. Please login again.");
+                store.dispatch({ type: actiontypes.USER_LOGOUT });
+                window.location.href = "/login";
             }
-        } else {
-            toast.error("No refresh token available. Please login again.");
+        } catch (e) {
+            console.log(e)
+            toast.error("Token expired. Please login again.");
+            store.dispatch({ type: actiontypes.USER_LOGOUT });
             window.location.href = '/login';
         }
     }
-
+    if (error.response?.status === 401 && !refreshToken) {
+        toast.error('No refresh token available. Please login again.');
+        store.dispatch({ type: actiontypes.USER_LOGOUT });
+        window.location.href = '/login';
+    }
     let errorMessage = ''
     switch (error.status) {
         case 400:

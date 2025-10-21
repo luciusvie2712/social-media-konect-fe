@@ -3,12 +3,16 @@ import "./ManageUser.scss";
 import { useEffect, useState } from "react";
 import { getAllUserTable } from "../../../utils/api.customize";
 import { toast } from "react-toastify";
+import ModalEditUser from "./ModalEditUser";
+
 const ManageUser = () => {
   let limit = 6;
   const [currentPages, setCurrentPages] = useState(1);
   const [listUserTable, setListUserTable] = useState();
   const [totalPages, setTotalpages] = useState(0);
   const [showModal, setshowModal] = useState(false);
+  const [dataUserEdit, setDataUserEdit] = useState();
+  const [showModalEdit, setShowModalEdit] = useState(false);
   useEffect(() => {
     handleGetUserTable();
   }, [currentPages]);
@@ -26,6 +30,13 @@ const ManageUser = () => {
     }
   };
   const handleSetShowModal = () => setshowModal((prev) => !prev);
+  const handleEditUser = (data) => {
+    setShowModalEdit(true);
+    if (data) {
+      setDataUserEdit(data);
+    }
+  };
+
   return (
     <>
       <div className="manage-user-container">
@@ -37,6 +48,13 @@ const ManageUser = () => {
           handleGetUserTable={handleGetUserTable}
           setShowModal={handleSetShowModal}
           showModal={showModal}
+          handleEditUser={handleEditUser}
+        />
+        <ModalEditUser
+          handleGetUserTable={handleGetUserTable}
+          setShow={setShowModalEdit}
+          show={showModalEdit}
+          dataUserEdit={dataUserEdit}
         />
       </div>
     </>

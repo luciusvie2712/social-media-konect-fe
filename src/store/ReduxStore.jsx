@@ -19,3 +19,4 @@ const store = createStore(
 );
 let persistor = persistStore(store);
 export { store, persistor };
+export default store;

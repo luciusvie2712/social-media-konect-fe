@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     phoneNumber: "",
     id: "",
     accessToken: "",
+    refreshToken: "",
   },
   isauthentic: false,
 };
@@ -23,6 +24,7 @@ const UserReducer = (state = INITIAL_STATE, action) => {
         ...state,
         account: {
           accessToken: action?.data?.payloadToken?.accessToken,
+          refreshToken: action?.data?.payloadToken?.refreshToken,
           email: action?.data?.data?.email,
           avatar: action?.data?.data?.avatar,
           roleId: action?.data?.data?.roleId,

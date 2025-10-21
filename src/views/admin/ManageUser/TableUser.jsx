@@ -21,6 +21,7 @@ const TableUser = (props) => {
     handleGetUserTable,
     showModal,
     setShowModal,
+    handleEditUser,
   } = props;
   const [selectedUser, setSelectedUser] = useState(null);
   const columns = [
@@ -45,13 +46,22 @@ const TableUser = (props) => {
       dataIndex: "accountStatus",
       key: "accountStatus",
     },
-
+    {
+      title: "Role",
+      dataIndex: "roleId",
+      key: "roleId",
+    },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>Edit </a>
+          <a
+            style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}
+            onClick={() => handleEditUser(record)}
+          >
+            Edit{" "}
+          </a>
           <a
             style={{ color: "red", fontSize: "15px" }}
             onClick={() => handleDeleteUser(record)}
