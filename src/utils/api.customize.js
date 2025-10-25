@@ -49,6 +49,12 @@ const LikePost = (userId, postId) => {
 const createComment = (dataComment) => {
     return axios.post('/api/Create-comment', dataComment)
 }
+const getComment = (postId) => {
+    return axios.get(`/api/get-comment?postId=${postId}`)
+}
+const deleteComment = (commentId, userId) => {
+    return axios.delete(`/api/delete-comment?commentId=${commentId}&&userId=${userId}`)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -117,5 +123,8 @@ export {
     getNotifications,
     maskAsReadAPI,
     getAllUserTable,
-    deleteUserTable
+    deleteUserTable,
+    createComment,
+    getComment,
+    deleteComment
 }
