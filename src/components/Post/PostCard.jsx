@@ -96,9 +96,9 @@ const PostCard = ({ post, index }) => {
       return (
         <div className="w-full overflow-hidden flex">
           <img
-            src={mediaList[0].url}
-            className="rounded object-contain max-w-full max-h-[600px]"
-          />
+              src={mediaList[0].url}
+              className="rounded object-contain max-w-full max-h-[600px]"
+            />
         </div>
       );
     }
@@ -144,14 +144,17 @@ const PostCard = ({ post, index }) => {
     if (openComment) fetchComments(post._id)
   }, [openComment, post._id, fetchComments])
 
-  const onCreate = async (content, parenComment = null) => {
+  const onCreate = async (content, parentComment = null) => {
     const success = await handleCreateComment({
       post: post._id,
       author: userId,
       content, 
-      parenComment,
+      parentComment,
     })
-    if (success) await fetchComments(post._id)
+    if (success) {
+      await fetchComments(post._id)
+      setNewComment("")
+    }
   }
 
   const onDelete = async (commentId) => {
