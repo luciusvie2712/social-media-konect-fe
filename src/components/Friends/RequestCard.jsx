@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux"
 import { useAcceptRequest } from "../../hook/useAcceptRequest"
+import avatar from '../../assets/download.png'
 
 
 const RequestCard = ({index, item}) => {
@@ -16,7 +17,7 @@ const RequestCard = ({index, item}) => {
 
     return (
         <div className="w-[180px] border-1 border-[#474747] rounded flex flex-col items-center cursor-pointer bg-[#29252520]">
-            <img src={item.requester.avatar} className="rounded-t-[4px]"/>
+            <img src={item.requester.avatar || avatar} className="rounded-t-[4px]"/>
             <div className="w-full flex flex-col item-center pt-2">
                 <span className="text-[15px] font-semibold px-2">{item.requester.name}</span>
                 <span className="text-[13px] px-2 opacity-50">{item.mutualFriends} bạn chung</span>

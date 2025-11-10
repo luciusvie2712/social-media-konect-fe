@@ -8,6 +8,7 @@ import MediaGrid from "../Post/MediaGrid";
 const CreatePost = ({ isOpen, setIsOpen, account }) => {
   if (!isOpen) return null;
   const userId = useSelector((state) => state.user.account.id);
+  
   useEffect(() => {
     if (userId) {
       setFormCreate({

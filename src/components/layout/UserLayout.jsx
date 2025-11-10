@@ -1,19 +1,15 @@
-import { Outlet, useLocation } from "react-router-dom"
-import SideBar from "./SideBar"
-
+import { Outlet, useLocation } from "react-router-dom";
+import NavBar from './NavBar';
 
 const UserLayout = () => {
-    const location = useLocation();
-    const isFriendList = /^\/friends\/(request|suggestion|all)/.test(location.pathname);
+  return (
+    <div className="flex flex-col w-screen h-fit gap-4">
+      <NavBar />
+      <div className="flex w-full h-screen !pt-14 text-white">
+        <Outlet />
+      </div>
+    </div>
+  );
+};
 
-    return (
-        <div className="flex w-screen h-screen items-center">
-            <SideBar />
-            <div className={`flex flex-col text-white px-2 ${isFriendList ? "w-[95%]" : "w-[85%]"}`}>
-                <Outlet />
-            </div>
-        </div>
-    )
-}
-
-export default UserLayout
+export default UserLayout;

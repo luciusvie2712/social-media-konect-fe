@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getNotifications, maskAsReadAPI } from "../../utils/api.customize";
+import avatar from '../../assets/download.png'
 
 const NotificationModal = (props) => {
   const { show, setShow } = props;
@@ -107,7 +108,7 @@ const NotificationModal = (props) => {
                     >
                       <div className="flex items-center gap-2">
                         <img
-                          src={n.senderId?.avatar || "/default-avatar.png"}
+                          src={n.senderId?.avatar || avatar}
                           alt="avatar"
                           className="w-8 h-8 rounded-full object-cover"
                         />
@@ -120,6 +121,8 @@ const NotificationModal = (props) => {
                               ? "đã bình luận bài viết của bạn"
                               : n.type === "friend_request"
                               ? "đã gửi yêu cầu kết bạn"
+                              : n.type === "friend_accept"
+                              ? "đã chấp nhận yêu cầu kết bạn"
                               : ""}
                           </span>
                           <span className="text-xs text-gray-400">
