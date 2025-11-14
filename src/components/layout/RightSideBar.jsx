@@ -10,11 +10,11 @@ const RightSideBar = () => {
     console.log(friends)
 
     return (
-        <div className="w-full text-white flex flex-col gap-2">
+        <div className="w-full text-black flex flex-col gap-2 !pt-4">
             <div className="w-full flex items-center gap-2">
-                <span className="bg-gray-400 h-[1px] w-4"></span>
+                <span className="bg-gray-300 h-[1px] w-4"></span>
                 <span className="font-medium">Bạn bè đang hoạt động</span>
-                <span className="bg-gray-400 h-[1px] w-10"></span>
+                <span className="bg-gray-300 h-[1px] w-10"></span>
             </div>
             <div className="w-full px-3 flex flex-col items-center">
                 {friends?.length > 0 ? (

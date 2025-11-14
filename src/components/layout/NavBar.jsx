@@ -18,33 +18,38 @@ const NavBar = () => {
     }
 
     return (
-        <div className="fixed top-0 left-0 w-full bg-[#242424] shadow-md z-50 flex items-center justify-between px-4 py-2 text-white">
+        <div className="fixed top-0 left-0 w-full bg-[#ffffff] shadow-md z-50 flex items-center justify-between px-4 py-2 text-black">
             <div className="flex items-center">
                 <NavLink to="/home">
-                    <img src={bigLogo} className="h-10" />
+                    <img src={bigLogo} className="h-10 border-1" />
                 </NavLink>
             </div>
-            <div className="flex-1 max-w-md mx-4">
-                <input type="text" placeholder="Tìm kiếm ..." className="" />
+            <div className="flex-1 max-w-md mx-4 justify-center !ml-60">
+                <input type="search" placeholder="Tìm kiếm ..." className="w-full bg-gray-200 rounded-[20px] px-4 py-1 outline-none" />
             </div>
             <div className="flex items-center space-x-4 gap-4">
-                <NavLink to={`/profile/${account?.id}`} className=" ">
+                <div 
+                    onClick={() => setOpenNotification(true)} 
+                    className="relative text-xl text-black rounded-full bg-gray-200 px-2 py-1 cursor-pointer hover:bg-blue-400 hover:!text-white"
+
+                >
+                    <NotificationModal show={openModalNotification} setShow={setOpenNotification} account={account} />
+                    <i className="fa-regular fa-bell"></i>
+                </div>
+                <NavLink to='/message-box' className="text-xl text-black rounded-full bg-gray-200 px-2 py-1 hover:bg-blue-400 hover:!text-white" >
+                    <i class="fa-regular fa-message"></i>
+                </NavLink>
+                <div className="text-xl text-black rounded-full bg-gray-200 px-2 py-1 cursor-pointer hover:bg-blue-400 hover:!text-white">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+                <div onClick={handleLogout} className="text-xl text-black rounded-full bg-gray-200 px-2 py-1 cursor-pointer hover:bg-blue-400 hover:!text-white">
+                    <i className="fa-solid fa-right-from-bracket"></i>
+                </div>
+                <NavLink to={`/profile/${account?.id}`} className=" border-2 border-gray-200 hover:border-blue-400 rounded-full">
                     <img src={account?.avatar || avatar} className="w-8 h-8 rounded-full" />
                 </NavLink>
-                <button onClick={() => setOpenNotification(true)} className="text-xl">
-                    <i className="fa-regular fa-bell"></i>
-                </button>
-                <NavLink to='/message-box' className="text-xl">
-                    <i className="fa-solid fa-paper-plane"></i>
-                </NavLink>
-                <button className="text-xl">
-                    <i className="fa-solid fa-bars"></i> {/* Cài đặt - có thể mở dropdown với logout */}
-                </button>
-                <button onClick={handleLogout} className="text-xl">
-                    <i className="fa-solid fa-right-from-bracket"></i>
-                </button>
             </div>
-            <NotificationModal show={openModalNotification} setShow={setOpenNotification} account={account} />
+            
         </div>
     )
 }

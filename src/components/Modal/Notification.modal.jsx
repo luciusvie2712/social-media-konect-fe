@@ -74,15 +74,15 @@ const NotificationModal = (props) => {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -10 }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25 }}
-          className="notification-modal fixed left-[16%] h-[95vh] rounded bg-[#222] border-[1px] border-[#494949] w-[380px] text-white flex flex-col z-50"
+          className="notification-modal fixed top-[8%] right-[0] min-h-0 p-2 rounded bg-[#ffffff] shadow-lg w-[380px] text-black flex flex-col z-50"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex justify-between items-center p-4 border-b border-[#494949]">
-            <h2 className="text-lg font-semibold">Thông báo</h2>
+          <div className="flex justify-between items-center p-3">
+            <h4 className="font-bold">Thông báo</h4>
             <button
               onClick={() => setShow(false)}
               className="text-gray-400 hover:text-gray-200 transition"

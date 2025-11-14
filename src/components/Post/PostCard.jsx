@@ -5,6 +5,7 @@ import { LikePost } from "../../utils/api.customize";
 import avatar from "../../assets/download.png";
 import { useComment } from "../../hook/useComment";
 import CommentItem from "./CommentItem";
+import { NavLink } from "react-router-dom";
 
 const PostCard = ({ post, index }) => {
   const [statusLike, setStatusLike] = useState({})
@@ -161,28 +162,28 @@ const PostCard = ({ post, index }) => {
     const success = await handleDeleteComment(commentId, userId)
     if (success) await fetchComments(post._id)
   }
-
+console.log(dataPost[0])
   return (
     <div
       key={index}
-      className="w-full rounded bg-[#222] px-3 py-2 border-[1px] border-[#494949]"
+      className="w-full rounded bg-[#ffffff] px-3 py-2 border-[1px] border-gray-200 text-black shadow-sm"
     >
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex justify-center items-center">
+          <NavLink to={`/profile/${post?.author?._id}`} className="flex justify-center items-center">
             <img
               src={dataPost[0]?.author?.avatar || avatar}
               className="rounded-full w-10"
             />
-          </div>
+          </NavLink>
           <div className="flex flex-col gap-1">
-            <div className="font-semibold text-white">
-              <div>{dataPost[0]?.author?.name}</div>
+
+              <NavLink to={`/profile/${post?.author?._id}`} className="font-semibold text-black !no-underline">{dataPost[0]?.author?.name}</NavLink>
               <div className="flex items-center gap-2">
-                <span className="opacity-80">2 giờ</span>
-                <i className="fa-solid fa-earth-americas"></i>
+                <span className="opacity-40">2 giờ</span>
+                <i className="fa-solid fa-earth-americas opacity-50"></i>
               </div>
-            </div>
+
           </div>
         </div>
         <div className="cursor-pointer">
@@ -202,7 +203,7 @@ const PostCard = ({ post, index }) => {
           onClick={() => handleLikePost(post._id)}
         >
           <i
-            style={{ color: statusLike[post._id] ? "#b15426" : "" }}
+            style={{ color: statusLike[post._id] ? "#6967e1" : "" }}
             className={`fa-${
               statusLike[post._id] ? "solid" : "regular"
             } fa-heart w-4 transition-all duration-150`}
@@ -229,10 +230,10 @@ const PostCard = ({ post, index }) => {
             <input
               type="text"
               onChange={(e) => setNewComment(e.target.value)} value={newComment}
-              className="bg-[#494949] py-2 rounded w-[85%] focus:bg-[#222] focus:outline-1 outline-[#b15426] px-2"
+              className="bg-gray-200 py-2 rounded w-[85%] focus:outline-1 outline-gray-300 px-2"
               placeholder="Viết bình luận của bạn ..."
             />
-            <div onClick={() => onCreate(newComment)} className="w-[15%] flex justify-center bg-[#b15426] py-2 rounded cursor-pointer hover:bg-[#89421e] text-white">
+            <div onClick={() => onCreate(newComment)} className="w-[15%] flex justify-center bg-blue-300 text-white py-2 rounded cursor-pointer hover:bg-blue-100 hover:!text-blue-500 ">
               Đăng
             </div>
           </div>

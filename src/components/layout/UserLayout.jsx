@@ -3,9 +3,9 @@ import NavBar from './NavBar';
 
 const UserLayout = () => {
   return (
-    <div className="flex flex-col w-screen h-fit gap-4">
+    <div className="flex flex-col w-screen h-screen gap-4">
       <NavBar />
-      <div className="flex w-full h-screen !pt-14 text-white">
+      <div className="flex w-full h-full !mt-14 px-5 overflow-auto">
         <Outlet />
       </div>
     </div>

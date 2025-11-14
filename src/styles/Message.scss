@@ -3,9 +3,9 @@
     height: calc(100vh - 56px);
     display: flex;
     justify-content: center;
-    background-color: #222;
+    background-color: #ffffff;
     border-radius: 4px;
-    border: 1px solid #494949;
+    border: 1px solid #cdcdcd;
 
     .message-content {
         width: 100%;
@@ -14,7 +14,7 @@
         height: 100%;
 
         .message-content__left {
-            border-right: 1px solid #494949;
+            border-right: 1px solid #cdcdcd;
             width: 25%;
             padding-top: 10px;
             max-height: 100%;
@@ -48,7 +48,7 @@
 
                 label {
                     display: flex;
-                    background-color: #242424;
+                    background-color: #cdcdcd;
                     align-items: center;
                     border-radius: 5px;
                     padding-block: 5px;
@@ -100,9 +100,15 @@
                     cursor: pointer;
                     padding-left: 4px;
                     padding-block: 5px;
+                    border-left: 4px solid #ffffff;
 
                     &:hover {
-                        background-color: #242424;
+                        background-color: #7db6f7;
+                        border-left: 4px solid #3686e0;
+                    }
+                    &.active {
+                        background-color: #7db6f7;
+                        border-left: 4px solid #3686e0;
                     }
 
                     .avatar-user {
@@ -156,12 +162,13 @@
                 padding-bottom: 15px;
                 padding-top: 15px;
                 align-items: center;
-                border-bottom: 1px solid #494949;
+                border-bottom: 1px solid #cdcdcd;
 
                 .header__info {
                     display: flex;
                     gap: 10px;
                     align-items: center;
+
 
                     img {
                         width: 40px;
@@ -179,6 +186,7 @@
                     display: flex;
                     gap: 15px;
                     align-items: center;
+                    color: #3686e0;
 
                     div>i {
                         font-size: 20px;
@@ -198,7 +206,7 @@
                     margin-top: 12px;
                     padding: 7px;
                     border-radius: 12px;
-                    background-color: #555;
+                    background-color: #5e5e5e;
                     color: white;
 
                     .media-list {
@@ -254,10 +262,11 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border-top: 1px solid #494949;
+                border-top: 1px solid #cdcdcd;
                 padding-block: 10px;
                 padding-left: 10px;
                 padding-right: 10px;
+                color: #3686e0;
 
                 .input-frame {
                     width: 100%;
@@ -268,10 +277,12 @@
                     gap: 10px;
                     padding-inline: 10px;
                     font-size: 20px;
+                    
 
                     input {
                         font-size: 15px;
                         width: 100%;
+                        color: black;
 
                         &:focus {
                             outline: none;
@@ -298,7 +309,7 @@
 
         .message-content__right {
             width: 25%;
-            border-left: 1px solid #494949;
+            border-left: 1px solid #cdcdcd;
         }
     }
 }

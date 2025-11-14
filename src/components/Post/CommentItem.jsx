@@ -28,10 +28,10 @@ const CommentItem = ({ comment, userId, onReply, onDelete, level = 0 }) => {
                         className="w-9 h-9 rounded-full"
                     />
                     <div className="w-full">
-                        <div className="text-[#b15426] font-medium">
+                        <div className="text-gray-800 font-medium">
                             {comment.author?.name || "Ẩn danh"}
                         </div>
-                        <div className="text-white text-sm">{comment.content}</div>
+                        <div className="text-black text-sm">{comment.content}</div>
                         <div className="flex gap-3 text-xs opacity-70 mt-1">
                             <button
                                 onClick={() => {

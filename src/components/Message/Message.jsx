@@ -159,7 +159,7 @@ const Message = () => {
                   <>
                     <div
                       key={item._id}
-                      className="chatted-card"
+                      className={`chatted-card ${currentReceiverId === item.userId ? "active" : ""}`} 
                       onClick={() => clickViewMessageSegment(item.userId)}
                     >
                       <div className="avatar-user">

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ShowListFriends from "../../components/Friends/ShowListFriends";
 import "../../styles/FriendDetail.scss";
 import { useState } from "react";
-import Profile from "../../components/Profile/Profile";
+import Profile from '../user/ProfilePage'
 import { useSelector } from "react-redux";
 
 import { useFriendList } from "../../hook/useFriendList";
