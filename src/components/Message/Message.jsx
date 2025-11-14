@@ -130,7 +130,7 @@ const Message = () => {
       }));
     }
   };
-
+  console.log("fdasdasdasormSendMess", listUserChat);
   console.log("formSendMess", formSendMess);
   return (
     <div className="message-container">
@@ -159,14 +159,16 @@ const Message = () => {
                   <>
                     <div
                       key={item._id}
-                      className={`chatted-card ${currentReceiverId === item.userId ? "active" : ""}`} 
+                      className={`chatted-card ${
+                        currentReceiverId === item.userId ? "active" : ""
+                      }`}
                       onClick={() => clickViewMessageSegment(item.userId)}
                     >
                       <div className="avatar-user">
                         <img src={item.avatar || avatar} alt="" />
                       </div>
                       <div className="detail-chat">
-                        <div className="name">{item.nameUser}</div>
+                        <div className="name">{item.name}</div>
                         <div className="last-chat">
                           <div className="chat">{item.lastMessage}</div>
                           <div className="time-ago">
@@ -293,7 +295,7 @@ const Message = () => {
                       multiple
                       onClick={(e) => chooseFileSendMess(e)}
                     />
-                    <label 
+                    <label
                       className="fa-solid fa-image"
                       htmlFor="file-mess"
                     ></label>

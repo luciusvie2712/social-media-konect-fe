@@ -8,80 +8,86 @@ import CommentItem from "./CommentItem";
 import { NavLink } from "react-router-dom";
 
 const PostCard = ({ post, index }) => {
-  const [statusLike, setStatusLike] = useState({})
-  const [openComment, setOpenComment] = useState(false)
-  const [newComment, setNewComment] = useState("")
-  const [dataPost, setDataPost] = useState([])
+  const [statusLike, setStatusLike] = useState({});
+  const [openComment, setOpenComment] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [dataPost, setDataPost] = useState([]);
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
     : post?.media?.url
     ? [post.media]
-    : []
-  const user = useSelector((state) => state.user.account)
-  const userId = user?.id
-  const { comments, loading, fetchComments, handleCreateComment, handleDeleteComment } = useComment()
+    : [];
+  const user = useSelector((state) => state.user.account);
+  const userId = user?.id;
+  const {
+    comments,
+    loading,
+    fetchComments,
+    handleCreateComment,
+    handleDeleteComment,
+  } = useComment();
 
   useEffect(() => {
     if (post) {
-      const postArray = Array.isArray(post) ? post : [post]
-      setDataPost(postArray)
-      syncLikesStatus(postArray)
+      const postArray = Array.isArray(post) ? post : [post];
+      setDataPost(postArray);
+      syncLikesStatus(postArray);
     }
-  }, [post, userId])
+  }, [post, userId]);
 
   const syncLikesStatus = (posts) => {
-    const status = {}
+    const status = {};
     posts.forEach((item) => {
       status[item._id] = item.likes.some((like) => {
-        if (typeof like === "string") return like === userId
-        if (typeof like === "object" && like._id) return like._id === userId
-        return false
-      })
-    })
-    setStatusLike(status)
-  }
+        if (typeof like === "string") return like === userId;
+        if (typeof like === "object" && like._id) return like._id === userId;
+        return false;
+      });
+    });
+    setStatusLike(status);
+  };
 
   const handleLikePost = async (postId) => {
     try {
-      const response = await LikePost(userId, postId)
+      const response = await LikePost(userId, postId);
       if (response?.Ec === 0) {
         setStatusLike((prev) => ({
           ...prev,
           [postId]: !prev[postId],
-        }))
+        }));
         setDataPost((prevPosts) =>
           prevPosts.map((post) => {
             if (post._id === postId) {
               const alreadyLiked = post.likes.some((like) => {
-                if (typeof like === "string") return like === userId
+                if (typeof like === "string") return like === userId;
                 if (typeof like === "object" && like._id)
-                  return like._id === userId
-                return false
-              })
+                  return like._id === userId;
+                return false;
+              });
 
               const updateLikes = alreadyLiked
                 ? post.likes.filter((like) => {
-                    if (typeof like === "string") return like !== userId
+                    if (typeof like === "string") return like !== userId;
                     if (typeof like === "object" && like._id)
                       return like._id !== userId;
-                    return true
+                    return true;
                   })
-                : [...post.likes, userId]
-              return { ...post, likes: updateLikes }
+                : [...post.likes, userId];
+              return { ...post, likes: updateLikes };
             }
-            return post
+            return post;
           })
         );
       } else {
-        toast.error(response?.Mes)
+        toast.error(response?.Mes);
       }
     } catch (e) {
-      console.error("Lỗi like:", error)
+      console.error("Lỗi like:", error);
     }
-  }
+  };
   const renderMedia = () => {
     if (mediaList[0]?.type === "video") {
-      const video = mediaList[0]
+      const video = mediaList[0];
       return (
         <div className="relative w-full rounded overflow-hidden bg-black aspect-video">
           <video
@@ -97,14 +103,14 @@ const PostCard = ({ post, index }) => {
       return (
         <div className="w-full overflow-hidden flex">
           <img
-              src={mediaList[0].url}
-              className="rounded object-contain max-w-full max-h-[600px]"
-            />
+            src={mediaList[0].url}
+            className="rounded object-contain max-w-full max-h-[600px]"
+          />
         </div>
       );
     }
-    const displayImageList = mediaList.slice(0, 9)
-    const hiddenCount = mediaList.length - 9
+    const displayImageList = mediaList.slice(0, 9);
+    const hiddenCount = mediaList.length - 9;
     return (
       <div
         className={`grid ${
@@ -130,39 +136,39 @@ const PostCard = ({ post, index }) => {
           </div>
         ))}
       </div>
-    )
-  }
+    );
+  };
 
   const handleOpenComment = () => {
     if (openComment) {
-      setOpenComment(false)
+      setOpenComment(false);
     } else {
-      setOpenComment(true)
+      setOpenComment(true);
     }
-  }
+  };
 
   useEffect(() => {
-    if (openComment) fetchComments(post._id)
-  }, [openComment, post._id, fetchComments])
+    if (openComment) fetchComments(post._id);
+  }, [openComment, post._id, fetchComments]);
 
   const onCreate = async (content, parentComment = null) => {
     const success = await handleCreateComment({
       post: post._id,
       author: userId,
-      content, 
+      content,
       parentComment,
-    })
+    });
     if (success) {
-      await fetchComments(post._id)
-      setNewComment("")
+      await fetchComments(post._id);
+      setNewComment("");
     }
-  }
+  };
 
   const onDelete = async (commentId) => {
-    const success = await handleDeleteComment(commentId, userId)
-    if (success) await fetchComments(post._id)
-  }
-console.log(dataPost[0])
+    const success = await handleDeleteComment(commentId, userId);
+    if (success) await fetchComments(post._id);
+  };
+
   return (
     <div
       key={index}
@@ -170,20 +176,26 @@ console.log(dataPost[0])
     >
       <div className="w-full flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <NavLink to={`/profile/${post?.author?._id}`} className="flex justify-center items-center">
+          <NavLink
+            to={`/profile/${post?.author?._id}`}
+            className="flex justify-center items-center"
+          >
             <img
               src={dataPost[0]?.author?.avatar || avatar}
               className="rounded-full w-10"
             />
           </NavLink>
           <div className="flex flex-col gap-1">
-
-              <NavLink to={`/profile/${post?.author?._id}`} className="font-semibold text-black !no-underline">{dataPost[0]?.author?.name}</NavLink>
-              <div className="flex items-center gap-2">
-                <span className="opacity-40">2 giờ</span>
-                <i className="fa-solid fa-earth-americas opacity-50"></i>
-              </div>
-
+            <NavLink
+              to={`/profile/${post?.author?._id}`}
+              className="font-semibold text-black !no-underline"
+            >
+              {dataPost[0]?.author?.name}
+            </NavLink>
+            <div className="flex items-center gap-2">
+              <span className="opacity-40">2 giờ</span>
+              <i className="fa-solid fa-earth-americas opacity-50"></i>
+            </div>
           </div>
         </div>
         <div className="cursor-pointer">
@@ -229,11 +241,15 @@ console.log(dataPost[0])
           <div className="w-full flex items-center gap-2">
             <input
               type="text"
-              onChange={(e) => setNewComment(e.target.value)} value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              value={newComment}
               className="bg-gray-200 py-2 rounded w-[85%] focus:outline-1 outline-gray-300 px-2"
               placeholder="Viết bình luận của bạn ..."
             />
-            <div onClick={() => onCreate(newComment)} className="w-[15%] flex justify-center bg-blue-300 text-white py-2 rounded cursor-pointer hover:bg-blue-100 hover:!text-blue-500 ">
+            <div
+              onClick={() => onCreate(newComment)}
+              className="w-[15%] flex justify-center bg-blue-300 text-white py-2 rounded cursor-pointer hover:bg-blue-100 hover:!text-blue-500 "
+            >
               Đăng
             </div>
           </div>
@@ -250,17 +266,19 @@ console.log(dataPost[0])
                   comment={comment}
                   userId={userId}
                   onReply={onCreate}
-                  onDelete={onDelete} 
+                  onDelete={onDelete}
                 />
               ))
             ) : (
-              <div className="text-gray-400 text-sm">Hãy là người đầu tiên bình luận.....</div>
+              <div className="text-gray-400 text-sm">
+                Hãy là người đầu tiên bình luận.....
+              </div>
             )}
           </div>
           {comments?.length > 3 && (
-              <div className="w-full flex items-center justify-center underline cursor-pointer   opacity-60 text-[16px] hover:opacity-80">
-                Xem tất cả bình luận
-              </div>
+            <div className="w-full flex items-center justify-center underline cursor-pointer   opacity-60 text-[16px] hover:opacity-80">
+              Xem tất cả bình luận
+            </div>
           )}
         </div>
       )}
