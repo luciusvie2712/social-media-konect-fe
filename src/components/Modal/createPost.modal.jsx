@@ -112,17 +112,17 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3">
       <div
-        className="absolute right-4 top-4 px-3 py-2 rounded-full cursor-pointer bg-[#2424248e] hover:bg-[#3a3a3a]"
+        className="absolute right-4 top-4 px-3 py-2 rounded-full cursor-pointer bg-[#cdcdcd] hover:bg-[#3a3a3a]"
         onClick={() => setIsOpen(false)}
       >
         <i className="fa-solid fa-xmark opacity-70"></i>
       </div>
 
       <form
-        className="bg-[#242424] text-white w-full max-w-[700px] max-h-[90vh] rounded-lg overflow-hidden flex flex-col shadow-lg"
+        className="bg-[#ffffff] text-black w-full max-w-[700px] max-h-[90vh] rounded-lg overflow-hidden flex flex-col shadow-lg"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="sticky top-0 z-20 bg-[#242424] border-b px-4 py-3 flex items-center justify-between">
+        <div className="sticky top-0 z-20 bg-[#ffffff] border-b px-4 py-3 flex items-center justify-between">
           <div className="text-lg font-semibold">Tạo bài viết</div>
           <div className="text-sm text-gray-300">
             {formCreate.mediaPreview.length} media
@@ -137,7 +137,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
                 {account.name}
               </div>
               <select
-                className="bg-black rounded cursor-pointer text-sm px-2 py-1 mt-1"
+                className="bg-white rounded cursor-pointer text-sm px-2 py-1 mt-1 border-1 border-gray-400 outline-none"
                 name="visibility"
                 value={formCreate.visibility}
                 onChange={handleOnchangeInput}
@@ -169,7 +169,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
             />
             <label
               htmlFor="media"
-              className="inline-block cursor-pointer text-sm sm:text-base px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a]"
+              className="inline-block cursor-pointer text-sm sm:text-base px-3 py-2 bg-[#ffffff] border-1 border-gray-400 rounded hover:bg-[#cdcdcd]"
             >
               Chọn ảnh/video (thay thế)
             </label>
@@ -184,7 +184,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
           )}
         </div>
 
-        <div className="sticky bottom-0 z-20 bg-[#242424] border-t px-4 py-3 flex gap-3 items-center">
+        <div className="sticky bottom-0 z-20 bg-[#ffffff] border-t px-4 py-3 flex gap-3 items-center">
           <div className="flex-1">
             <input
               ref={addMoreRef}
@@ -197,7 +197,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
             <button
               type="button"
               onClick={() => addMoreRef.current.click()}
-              className="px-3 py-2 bg-[#2f2f2f] rounded hover:bg-[#3a3a3a] text-sm"
+              className="px-3 py-2 bg-[#ffffff] border-1 border-gray-400 rounded hover:bg-[#cdcdcd] text-sm"
             >
               Thêm ảnh/video
             </button>
@@ -205,7 +205,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
           <div className="w-1/2">
             <button
               type="button"
-              className="w-full bg-[#2f2f2fca] px-4 py-2 font-semibold rounded hover:bg-[#3a3a3a]"
+              className="w-full bg-blue-200 px-4 py-2 font-semibold rounded hover:bg-blue-400"
               onClick={handleCreatePost}
             >
               Đăng bài viết

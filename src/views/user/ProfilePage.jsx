@@ -67,7 +67,7 @@ const ProfilePage = () => {
             <span>156</span>
             <span>Bạn bè</span>
           </div>
-           <div className="stats-item">
+          <div className="stats-item">
             <span>5,236</span>
             <span>Người theo dõi</span>
           </div>
