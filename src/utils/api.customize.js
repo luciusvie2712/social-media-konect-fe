@@ -101,6 +101,13 @@ const getAllUserTable = (limit, page) => {
 const deleteUserTable = (id) => {
     return axios.delete(`/api/DeleteUser?id=${id}`)
 }
+const getTablePost = (limit, page) => {
+    return axios.get(`/api/get-post-table?limit=${limit}&&page=${page}`)
+}
+const deletePost = (postId) => {
+    return axios.delete(`/api/delete/post?id=${postId}`)
+}
+
 export {
     createUserAPI,
     loginUserAPI,
@@ -126,5 +133,7 @@ export {
     deleteUserTable,
     createComment,
     getComment,
-    deleteComment
+    deleteComment,
+    getTablePost, deletePost
+
 }

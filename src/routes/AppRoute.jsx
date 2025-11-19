@@ -12,6 +12,7 @@ import Message from "../components/Message/Message";
 import FriendPage from "../views/user/FriendPage";
 import FriendDetail from "../views/user/FriendDetail";
 import ManageUser from "../views/admin/ManageUser/ManageUser";
+import ManagePost from "../views/admin/ManagePost/ManagePost";
 
 const AppRoute = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoute = () => {
         <Route path="/auth/google/callback" element={<GoogleCallback />} />
       </Route>
       <Route path="/admin/Manage-User" element={<ManageUser />} />
+      <Route path="/admin/Manage-Post" element={<ManagePost />} />
       {/* User routes */}
       <Route
         path="/*"
