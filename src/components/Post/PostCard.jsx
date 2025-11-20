@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import { useSelector } from "react-redux";
-import { LikePost } from "../../utils/api.customize";
+import { deletePost, LikePost } from "../../utils/api.customize";
 import avatar from "../../assets/download.png";
 import { useComment } from "../../hook/useComment";
 import CommentItem from "./CommentItem";
 import { NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PostCard = ({ post, index }) => {
+  const [openMenu, setOpenMenu] = useState(false);
+  const menuRef = useRef(null);
   const [statusLike, setStatusLike] = useState({});
   const [openComment, setOpenComment] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -26,6 +29,30 @@ const PostCard = ({ post, index }) => {
     handleCreateComment,
     handleDeleteComment,
   } = useComment();
+
+  useEffect(() => {
+    const hanldeClickOutSide = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpenMenu(false)
+      }
+    }
+    document.addEventListener("mousedown", hanldeClickOutSide)
+    return ( ) => document.removeEventListener("mousedown", hanldeClickOutSide)
+  }, [])
+
+  const handleDeletePost = async (postId) => {
+    try {
+      const res = await deletePost(postId)
+      if (res?.Ec === 0) {
+        toast.success("Đã gỡ bỏ bài viết")
+
+      } else (
+        toast.warn(res?.Mes)
+      )
+    } catch (error) {
+      console.error("Delete error: ", error)
+    }
+  }
 
   useEffect(() => {
     if (post) {
@@ -198,8 +225,24 @@ const PostCard = ({ post, index }) => {
             </div>
           </div>
         </div>
-        <div className="cursor-pointer">
+        <div onClick={() => setOpenMenu(!openMenu)} ref={menuRef} className="cursor-pointer relative">
           <i className="fa-solid fa-ellipsis w-[24px] text-[20px]"></i>
+          {openMenu && (
+            <div className="absolute top-4 right-1 bg-gray-200 rounded border-1 border-gray-300 z-1 w-[100px] flex flex-col">
+              {post?.author?._id === userId ? (
+                <span 
+                  onClick={(e) => {
+                    e.stopPropagation(); handleDeletePost(post._id)
+                  }}
+                  className="hover:opacity-50 px-2 text-right"
+                >
+                  Gỡ bài viết
+                </span>
+              ) : (
+                <span className="hover:opacity-50 px-2 text-right">Báo cáo</span>
+              )}
+          </div>
+          )}
         </div>
       </div>
       <div className="w-full flex flex-col gap-2 mt-2 !pl-[52px]">

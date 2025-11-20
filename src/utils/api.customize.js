@@ -55,6 +55,9 @@ const getComment = (postId) => {
 const deleteComment = (commentId, userId) => {
     return axios.delete(`/api/delete-comment?commentId=${commentId}&&userId=${userId}`)
 }
+const deletePost = (postId) => {
+    return axios.delete(`/api/delete/post?id=${postId}`)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -104,9 +107,7 @@ const deleteUserTable = (id) => {
 const getTablePost = (limit, page) => {
     return axios.get(`/api/get-post-table?limit=${limit}&&page=${page}`)
 }
-const deletePost = (postId) => {
-    return axios.delete(`/api/delete/post?id=${postId}`)
-}
+
 
 export {
     createUserAPI,

@@ -4,7 +4,6 @@ import "../../styles/FriendDetail.scss";
 import { useState } from "react";
 import Profile from '../user/ProfilePage'
 import { useSelector } from "react-redux";
-
 import { useFriendList } from "../../hook/useFriendList";
 
 const FriendDetail = () => {
