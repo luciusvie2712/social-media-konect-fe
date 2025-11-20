@@ -1,0 +1,39 @@
+.modal-container {
+    .header-detail {
+        text-align: center;
+        font-weight: 500;
+        font-size: 28px;
+        text-shadow: 1px 1px;
+    }
+
+    .media-content {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+
+        img,
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        &.two-media {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        &.three-media {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        &.four-media {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        &.multi-media {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    }
+
+}

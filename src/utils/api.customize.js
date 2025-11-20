@@ -107,7 +107,9 @@ const deleteUserTable = (id) => {
 const getTablePost = (limit, page) => {
     return axios.get(`/api/get-post-table?limit=${limit}&&page=${page}`)
 }
-
+const handleProcessReportPost = (data) => {
+    return axios.put(`/api/handle-report-post`, data)
+}
 
 export {
     createUserAPI,
@@ -135,6 +137,6 @@ export {
     createComment,
     getComment,
     deleteComment,
-    getTablePost, deletePost
+    getTablePost, deletePost, handleProcessReportPost
 
 }

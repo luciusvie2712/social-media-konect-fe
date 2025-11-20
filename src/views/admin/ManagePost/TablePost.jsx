@@ -9,8 +9,13 @@ import {
   Tag,
 } from "antd";
 import { toast } from "react-toastify";
-import { deletePost } from "../../../utils/api.customize";
-import { useState } from "react";
+import {
+  deletePost,
+  handleProcessReportPost,
+} from "../../../utils/api.customize";
+import { useEffect, useState } from "react";
+import imgdefault from "../../../assets/image/imagedefault.jpg";
+import { useSelector } from "react-redux";
 const TablePost = (props) => {
   const {
     listPostTable,
@@ -20,9 +25,26 @@ const TablePost = (props) => {
     handleGetPostTable,
     showModal,
     setShowModal,
+    handleShowDetailPost,
+    handleShowDetailImage,
   } = props;
-
+  const userId = useSelector((state) => state.user.account.id);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [showModalReport, setShowModalReport] = useState(false);
+  const [dataReport, setDataReport] = useState();
+  const [dataProcessReport, setDataProcessReport] = useState({
+    postId: "",
+    action: " ",
+    userId: "",
+  });
+  useEffect(() => {
+    if (userId) {
+      setDataProcessReport((prev) => ({
+        ...prev,
+        userId: userId,
+      }));
+    }
+  }, []);
   const columns = [
     {
       title: "ID",
@@ -31,15 +53,30 @@ const TablePost = (props) => {
     },
     {
       title: "Author name",
-      render: (_, record) => (
-        <Tag color="green">{record.author?.name || 0}</Tag>
-      ),
+      render: (_, record) => <Tag color="blue">{record.author?.name || 0}</Tag>,
       key: "author",
     },
     {
       title: "Media",
-      dataIndex: "phoneNumber",
       key: "media",
+      render: (_, record) => (
+        <div
+          onClick={() => handleShowDetailImage(record)}
+          className="cursor-pointer flex justify-center"
+        >
+          {record.media && record.media.length > 0 ? (
+            <img
+              src={imgdefault}
+              className="w-10 h-10 object-cover rounded-md"
+            />
+          ) : (
+            <img
+              src={imgdefault}
+              className="w-10 h-10 object-cover opacity-50 rounded-md"
+            />
+          )}
+        </div>
+      ),
     },
     {
       title: "caption",
@@ -48,17 +85,48 @@ const TablePost = (props) => {
     },
     {
       title: "reports",
-      render: (_, record) => (
-        <Tag color="red">{record.reports?.length || 0}</Tag>
-      ),
-      key: "reports",
+      render: (_, record) => {
+        let tagColor = "green";
+
+        if (record.reports?.length > 0) {
+          const hasPending = record.reports.some(
+            (item) => item.status === "pending"
+          );
+          const allReviewed = record.reports.every(
+            (item) => item.status === "reviewed"
+          );
+
+          if (hasPending) {
+            tagColor = "red";
+          } else if (allReviewed) {
+            tagColor = "gold";
+          } else {
+            tagColor = "red";
+          }
+        }
+
+        return (
+          <Tag
+            className="cursor-pointer flex justify-center"
+            color={tagColor}
+            onClick={() => handleViewReport(record)}
+          >
+            {record.reports?.length || 0}
+          </Tag>
+        );
+      },
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}>....</a>
+          <a
+            style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}
+            onClick={() => handleShowDetailPost(record)}
+          >
+            ....
+          </a>
           <a
             style={{ color: "red", fontSize: "15px" }}
             onClick={() => handleDeletePost(record._id)}
@@ -69,6 +137,15 @@ const TablePost = (props) => {
       ),
     },
   ];
+  const handleViewReport = (data) => {
+    if (data.reports.length < 1) return;
+    setDataProcessReport((prev) => ({
+      ...prev,
+      postId: data?._id,
+    }));
+    setShowModalReport(true);
+    setDataReport(data.reports);
+  };
   //tailwind 2 cai the a cho dep dum`
   const dataWithKey = listPostTable?.map((item, index) => ({
     key: item._id || index,
@@ -97,6 +174,30 @@ const TablePost = (props) => {
     setShowModal();
     setSelectedPost(null);
     toast.info("Cancel action Delete");
+  };
+  const handleReport = async (action) => {
+    try {
+      const payload = {
+        ...dataProcessReport,
+        action,
+      };
+      const response = await handleProcessReportPost(payload);
+      if (response?.Ec === 0) {
+        setDataProcessReport((prev) => ({
+          ...prev,
+          postId: "",
+          action: " ",
+          userId: "",
+        }));
+        handleGetPostTable();
+        setShowModalReport(false);
+        toast.success(response.Mes);
+      } else {
+        toast.error(response?.Mes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -143,6 +244,53 @@ const TablePost = (props) => {
           />
         </div>
       )}
+      <Modal
+        open={showModalReport}
+        onCancel={() => setShowModalReport(false)}
+        footer={null}
+        width={400}
+      >
+        {dataReport &&
+          dataReport.length > 0 &&
+          dataReport.map((item) => {
+            return (
+              <>
+                <div className="report-main">
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      display: "flex",
+                    }}
+                  >
+                    Reason :<p style={{ color: "red" }}>{item.reason}</p>
+                  </span>
+                </div>
+              </>
+            );
+          })}
+        <div
+          className="button-handle-report"
+          style={{
+            display: "flex",
+            gap: "10px",
+            justifyContent: "end",
+            marginTop: "20px",
+          }}
+        >
+          <button
+            className="btn btn-warning"
+            onClick={() => handleReport("reviewed")}
+          >
+            Reviewed
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => handleReport("dismissed")}
+          >
+            dismissed
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

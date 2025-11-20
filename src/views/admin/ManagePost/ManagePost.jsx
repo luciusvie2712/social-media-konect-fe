@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getTablePost } from "../../../utils/api.customize";
 import TablePost from "./TablePost";
+import ModalDetail from "./ModalDetail";
+import ModalShowImage from "./ModalShowImage";
 
 const ManagePost = () => {
   let limit = 8;
@@ -8,7 +10,9 @@ const ManagePost = () => {
   const [listPostTable, setListPostTable] = useState();
   const [totalPages, setTotalpages] = useState(0);
   const [showModal, setshowModal] = useState(false);
-  console.log("listPostTable", listPostTable);
+  const [showDetail, setShowDetail] = useState(false);
+  const [detailPost, setDetailPost] = useState(null);
+  const [showDetailImage, setShowDetailImage] = useState(false);
   useEffect(() => {
     handleGetPostTable();
   }, [currentPages]);
@@ -26,7 +30,14 @@ const ManagePost = () => {
     }
   };
   const handleSetShowModal = () => setshowModal((prev) => !prev);
-
+  const handleShowDetailPost = (dataPost) => {
+    setDetailPost(dataPost);
+    setShowDetail(true);
+  };
+  const handleShowDetailImage = (dataPost) => {
+    setDetailPost(dataPost);
+    setShowDetailImage(true);
+  };
   return (
     <>
       <TablePost
@@ -37,6 +48,18 @@ const ManagePost = () => {
         handleGetPostTable={handleGetPostTable}
         setShowModal={handleSetShowModal}
         showModal={showModal}
+        handleShowDetailPost={handleShowDetailPost}
+        handleShowDetailImage={handleShowDetailImage}
+      />
+      <ModalDetail
+        detailPost={detailPost}
+        showDetail={showDetail}
+        setShowDetail={setShowDetail}
+      />
+      <ModalShowImage
+        detailPost={detailPost}
+        showDetailImage={showDetailImage}
+        setShowDetailImage={setShowDetailImage}
       />
     </>
   );
