@@ -58,6 +58,9 @@ const deleteComment = (commentId, userId) => {
 const deletePost = (postId) => {
     return axios.delete(`/api/delete/post?id=${postId}`)
 }
+const sharePost = (data) => {
+    return axios.post('/api/share-post', data)
+} 
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -119,6 +122,7 @@ export {
     resetPasswordAPI,
     createPostAPI,
     getPost,
+    sharePost,
     getDataUserLoginGoogle,
     getListUserChatted,
     getConversation,

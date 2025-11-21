@@ -5,7 +5,7 @@ import { useGetPost } from "../../hook/useGetPost";
 const PostList = () => {
   const user = useSelector((state) => state.user.account);
   const { posts, loading } = useGetPost(user.id);
-  console.log(user.id)
+  console.log(posts)
 
   if (loading) return (
     <div className="flex justify-center items-center h-screen">

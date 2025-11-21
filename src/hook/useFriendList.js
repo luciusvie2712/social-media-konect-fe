@@ -3,9 +3,12 @@ import { getFriendRequest, GetfriendSuggestion, getListFriends } from "../utils/
 
 export const useFriendList = (type, userId) => {
     const [friends, setFriends] = useState([])
+    const [raw, setRaw] = useState(null)
     const [loading, setLoading] = useState(true)
 
     const fetchFriend = async () => {
+        if (!userId) return
+        setLoading(true)
         try {
             let dataRes
             switch (type) {
@@ -19,13 +22,23 @@ export const useFriendList = (type, userId) => {
                     dataRes = await getListFriends(userId)
                     break
                 default:
-                    dataRes = { 
-                        Ec: 1,
-                        Mes: "Type is not valid"
-                    }
+                    console.warn("Invalid type in useFriendList:", type)
+                    setFriends([])
+                    return
             }
+
             if  (dataRes.Ec === 0) {
-                setFriends(dataRes.data)
+                const data = dataRes?.data
+                setRaw(data)
+                if (type === "suggestion") {
+                    const merged = [
+                        ...(data.friendOfFriendSuggestions || []),
+                        ...(data.sameCitySuggestions || [])
+                    ]
+                    setFriends(merged)
+                } else {
+                    setFriends(data || [])
+                }
             } else {
                 console.warn(">>> API Error: ", dataRes?.Mes)
                 setFriends([])
@@ -42,5 +55,5 @@ export const useFriendList = (type, userId) => {
         if (userId) fetchFriend()
     }, [type, userId])
 
-    return { friends, loading, refetch: fetchFriend }
+    return { friends, raw, loading, refetch: fetchFriend }
 }

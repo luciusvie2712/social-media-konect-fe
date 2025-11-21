@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import { useSelector } from "react-redux";
-import { deletePost, LikePost } from "../../utils/api.customize";
+import { deletePost, LikePost, sharePost } from "../../utils/api.customize";
 import avatar from "../../assets/download.png";
 import { useComment } from "../../hook/useComment";
 import CommentItem from "./CommentItem";
