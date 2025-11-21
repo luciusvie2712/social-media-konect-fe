@@ -1,0 +1,74 @@
+.logo-container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column;
+
+    .header-manage-logo {
+        margin-top: 40px;
+        color: rgba(21, 21, 21, 0.816);
+        text-shadow: 1px 1px;
+        font-size: 30px;
+    }
+
+    .logo-main {
+        background-color: rgba(209, 209, 209, 0.426);
+        padding: 5px;
+        width: 30%;
+        border: 1px solid;
+        text-align: center;
+        border: 1px solid rgba(73, 73, 73, 0.756);
+        border-radius: 10px;
+        height: auto;
+
+        label {
+            cursor: pointer;
+            padding: 3px;
+            border-radius: 5px;
+            background-color: rgba(23, 128, 209, 0.804);
+
+            &:hover {
+                background-color: rgba(60, 139, 200, 0.804);
+                transition: .3s ease;
+            }
+        }
+
+        .logo-prev {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+
+            img {
+
+                width: 200px;
+                height: 160px;
+                background-size: cover;
+            }
+
+            .button-clean-logo {
+                border: 1px solid rgb(172, 171, 171);
+                height: fit-content;
+                padding: 2px 5px;
+                cursor: pointer;
+
+                &:hover {
+                    color: rgb(77, 77, 77);
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
+    .button-confirm-logo {
+        margin-top: 20px;
+        border-radius: 5px;
+        background-color: rgba(91, 191, 91, 0.83);
+        padding: 5px 10px;
+
+        &:hover {
+            background-color: rgba(53, 193, 53, 0.83);
+            transition: .3s ease;
+        }
+    }
+}

@@ -60,7 +60,7 @@ const deletePost = (postId) => {
 }
 const sharePost = (data) => {
     return axios.post('/api/share-post', data)
-} 
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -113,7 +113,9 @@ const getTablePost = (limit, page) => {
 const handleProcessReportPost = (data) => {
     return axios.put(`/api/handle-report-post`, data)
 }
-
+const createLogo = (formData) => {
+    return axios.post(`/api/upload-logo`, formData)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -141,6 +143,6 @@ export {
     createComment,
     getComment,
     deleteComment,
-    getTablePost, deletePost, handleProcessReportPost
+    getTablePost, deletePost, handleProcessReportPost, createLogo
 
 }

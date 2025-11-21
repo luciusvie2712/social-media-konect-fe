@@ -13,6 +13,7 @@ import FriendPage from "../views/user/FriendPage";
 import FriendDetail from "../views/user/FriendDetail";
 import ManageUser from "../views/admin/ManageUser/ManageUser";
 import ManagePost from "../views/admin/ManagePost/ManagePost";
+import ManageLogo from "../views/admin/ManageLogo/ManageLogo";
 
 const AppRoute = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoute = () => {
       </Route>
       <Route path="/admin/Manage-User" element={<ManageUser />} />
       <Route path="/admin/Manage-Post" element={<ManagePost />} />
+      <Route path="/admin/Manage-Logo" element={<ManageLogo />} />
       {/* User routes */}
       <Route
         path="/*"
