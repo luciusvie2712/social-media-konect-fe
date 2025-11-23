@@ -116,6 +116,9 @@ const handleProcessReportPost = (data) => {
 const createLogo = (formData) => {
     return axios.post(`/api/upload-logo`, formData)
 }
+const handleReportPost = (postId, reporterId, reason) => {
+    return axios.post(`/api/report-post`, { postId, reporterId, reason })
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -123,26 +126,16 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
-    getPost,
-    sharePost,
+    getPost, sharePost,
     getDataUserLoginGoogle,
-    getListUserChatted,
-    getConversation,
-    sendMessage,
-    GetfriendSuggestion,
-    sendFriendRequest,
-    rejectFriendRequest,
-    getFriendRequest,
-    acceptFriendRequest,
-    getListFriends,
+    getListUserChatted, getConversation, sendMessage,
+    GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends,
     LikePost,
-    getNotifications,
-    maskAsReadAPI,
-    getAllUserTable,
-    deleteUserTable,
+    getNotifications, maskAsReadAPI,
+    getAllUserTable, deleteUserTable,
     createComment,
-    getComment,
-    deleteComment,
-    getTablePost, deletePost, handleProcessReportPost, createLogo
+    getComment, deleteComment,
+    getTablePost, deletePost, handleProcessReportPost, handleReportPost,
+    createLogo,
 
 }

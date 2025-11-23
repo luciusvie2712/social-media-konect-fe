@@ -10,7 +10,6 @@ const CreateLogo = () => {
   const handleChooseFileLogo = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    console.log(file);
     setLogoImage(file);
     setLogoPrev(URL.createObjectURL(file));
   };
