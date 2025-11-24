@@ -36,7 +36,6 @@ const NavBar = () => {
           <img
             src={filelogo || avatar}
             className="h-10"
-            alt="Logo"
             crossOrigin="use-credentials"
           />
         </NavLink>

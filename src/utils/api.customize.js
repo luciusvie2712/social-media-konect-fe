@@ -119,6 +119,9 @@ const createLogo = (formData) => {
 const handleReportPost = (postId, reporterId, reason) => {
     return axios.post(`/api/report-post`, { postId, reporterId, reason })
 }
+const handleSharePost = (userId, postId, caption, visibility) => {
+    return axios.post(`/api/share-post`, { userId, postId, caption, visibility })
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -135,7 +138,7 @@ export {
     getAllUserTable, deleteUserTable,
     createComment,
     getComment, deleteComment,
-    getTablePost, deletePost, handleProcessReportPost, handleReportPost,
+    getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
 
 }

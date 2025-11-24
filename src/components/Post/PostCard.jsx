@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { timeAgo } from "../../utils/timeAgo";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import ModalSharePost from "../Modal/ModalSharePost";
 const PostCard = ({ post, index }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
@@ -26,6 +27,8 @@ const PostCard = ({ post, index }) => {
   const [dataPost, setDataPost] = useState([]);
   const [show, setShow] = useState(false);
   const [postIdReport, setPostIdReport] = useState();
+  const [shareContent, setShareContent] = useState("");
+  const [shareModalShow, setShareModalShow] = useState(false);
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
     : post?.media?.url
@@ -236,6 +239,10 @@ const PostCard = ({ post, index }) => {
     setShow(true);
     setPostIdReport(postId);
   };
+  const handleSharePost = () => {
+    setShareContent(post);
+    setShareModalShow(true);
+  };
   return (
     <>
       <div
@@ -326,7 +333,10 @@ const PostCard = ({ post, index }) => {
             <i className="fa-regular fa-comment w-4"></i>
             <span>{comments?.length || 0} bình luận</span>
           </div>
-          <div className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded">
+          <div
+            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded"
+            onClick={handleSharePost}
+          >
             <i className="fa-solid fa-share w-4"></i>
             <span>Chia sẻ</span>
           </div>
@@ -424,6 +434,13 @@ const PostCard = ({ post, index }) => {
           <Button onClick={() => handleReport()}>Xác nhận báo cáo</Button>
         </Modal.Footer>
       </Modal>
+      <ModalSharePost
+        shareContent={shareContent}
+        shareModalShow={shareModalShow}
+        setShareModalShow={setShareModalShow}
+        setShareContent={setShareContent}
+        userId={userId}
+      />
     </>
   );
 };

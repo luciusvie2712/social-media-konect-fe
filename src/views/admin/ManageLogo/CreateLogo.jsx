@@ -14,6 +14,7 @@ const CreateLogo = () => {
     setLogoPrev(URL.createObjectURL(file));
   };
   const handleCreateLogo = async () => {
+    if (!logoImage) return;
     const res = await createLogo(formdata);
     if (res?.Ec === 0) {
       toast.success(res.Mes);
