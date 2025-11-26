@@ -32,7 +32,7 @@ instance.interceptors.response.use(function (response) {
     if (error.status === 401 && refreshToken && !originalRequest._retry) {
         originalRequest._retry = true
         try {
-            const res = await axios.post('/refresh-token', {}, {
+            const res = await axios.post('/api/refresh-token', {}, {
                 headers: {
                     'Authorization': `Bearer ${refreshToken}`,
                 }

@@ -5,6 +5,7 @@ import * as action from "../../store/Export";
 import { useEffect, useState } from "react";
 import NotificationModal from "../Modal/Notification.modal";
 import axios from "../../utils/axios.customize";
+import { getHistorySearch } from "../../utils/api.customize";
 const NavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,6 +30,10 @@ const NavBar = () => {
     }
   };
   const filelogo = `http://localhost:8080${logo}`;
+  const clickInputSearch = async () => {
+    const historySearch = await getHistorySearch();
+    console.log("history search", historySearch);
+  };
   return (
     <div className="fixed top-0 left-0 w-full bg-[#ffffff] shadow-md z-50 flex items-center justify-between px-4 py-2 text-black">
       <div className="flex items-center">
@@ -45,6 +50,7 @@ const NavBar = () => {
           type="search"
           placeholder="Tìm kiếm ..."
           className="w-full bg-gray-200 rounded-[20px] px-4 py-1 outline-none"
+          onClick={() => clickInputSearch()}
         />
       </div>
       <div className="flex items-center space-x-4 gap-4">

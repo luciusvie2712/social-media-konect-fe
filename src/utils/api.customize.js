@@ -122,6 +122,13 @@ const handleReportPost = (postId, reporterId, reason) => {
 const handleSharePost = (userId, postId, caption, visibility) => {
     return axios.post(`/api/share-post`, { userId, postId, caption, visibility })
 }
+const saveHistorySearch = (userId, keyword, targetUserId) => {
+    return axios.post(`/api/search-history`, { userId, keyword, targetUserId })
+}
+const getHistorySearch = () => {
+    return axios.get(`/api/search-history`,)
+}
+
 export {
     createUserAPI,
     loginUserAPI,
@@ -140,5 +147,6 @@ export {
     getComment, deleteComment,
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
-
+    saveHistorySearch,
+    getHistorySearch
 }
