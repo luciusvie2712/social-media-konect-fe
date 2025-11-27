@@ -4,19 +4,18 @@ import { toast } from "react-toastify";
 import avatar from "../../assets/download.png";
 import "../../styles/ProfilePage.scss";
 import { useParams } from "react-router-dom";
-import bgDemo from "../../assets/image/bg_image_profile_2.jpg"
+import bgDemo from "../../assets/image/bg_image_profile_2.jpg";
 
 const ProfilePage = () => {
-  const [ userData, setUserData ] = useState([])
-  const { id } = useParams()
-  console.log(">>>> User: ", userData)
+  const [userData, setUserData] = useState([]);
+  const { id } = useParams();
+  console.log(">>>> User: ", userData);
 
   useEffect(() => {
     const fetchAUser = async () => {
       try {
         if (!id) return;
         const res = await getAUserByIdAPI(id);
-        console.log(res);
         if (res.Ec === 0) {
           setUserData(res.data);
         } else {
@@ -60,11 +59,11 @@ const ProfilePage = () => {
         </div>
         <div className="header-profile__stats">
           <div className="stats-item">
-            <span>1,204</span>
+            <span>{userData?.totalPosts || 0}</span>
             <span>Bài viết</span>
           </div>
-           <div className="stats-item">
-            <span>156</span>
+          <div className="stats-item">
+            <span>{userData?.totalFriend || 0}</span>
             <span>Bạn bè</span>
           </div>
           <div className="stats-item">
@@ -74,22 +73,14 @@ const ProfilePage = () => {
         </div>
 
         <div className="header-profile__active-nav">
-          <div className="active-option">
-            Bài viết
-          </div>
-          <div className="active-option">
-            Giới thiệu
-          </div>
-          <div className="active-option">
-            Bạn bè
-          </div>
+          <div className="active-option">Bài viết</div>
+          <div className="active-option">Giới thiệu</div>
+          <div className="active-option">Bạn bè</div>
         </div>
       </div>
 
       {/* Body Profile */}
-      <div className="body-profile">
-
-      </div>
+      <div className="body-profile"></div>
     </div>
   );
 };

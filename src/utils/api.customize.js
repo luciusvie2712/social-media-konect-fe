@@ -22,7 +22,6 @@ const getAUserByIdAPI = (id) => {
 }
 const forgotPasswordAPI = (email) => {
     const API_URL = '/api/forgot-password'
-    console.log(email)
     return axios.post(API_URL, { email })
 }
 const resetPasswordAPI = (newPass) => {

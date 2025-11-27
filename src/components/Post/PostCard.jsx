@@ -206,6 +206,9 @@ const PostCard = ({ post, index }) => {
     if (openComment) fetchComments(post._id);
   }, [openComment, post._id, fetchComments]);
 
+  // useEffect(() => {
+  //   fetchComments(post._id);
+  // }, [post._id]);
   const onCreate = async (content, parentComment = null) => {
     const success = await handleCreateComment({
       post: post._id,
@@ -306,7 +309,9 @@ const PostCard = ({ post, index }) => {
         </div>
         <div className="w-full flex flex-col gap-2 mt-2 !pl-[52px]">
           {dataPost[0]?.caption && (
-            <div className="text-[14px]">{post.caption}</div>
+            <div className="text-[14px] whitespace-pre-wrap">
+              {post.caption}
+            </div>
           )}
           {mediaList?.length === 0 || (
             <div className="mt-3">{renderMedia()}</div>

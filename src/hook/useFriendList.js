@@ -18,7 +18,7 @@ export const useFriendList = (type, userId) => {
                 case "suggestion":
                     dataRes = await GetfriendSuggestion(userId)
                     break
-                case "all": 
+                case "all":
                     dataRes = await getListFriends(userId)
                     break
                 default:
@@ -27,7 +27,7 @@ export const useFriendList = (type, userId) => {
                     return
             }
 
-            if  (dataRes.Ec === 0) {
+            if (dataRes?.Ec === 0) {
                 const data = dataRes?.data
                 setRaw(data)
                 if (type === "suggestion") {

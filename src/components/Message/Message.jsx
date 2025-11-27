@@ -18,6 +18,9 @@ const Message = () => {
   const [listUserChat, setListUserChat] = useState();
   const [messageSegment, setMessageSegment] = useState([]);
   const [currentReceiverId, setCurrentReceiverId] = useState("");
+
+  const [showOptions, setShowOptions] = useState(false);
+
   const [formSendMess, setFormSendMess] = useState({
     message: "",
     media: [],
@@ -234,6 +237,13 @@ const Message = () => {
                         <img src={msg.receiverId.avatar || avatar} />
                       </div>
                     )}
+                    <span
+                      className="options"
+                      onClick={() => setShowOptions(!showOptions)}
+                    >
+                      ...
+                    </span>
+
                     <div className="bubble">
                       {msg.message && msg.message}
 
@@ -287,6 +297,7 @@ const Message = () => {
                       }))
                     }
                   />
+
                   <div className="button-add-img">
                     <input
                       type="file"
@@ -310,7 +321,10 @@ const Message = () => {
               </div>
             </>
           ) : (
-            <span>Flop quá thì ghi tên anh vào</span>
+            <div className="w-full h-40 flex flex-col items-center justify-center">
+              <span className="text-3xl font-bold">TIN NHẮN</span>
+              <i className="fa-regular fa-message text-5xl mt-2"></i>
+            </div>
           )}
         </div>
         {showDetail && (

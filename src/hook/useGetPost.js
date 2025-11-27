@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { getPost } from "../utils/api.customize"
 
 export const useGetPost = (id) => {
-    const [ posts, setPosts ] = useState(null)
-    const [ loading, setLoading ] = useState(true)
+    const [posts, setPosts] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if (!id) return
@@ -13,6 +13,7 @@ export const useGetPost = (id) => {
                 setLoading(true)
                 const resData = await getPost(id)
                 if (resData.Ec === 0) {
+
                     setPosts(Array.isArray(resData.Data) ? resData.Data : [resData.Data])
                 } else {
                     console.warn("Error get post: ", resData.Mes)

@@ -6,7 +6,7 @@ import actiontypes from '../store/Action/ActionTypes';
 const instance = axios.create({
     baseURL: 'http://localhost:8080/'
 });
-
+let hasShown429Toast = false;
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     const state = store.getState();
@@ -68,7 +68,7 @@ instance.interceptors.response.use(function (response) {
         window.location.href = '/login';
     }
     let errorMessage = ''
-    switch (error.status) {
+    switch (error.response?.status) {
         case 400:
             errorMessage = 'Bad Request: The server could not understand the request.';
             toast.error(errorMessage)
@@ -87,6 +87,13 @@ instance.interceptors.response.use(function (response) {
         case 404:
             errorMessage = 'Not Found: The requested resource could not be found.';
             toast.error(errorMessage)
+            break;
+        case 429:
+            if (!hasShown429Toast) {
+                toast.error('Too many requests, please try again later.');
+                hasShown429Toast = true;
+                setTimeout(() => { hasShown429Toast = false; }, 5000);
+            }
             break;
         case 500:
             errorMessage = 'Internal Server Error: There is a problem with the server.';
