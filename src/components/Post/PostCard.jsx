@@ -336,7 +336,7 @@ const PostCard = ({ post, index }) => {
             onClick={handleOpenComment}
           >
             <i className="fa-regular fa-comment w-4"></i>
-            <span>{comments?.length || 0} bình luận</span>
+            <span>{post?.commentCount || 0} bình luận</span>
           </div>
           <div
             className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded"

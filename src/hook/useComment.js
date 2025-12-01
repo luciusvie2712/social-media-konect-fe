@@ -3,8 +3,8 @@ import { createComment, deleteComment, getComment } from "../utils/api.customize
 import { toast } from "react-toastify"
 
 export const useComment = () => {
-    const [ comments, setComments ] = useState([])
-    const [ loading, setLoading ] = useState(false)
+    const [comments, setComments] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const fetchComments = useCallback(async (postId) => {
         if (!postId) return
@@ -38,9 +38,9 @@ export const useComment = () => {
         }
     }, [])
 
-    const handleDeleteComment = useCallback(async (commentId, userId) => {
+    const handleDeleteComment = useCallback(async (commentId,) => {
         try {
-            const res = await deleteComment(commentId, userId)
+            const res = await deleteComment(commentId,)
             if (res?.Ec === 0) {
                 toast.success("Đã xóa bình luận!")
                 return true
@@ -52,10 +52,10 @@ export const useComment = () => {
         } catch (error) {
             console.error(">>> Delete comment error: ", error)
             return false
-            
+
         }
     })
 
 
-    return { comments, loading, fetchComments, handleCreateComment, handleDeleteComment}
+    return { comments, loading, fetchComments, handleCreateComment, handleDeleteComment }
 }

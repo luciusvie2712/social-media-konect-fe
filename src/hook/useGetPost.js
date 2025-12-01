@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react"
 import { getPost } from "../utils/api.customize"
 
-export const useGetPost = (id) => {
+export const useGetPost = () => {
     const [posts, setPosts] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (!id) return
 
         const fetchPost = async () => {
             try {
                 setLoading(true)
-                const resData = await getPost(id)
+                const resData = await getPost()
                 if (resData.Ec === 0) {
 
                     setPosts(Array.isArray(resData.Data) ? resData.Data : [resData.Data])
@@ -27,7 +26,7 @@ export const useGetPost = (id) => {
         }
 
         fetchPost()
-    }, [id])
+    }, [])
 
     return { posts, loading }
 }

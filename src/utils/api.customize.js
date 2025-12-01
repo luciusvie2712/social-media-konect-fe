@@ -51,8 +51,8 @@ const createComment = (dataComment) => {
 const getComment = (postId) => {
     return axios.get(`/api/get-comment?postId=${postId}`)
 }
-const deleteComment = (commentId, userId) => {
-    return axios.delete(`/api/delete-comment?commentId=${commentId}&&userId=${userId}`)
+const deleteComment = (commentId,) => {
+    return axios.delete(`/api/delete-comment?commentId=${commentId}`)
 }
 const deletePost = (postId) => {
     return axios.delete(`/api/delete/post?id=${postId}`)
@@ -127,6 +127,9 @@ const saveHistorySearch = (userId, keyword, targetUserId) => {
 const getHistorySearch = () => {
     return axios.get(`/api/search-history`,)
 }
+const searchUserByName = (name) => {
+    return axios.get(`/api/find-user-by-name?name=${name}`,)
+}
 
 export {
     createUserAPI,
@@ -146,6 +149,6 @@ export {
     getComment, deleteComment,
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
-    saveHistorySearch,
-    getHistorySearch
+    saveHistorySearch, searchUserByName, getHistorySearch
+
 }

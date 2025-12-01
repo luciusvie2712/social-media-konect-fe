@@ -52,7 +52,7 @@ const Message = () => {
   formSendMess.media.forEach((file) => {
     formData.append("media", file);
   });
-
+  console.log("setlistUserChat", listUserChat);
   useEffect(() => {
     if (userId) {
       getListUser();

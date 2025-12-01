@@ -4,11 +4,11 @@ import { createPostAPI } from "../../utils/api.customize";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import MediaGrid from "../Post/MediaGrid";
-
+import EmojiPicker from "emoji-picker-react";
 const CreatePost = ({ isOpen, setIsOpen, account }) => {
   if (!isOpen) return null;
   const userId = useSelector((state) => state.user.account.id);
-  
+
   useEffect(() => {
     if (userId) {
       setFormCreate({
@@ -25,7 +25,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     mediaPreview: [],
     visibility: "public",
   });
-
+  const captionRef = useRef(null);
   const formData = new FormData();
   formData.append("author", formCreate.author);
   formData.append("caption", formCreate.caption);
@@ -35,6 +35,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
   });
   const fileRef = useRef(null);
   const addMoreRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleOnchangeInput = (e) => {
     setFormCreate((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -108,7 +109,24 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
       });
     }
   }, [isOpen]);
+  const onEmojiClick = (emojiObject) => {
+    const textarea = captionRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
 
+    const newText =
+      formCreate.caption.substring(0, start) +
+      emojiObject.emoji +
+      formCreate.caption.substring(end);
+
+    setFormCreate((prev) => ({ ...prev, caption: newText }));
+
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd =
+        start + emojiObject.emoji.length;
+      textarea.focus();
+    }, 0);
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3">
       <div
@@ -148,15 +166,30 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
               </select>
             </div>
           </div>
-          <textarea
-            rows={3}
-            name="caption"
-            value={formCreate.caption}
-            onChange={handleOnchangeInput}
-            placeholder="Hôm nay bạn thấy thế nào ....."
-            className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 text-sm sm:text-base resize-none mb-4"
-          />
+          <div className="relative mb-4">
+            <textarea
+              ref={captionRef}
+              rows={3}
+              name="caption"
+              value={formCreate.caption}
+              onChange={handleOnchangeInput}
+              placeholder="Hôm nay bạn thấy thế nào ....."
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 text-sm sm:text-base resize-none"
+            />
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="absolute right-2 bottom-2 text-xl"
+            >
+              😊
+            </button>
 
+            {showEmojiPicker && (
+              <div className="absolute bottom-10 right-0 z-50">
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
+          </div>
           <div className="mb-4">
             <input
               ref={fileRef}
