@@ -15,7 +15,7 @@ const RequestCard = ({ index, item }) => {
   };
 
   return (
-    <div className="w-[180px] border-1 border-[#474747] rounded flex flex-col items-center cursor-pointer bg-[#29252520]">
+    <div className="w-[180px] border-1 border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
       <img
         src={item?.requester?.avatar || avatar}
         className="rounded-t-[4px]"
@@ -33,11 +33,11 @@ const RequestCard = ({ index, item }) => {
           <>
             <button
               onClick={onAcceptRequest}
-              className="bg-[#2200b978] font-semibold py-1 rounded w-full hover:bg-[#5136ca79]"
+              className="font-semibold py-1 rounded w-full hover:bg-blue-400 bg-blue-300 text-black"
             >
               Xác nhận
             </button>
-            <button className="bg-[#4c4c4c86] font-semibold py-1 rounded w-full hover:bg-[#76767686]">
+            <button className="font-semibold py-1 rounded w-full hover:bg-gray-400 bg-gray-300 text-black]">
               Từ chối
             </button>
           </>

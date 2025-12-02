@@ -22,7 +22,7 @@ const SuggestionCard = ({ index, item }) => {
   return (
     <div
       key={index}
-      className="w-[180px] border-1 border-[#242424] rounded flex flex-col items-center cursor-pointer"
+      className="w-[180px] border-1 border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]"
     >
       <img src={item.avatar || avatar} className="rounded-t-[4px]" />
       <div className="w-full flex flex-col item-center pt-2">
@@ -35,19 +35,19 @@ const SuggestionCard = ({ index, item }) => {
         {status === "idle" ? (
           <button
             onClick={onSendRequest}
-            className="font-semibold py-1 rounded w-full hover:bg-[#6751c95b] bg-[#3416bc43] text-blue-400"
+            className="font-semibold py-1 rounded w-full hover:bg-blue-400 bg-blue-300 text-black"
           >
             Thêm bạn bè
           </button>
         ) : (
           <button
             onClick={onSendRequest}
-            className="font-semibold py-1 rounded w-full hover:bg-[#76767686] bg-[#242424] text-white"
+            className="font-semibold py-1 rounded w-full hover:bg-gray-400 bg-gray-300 text-black"
           >
             Hủy lời mời
           </button>
         )}
-        <button className="bg-[#4c4c4c86] font-semibold py-1 rounded w-full hover:bg-[#76767686]">
+        <button className="font-semibold py-1 rounded w-full hover:bg-gray-400 bg-gray-300 text-black">
           Gỡ/Xóa
         </button>
       </div>

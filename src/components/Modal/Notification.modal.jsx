@@ -91,7 +91,7 @@ const NotificationModal = (props) => {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-[#494949] p-2">
+          <div className="flex-1 overflow-y-auto divide-y divide-[#cdcdcd] p-2">
             {error ? (
               <div className="text-center py-6 text-red-400">{error}</div>
             ) : notifications.length === 0 ? (
@@ -103,7 +103,7 @@ const NotificationModal = (props) => {
                   .map((n, i) => (
                     <div
                       key={n._id || i}
-                      className={`flex px-2 py-2 hover:bg-[#2e2e2e] cursor-pointer justify-between items-center transition ${n.isRead ? "opacity-50" : "opacity-100"}`}
+                      className={`flex px-2 py-2 hover:bg-[#e5e5e5] cursor-pointer justify-between items-center transition ${n.isRead ? "opacity-50" : "opacity-100"}`}
                       onClick={() => maskAsRead(n._id)}
                     >
                       <div className="flex items-center gap-2">

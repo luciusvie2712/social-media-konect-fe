@@ -8,6 +8,7 @@ import EmojiPicker from "emoji-picker-react";
 const CreatePost = ({ isOpen, setIsOpen, account }) => {
   if (!isOpen) return null;
   const userId = useSelector((state) => state.user.account.id);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (userId) {
@@ -69,18 +70,25 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     event.target.value = "";
   };
   const handleCreatePost = async () => {
-    let res = await createPostAPI(formData);
-    if (res?.Ec === 0) {
-      toast.success(res.Mes);
-      setFormCreate({
-        ...formCreate,
-        caption: "",
-        visibility: "",
-        media: [],
-        mediaPreview: [],
-      });
-    } else {
-      toast.error(res?.Mes);
+    setLoading(true)
+    try {
+      let res = await createPostAPI(formData);
+      if (res?.Ec === 0) {
+        toast.success("Đã đăng bài viết");
+        setFormCreate({
+          ...formCreate,
+          caption: "",
+          visibility: "",
+          media: [],
+          mediaPreview: [],
+        });
+      } else {
+        toast.warn("Xảy ra lỗi khi đăng - đăng bài không thành công!");
+      }
+    } catch (error) {
+      console.error("Lỗi đăng bài viết: ", error)
+    } finally {
+      setLoading(false)
     }
   };
   const handleRemoveMedia = (index) => {
@@ -130,7 +138,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3">
       <div
-        className="absolute right-4 top-4 px-3 py-2 rounded-full cursor-pointer bg-[#cdcdcd] hover:bg-[#3a3a3a]"
+        className="absolute right-4 top-4 px-3 py-2 rounded-full cursor-pointer bg-[#cdcdcd] hover:bg-[#3a3a3a] hover:text-white!"
         onClick={() => setIsOpen(false)}
       >
         <i className="fa-solid fa-xmark opacity-70"></i>
@@ -206,7 +214,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
             >
               Chọn ảnh/video (thay thế)
             </label>
-            <span className="text-xs text-gray-400 ml-2">hoặc kéo & thả</span>
+            <span className="text-xs text-gray-400 ml-2!">hoặc kéo & thả</span>
           </div>
 
           {formCreate.mediaPreview.length > 0 && (
@@ -236,13 +244,20 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
             </button>
           </div>
           <div className="w-1/2">
-            <button
-              type="button"
-              className="w-full bg-blue-200 px-4 py-2 font-semibold rounded hover:bg-blue-400"
-              onClick={handleCreatePost}
-            >
-              Đăng bài viết
-            </button>
+            {loading ? (
+              <div className="flex justify-center items-center">
+                <div className="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="w-full bg-blue-200 px-4 py-2 font-semibold rounded hover:bg-blue-400 hover:text-white!"
+                onClick={handleCreatePost}
+              >
+                Đăng bài viết
+              </button>
+            )}
+            
           </div>
         </div>
       </form>

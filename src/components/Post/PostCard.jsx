@@ -16,6 +16,7 @@ import { timeAgo } from "../../utils/timeAgo";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import ModalSharePost from "../Modal/ModalSharePost";
+import Caption from "./Caption";
 const PostCard = ({ post, index }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
@@ -157,10 +158,12 @@ const PostCard = ({ post, index }) => {
     if (mediaList.length === 1) {
       return (
         <div className="w-full overflow-hidden flex">
-          <img
-            src={mediaList[0].url}
-            className="rounded object-contain max-w-full max-h-[600px]"
-          />
+          <div className="w-full flex justify-center bg-[#e5e5e5]">
+            <img
+              src={mediaList[0].url}
+              className="object-contain max-w-full max-h-[600px]"
+            />
+          </div>
         </div>
       );
     }
@@ -307,20 +310,19 @@ const PostCard = ({ post, index }) => {
             )}
           </div>
         </div>
-        <div className="w-full flex flex-col gap-2 mt-2 !pl-[52px]">
+        <div className="w-full flex flex-col mt-2 border-b-[#cdcdcd] border-b-1 py-2">
           {dataPost[0]?.caption && (
-            <div className="text-[14px] whitespace-pre-wrap">
-              {post.caption}
+            <div className="text-[15px] whitespace-pre-wrap">
+              <Caption caption={dataPost[0].caption} />
             </div>
           )}
           {mediaList?.length === 0 || (
             <div className="mt-3">{renderMedia()}</div>
           )}
         </div>
-        <hr />
-        <div className="w-full flex items-center mb-1 justify-around text-[15px]">
+        <div className="w-full flex items-center justify-around text-[15px]">
           <div
-            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded"
+            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#e5e5e5] py-1 gap-2 py-2"
             onClick={() => handleLikePost(post._id)}
           >
             <i
@@ -332,14 +334,14 @@ const PostCard = ({ post, index }) => {
             <span>{dataPost[0]?.likes?.length || 0}</span>
           </div>
           <div
-            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded"
+            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#e5e5e5] py-1 gap-2 py-2"
             onClick={handleOpenComment}
           >
             <i className="fa-regular fa-comment w-4"></i>
             <span>{post?.commentCount || 0} bình luận</span>
           </div>
           <div
-            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#5d5d5d7c] py-1 gap-2 rounded"
+            className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#e5e5e5] py-1 gap-2 py-2"
             onClick={handleSharePost}
           >
             <i className="fa-solid fa-share w-4"></i>
@@ -347,8 +349,8 @@ const PostCard = ({ post, index }) => {
           </div>
         </div>
         {openComment && (
-          <div className="w-full flex flex-col items-center">
-            <div className="w-full bg-[#494949] h-[1px] my-2"></div>
+          <div className="w-full flex flex-col items-center gap-2">
+            <div className="w-full bg-[#cdcdcd] h-[1px]"></div>
             {/* Input comment */}
             <div className="w-full flex items-center gap-2">
               <input
@@ -360,15 +362,14 @@ const PostCard = ({ post, index }) => {
               />
               <div
                 onClick={() => onCreate(newComment)}
-                className="w-[15%] flex justify-center bg-blue-300 text-white py-2 rounded cursor-pointer hover:bg-blue-100 hover:!text-blue-500 "
+                className="w-[15%] flex justify-center bg-blue-300 text-black font-medium py-2 rounded cursor-pointer hover:bg-blue-400 hover:!text-white transition"
               >
                 Đăng
               </div>
             </div>
 
-            <div className="w-full bg-[#494949] h-[1px] my-2"></div>
             {/* Display comment */}
-            <div className="w-full flex flex-col gap-2 mt-2 mb-3 items-center">
+            <div className="w-full flex flex-col gap-2 mt-1 mb-3 items-center">
               {loading ? (
                 <div className="text-gray-400">Đang tải bình luận...</div>
               ) : comments?.length > 0 ? (
