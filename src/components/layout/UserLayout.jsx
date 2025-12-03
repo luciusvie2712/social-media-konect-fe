@@ -5,7 +5,7 @@ const UserLayout = () => {
   return (
     <div className="flex flex-col w-screen h-screen gap-4">
       <NavBar />
-      <div className="flex w-full h-full !mt-14 px-5 overflow-auto">
+      <div className="flex !w-screen h-full !mt-14 overflow-auto px-5">
         <Outlet />
       </div>
     </div>

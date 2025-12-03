@@ -49,7 +49,7 @@ const NavBar = () => {
       console.error(err);
     }
   };
-  const filelogo = `http://localhost:8080${logo}`;
+  const filelogo = `http://localhost:8080${logo}`; //env
   const clickInputSearch = async () => {
     setShowHistory(true);
     if (showHistory) {

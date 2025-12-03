@@ -90,8 +90,8 @@ const acceptFriendRequest = (requesterId, recipientId) => {
 const getFriendRequest = (userId) => {
     return axios.get(`/api/get-accept-request?userId=${userId}`)
 }
-const getListFriends = (id) => {
-    return axios.get(`/api/get-listfriend?id=${id}`)
+const getListFriends = () => {
+    return axios.get(`/api/get-listfriend`)
 }
 
 const getNotifications = (id) => {
@@ -150,5 +150,4 @@ export {
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
     saveHistorySearch, searchUserByName, getHistorySearch
-
 }

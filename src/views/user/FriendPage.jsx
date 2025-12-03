@@ -13,7 +13,7 @@ const FriendPage = () => {
   const safeSuggestion = Array.isArray(friendSuggestion) ? friendSuggestion : []; 
 
   return (
-    <div className="container">
+    <div className="friend-container">
       <div className="navbar-left">
         <NavBar />
       </div>

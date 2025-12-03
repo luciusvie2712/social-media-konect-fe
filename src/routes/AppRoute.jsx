@@ -40,9 +40,10 @@ const AppRoute = () => {
         <Route index element={<Navigate to="home" />} />
         <Route path="home" element={<HomePage />} />
         <Route path="profile/:id" element={<ProfilePage />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="message-box" element={<Message />} />
         <Route path="friends" element={<FriendPage />} />
-        <Route path="friends/:type" element={<FriendDetail />} />
+        <Route path="friends/:type/:friendId?" element={<FriendDetail />} />
       </Route>
     </Routes>
   );

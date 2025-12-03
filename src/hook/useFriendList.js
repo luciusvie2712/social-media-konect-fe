@@ -19,7 +19,7 @@ export const useFriendList = (type, userId) => {
                     dataRes = await GetfriendSuggestion(userId)
                     break
                 case "all":
-                    dataRes = await getListFriends(userId)
+                    dataRes = await getListFriends()
                     break
                 default:
                     console.warn("Invalid type in useFriendList:", type)
@@ -36,6 +36,9 @@ export const useFriendList = (type, userId) => {
                         ...(data.sameCitySuggestions || [])
                     ]
                     setFriends(merged)
+                } else if (type === "request") {
+                    const list = (data || []).map(item => item.requester)
+                    setFriends(list)
                 } else {
                     setFriends(data || [])
                 }

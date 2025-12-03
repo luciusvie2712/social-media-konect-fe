@@ -1,21 +1,22 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ShowListFriends from "../../components/Friends/ShowListFriends";
 import "../../styles/FriendDetail.scss";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Profile from "../user/ProfilePage";
 import { useSelector } from "react-redux";
 import { useFriendList } from "../../hook/useFriendList";
 
 const FriendDetail = () => {
-  const { type } = useParams();
+  const { type, friendId } = useParams();
   const navigate = useNavigate();
-  const [selectedFriend, setSelectedFriend] = useState(null);
   const user = useSelector((state) => state.user.account);
-
   const { friends, loading } = useFriendList(type, user?.id);
-  console.log(friends);
+  console.log("Friends: ", friends)
+
+  const selectedFriend = useMemo(() => friends?.find((i) => i?._id?.toString() === friendId), [friends, friendId])
+
   return (
-    <div className="container">
+    <div className="friend-container">
       <div className="nav-left">
         <div className="header-nav">
           <div onClick={() => navigate(-1)} className="btn-back">
@@ -42,7 +43,7 @@ const FriendDetail = () => {
                 typeList={type}
                 key={index}
                 item={item}
-                onSelect={() => setSelectedFriend(item)}
+                onSelect={() => navigate(`/friends/${type}/${item._id}`)}
               />
             ))
           ) : (
@@ -52,9 +53,9 @@ const FriendDetail = () => {
       </div>
       <div className="display">
         {selectedFriend ? (
-          <Profile data={selectedFriend} typeProfile={type} />
+          <Profile data={selectedFriend} type={type}/>
         ) : (
-          <span className="">
+          <span>
             Vui lòng chọn bạn bè bạn muốn xem trang cá nhân
           </span>
         )}

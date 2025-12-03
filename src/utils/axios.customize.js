@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import store from '../store/ReduxStore'
 import actiontypes from '../store/Action/ActionTypes';
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/'
+    baseURL: 'http://localhost:8080/' //env
 });
 let hasShown429Toast = false;
 // Add a request interceptor
