@@ -14,6 +14,9 @@ import FriendDetail from "../views/user/FriendDetail";
 import ManageUser from "../views/admin/ManageUser/ManageUser";
 import ManagePost from "../views/admin/ManagePost/ManagePost";
 import ManageLogo from "../views/admin/ManageLogo/ManageLogo";
+import Pagebanned from "../ErrorPage";
+import AdminPages from "../views/admin/AdminPage";
+import AdminDashboard from "../views/admin/AdminDashboard";
 
 const AppRoute = () => {
   return (
@@ -25,9 +28,13 @@ const AppRoute = () => {
         <Route path="/api/reset-password/:token" element={<ResetPassword />} />
         <Route path="/auth/google/callback" element={<GoogleCallback />} />
       </Route>
-      <Route path="/admin/Manage-User" element={<ManageUser />} />
-      <Route path="/admin/Manage-Post" element={<ManagePost />} />
-      <Route path="/admin/Manage-Logo" element={<ManageLogo />} />
+      <Route path="/admin" element={<AdminPages />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="Manage-User" element={<ManageUser />} />
+        <Route path="Manage-Post" element={<ManagePost />} />
+        <Route path="Manage-Logo" element={<ManageLogo />} />
+      </Route>
+
       {/* User routes */}
       <Route
         path="/*"
@@ -37,6 +44,7 @@ const AppRoute = () => {
           </PrivitaRoute>
         }
       >
+        <Route path="*" element={<Pagebanned />} />
         <Route index element={<Navigate to="home" />} />
         <Route path="home" element={<HomePage />} />
         <Route path="profile/:id" element={<ProfilePage />} />

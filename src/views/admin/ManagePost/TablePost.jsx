@@ -47,17 +47,38 @@ const TablePost = (props) => {
   }, []);
   const columns = [
     {
-      title: "ID",
-      render: (_, record) => <p>{record?._id}</p>,
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          id
+        </span>
+      ),
+
+      render: (_, record) => (
+        <p style={{ color: "#7e7e7eff" }}>{record?._id}</p>
+      ),
       key: "_id",
     },
     {
-      title: "Author name",
-      render: (_, record) => <Tag color="blue">{record.author?.name || 0}</Tag>,
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          Author name
+        </span>
+      ),
+      render: (_, record) => (
+        <Tag color="blue">
+          <span style={{ fontSize: "15px", fontWeight: "500" }}>
+            {record.author?.name || ""}
+          </span>
+        </Tag>
+      ),
       key: "author",
     },
     {
-      title: "Media",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          Media
+        </span>
+      ),
       key: "media",
       render: (_, record) => (
         <div
@@ -79,12 +100,32 @@ const TablePost = (props) => {
       ),
     },
     {
-      title: "caption",
-      dataIndex: "caption",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          Caption
+        </span>
+      ),
+      render: (_, record) => (
+        <p
+          style={{
+            maxWidth: "250px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            margin: 0,
+          }}
+        >
+          {record.caption || "asd"}
+        </p>
+      ),
       key: "caption",
     },
     {
-      title: "reports",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          reports
+        </span>
+      ),
       render: (_, record) => {
         let tagColor = "green";
 
@@ -117,7 +158,11 @@ const TablePost = (props) => {
       },
     },
     {
-      title: "Action",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          action
+        </span>
+      ),
       key: "action",
       render: (_, record) => (
         <Space size="middle">
@@ -128,10 +173,20 @@ const TablePost = (props) => {
             ....
           </a>
           <a
-            style={{ color: "red", fontSize: "15px" }}
+            style={{ color: "#edededff", fontSize: "15px" }}
             onClick={() => handleDeletePost(record._id)}
           >
-            Delete
+            <span
+              style={{
+                color: "rgba(230, 227, 227, 1)",
+                fontSize: "15px",
+                borderRadius: "8px",
+                padding: "4px 10px",
+                backgroundColor: "rgba(180, 30, 200, 1)",
+              }}
+            >
+              Delete
+            </span>
           </a>
         </Space>
       ),
@@ -201,7 +256,7 @@ const TablePost = (props) => {
   };
   return (
     <>
-      <h2 style={{ textAlign: "center" }}>TABLE USER</h2>
+      <h2 style={{ fontWeight: "bold" }}>Post Management</h2>
       <Table
         columns={columns}
         dataSource={dataWithKey}

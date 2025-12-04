@@ -210,10 +210,10 @@ const NavBar = () => {
           to="/message-box"
           className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 hover:bg-blue-400 hover:!text-white flex justify-center no-underline!"
         >
-          <i class="fa-solid fa-envelope"></i>
+          <i className="fa-solid fa-envelope"></i>
         </NavLink>
         <div className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 cursor-pointer hover:bg-blue-400 hover:!text-white flex justify-center">
-          <i class="fa-solid fa-gear"></i>
+          <i className="fa-solid fa-gear"></i>
         </div>
         <div
           onClick={handleLogout}

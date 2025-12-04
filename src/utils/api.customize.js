@@ -131,6 +131,16 @@ const searchUserByName = (name) => {
     return axios.get(`/api/find-user-by-name?name=${name}`,)
 }
 
+//addasboard
+const getAdminSummary = () => {
+    return axios.get(`/api/summary`)
+}
+const getUserStats = () => {
+    return axios.get(`/api/stats/users`)
+}
+const getPostStats = () => {
+    return axios.get(`/api/stats/posts`)
+}
 export {
     createUserAPI,
     loginUserAPI,
@@ -149,5 +159,6 @@ export {
     getComment, deleteComment,
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
-    saveHistorySearch, searchUserByName, getHistorySearch
+    saveHistorySearch, searchUserByName, getHistorySearch,
+    getAdminSummary, getUserStats, getPostStats
 }

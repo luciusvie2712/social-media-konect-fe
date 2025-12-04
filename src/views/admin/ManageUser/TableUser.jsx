@@ -26,44 +26,114 @@ const TableUser = (props) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          name
+        </span>
+      ),
+      render: (_, record) => (
+        <Tag color="blue">
+          <span style={{ fontSize: "15px", fontWeight: "500" }}>
+            {record.name || ""}
+          </span>
+        </Tag>
+      ),
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          email
+        </span>
+      ),
+      render: (_, record) => (
+        <p style={{ color: "#7e7e7eff" }}>{record?.email}</p>
+      ),
       key: "Email",
     },
     {
-      title: "Phone Number",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          Join Date
+        </span>
+      ),
+      render: (_, record) => {
+        let time = new Date(record.createdAt);
+        let formattedTime = time.toLocaleDateString("en-GB");
+        return <p style={{ color: "#7e7e7eff" }}>{formattedTime} </p>;
+      },
+      key: "createdAt",
     },
     {
-      title: "Account status",
-      dataIndex: "accountStatus",
-      key: "accountStatus",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          status
+        </span>
+      ),
+      render: (_, record) => {
+        let bg = "#d9d9d9";
+        let cl = "black";
+        if (record.statusAccount === "active")
+          (bg = "#8dc28ed8"), (cl = "green");
+        if (record.statusAccount === "banned") (bg = "#c88d8eff"), (cl = "red");
+
+        return (
+          <p
+            style={{
+              backgroundColor: bg,
+              color: cl,
+              padding: "2px 10px",
+              borderRadius: "8px",
+              width: "fit-content",
+              textTransform: "capitalize",
+            }}
+          >
+            {record.statusAccount}
+          </p>
+        );
+      },
+      key: "statusAccount",
     },
     {
-      title: "Role",
-      dataIndex: "roleId",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          role
+        </span>
+      ),
+      render: (_, record) => (
+        <p style={{ fontWeight: "500" }}>{record?.roleId}</p>
+      ),
       key: "roleId",
     },
     {
-      title: "Action",
+      title: (
+        <span style={{ textTransform: "uppercase", color: "#7e7e7eff" }}>
+          action
+        </span>
+      ),
       key: "action",
       render: (_, record) => (
         <Space size="middle">
           <a
-            style={{ color: "rgb(233, 185, 38)", fontSize: "15px" }}
+            style={{
+              color: "rgba(230, 227, 227, 1)",
+              fontSize: "15px",
+              borderRadius: "8px",
+              padding: "4px 10px",
+              backgroundColor: "rgba(180, 30, 200, 1)",
+            }}
             onClick={() => handleEditUser(record)}
           >
-            Edit{" "}
+            BanAccount
           </a>
           <a
-            style={{ color: "red", fontSize: "15px" }}
+            style={{
+              color: "rgba(230, 227, 227, 1)",
+              fontSize: "15px",
+              borderRadius: "8px",
+              padding: "4px 10px",
+              backgroundColor: "rgba(225, 57, 42, 1)",
+            }}
             onClick={() => handleDeleteUser(record)}
           >
             Delete
@@ -103,7 +173,7 @@ const TableUser = (props) => {
   };
   return (
     <>
-      <h2 style={{ textAlign: "center" }}>TABLE USER</h2>
+      <h2 style={{ fontWeight: "bold" }}>Account Management</h2>
       <Table
         columns={columns}
         dataSource={dataWithKey}
