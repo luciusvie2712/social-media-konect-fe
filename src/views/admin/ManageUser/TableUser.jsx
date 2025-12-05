@@ -4,14 +4,15 @@ import {
   Divider,
   message,
   Modal,
+  Select,
   Space,
   Table,
   Tag,
 } from "antd";
 import { toast } from "react-toastify";
 import "./ManageUser.scss";
-import { deleteUserTable } from "../../../utils/api.customize";
-import { useState } from "react";
+import { deleteUserTable, updateAuser } from "../../../utils/api.customize";
+import { useEffect, useState } from "react";
 const TableUser = (props) => {
   const {
     listUserTable,
@@ -24,6 +25,31 @@ const TableUser = (props) => {
     handleEditUser,
   } = props;
   const [selectedUser, setSelectedUser] = useState(null);
+  const [formUpdate, setFormUpdate] = useState({
+    roleId: "",
+    _id: "",
+  });
+
+  const handleChangeRole = async (userId, newRole) => {
+    try {
+      if (!userId) return;
+
+      const payload = {
+        _id: userId,
+        roleId: newRole,
+      };
+
+      setFormUpdate(payload);
+      const res = await updateAuser(payload);
+      if (res?.Ec === 0) {
+        handleGetUserTable();
+      } else {
+        toast.error(res?.Mes);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const columns = [
     {
       title: (
@@ -101,7 +127,15 @@ const TableUser = (props) => {
         </span>
       ),
       render: (_, record) => (
-        <p style={{ fontWeight: "500" }}>{record?.roleId}</p>
+        <Select
+          value={record.roleId}
+          style={{ width: 120 }}
+          onChange={(value) => handleChangeRole(record._id, value)}
+          options={[
+            { value: "user", label: "User" },
+            { value: "admin", label: "Admin" },
+          ]}
+        />
       ),
       key: "roleId",
     },
@@ -178,6 +212,7 @@ const TableUser = (props) => {
         columns={columns}
         dataSource={dataWithKey}
         size="larger"
+        rowKey="_id"
         pagination={{
           current: currentPages,
           pageSize: 6,
