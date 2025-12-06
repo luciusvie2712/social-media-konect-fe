@@ -24,3 +24,31 @@
     "ELSH" 0,
     "ELXP" 0;
 }
+
+/* Thêm vào file CSS hoặc sử dụng @apply trong component */
+.mini-chat-transition {
+  transition: all 0.3s ease;
+}
+
+/* Đảm bảo z-index phù hợp */
+.z-60 {
+  z-index: 60;
+}
+
+/* Scrollbar styling */
+.mini-chat-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-chat-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.mini-chat-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.mini-chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

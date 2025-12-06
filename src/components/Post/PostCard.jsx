@@ -249,6 +249,8 @@ const PostCard = ({ post, index }) => {
     setShareContent(post);
     setShareModalShow(true);
   };
+
+  console.log("Post", dataPost[0])
   return (
     <>
       <div
@@ -275,7 +277,9 @@ const PostCard = ({ post, index }) => {
               </NavLink>
               <div className="flex items-center gap-2">
                 <span className="opacity-40">{timeText}</span>
-                <i className="fa-solid fa-earth-americas opacity-50"></i>
+                {dataPost[0]?.visibility === "private" && <i className="fa-solid fa-lock opacity-40 text-[14px] h-3 w-3"></i>}
+                {dataPost[0]?.visibility === "friends" && <i className="fa-solid fa-user-group opacity-40 text-[14px] h-3 w-3"></i>}
+                {dataPost[0]?.visibility === "public" && <i className="fa-solid fa-earth-europe opacity-40 text-[14px] h-3 w-3"></i>}
               </div>
             </div>
           </div>

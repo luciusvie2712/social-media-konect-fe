@@ -17,7 +17,7 @@ const ShowListFriends = ({item, typeList, index, onSelect}) => {
         }
     
     return (
-        <div key={index} onClick={onSelect} className="w-full flex items-center gap-2 hover:bg-blue-200 cursor-pointer py-2 px-2 rounded">
+        <div key={index} onClick={onSelect} className="w-full flex items-center gap-2 hover:bg-gray-200 cursor-pointer py-2 px-2 rounded">
             <img src={item.avatar || avatar} className="w-[60px] rounded-full" />
             <div className="flex flex-col items-center w-full gap-2">
                 <div className="flex text-[15px] w-full">

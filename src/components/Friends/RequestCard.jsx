@@ -8,7 +8,7 @@ const RequestCard = ({ index, item }) => {
 
   const onAcceptRequest = async () => {
     try {
-      await handleAcceptFriendRequest(item.requester._id, user.id);
+      await handleAcceptFriendRequest(item._id, user.id);
     } catch (error) {
       console.error(error);
     }
@@ -17,12 +17,12 @@ const RequestCard = ({ index, item }) => {
   return (
     <div className="w-[180px] border-1 border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
       <img
-        src={item?.requester?.avatar || avatar}
+        src={item?.avatar || avatar}
         className="rounded-t-[4px]"
       />
       <div className="w-full flex flex-col item-center pt-2">
         <span className="text-[15px] font-semibold px-2">
-          {item?.requester?.name}
+          {item?.name}
         </span>
         <span className="text-[13px] px-2 opacity-50">
           {item.mutualFriends} bạn chung
