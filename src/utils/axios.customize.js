@@ -27,41 +27,51 @@ instance.interceptors.response.use(function (response) {
 }, async function as(error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    const originalRequest = error.config;
     const state = store.getState();
     const refreshToken = state.user?.account?.refreshToken;
-    if (error.status === 401 && refreshToken && !originalRequest._retry) {
-        originalRequest._retry = true
+    if (error.response?.status === 401 && refreshToken && !originalRequest._retry) {
+        originalRequest._retry = true;
+
         try {
-            const res = await axios.post('/api/refresh-token', {}, {
-                headers: {
-                    'Authorization': `Bearer ${refreshToken}`,
+            const res = await axios.post(
+                'http://localhost:8080/api/refresh-token',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${refreshToken}`,
+                    },
                 }
-            });
+            );
+
             if (res?.data?.EC === 0) {
                 const newAccessToken = res.data.accessToken;
                 const newRefreshToken = res.data.newRefreshToken;
 
                 store.dispatch({
-                    type: "USER_UPDATE_TOKEN",
+                    type: 'USER_UPDATE_TOKEN',
                     payload: {
                         accessToken: newAccessToken,
                         refreshToken: newRefreshToken,
-                    }
-                })
-                originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                    },
+                });
+
+                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                 return instance(originalRequest);
             } else {
-                toast.error("Session expired. Please login again.");
+                toast.error('Session expired. Please login again.');
                 store.dispatch({ type: actiontypes.USER_LOGOUT });
-                window.location.href = "/login";
+                window.location.href = '/login';
+                return Promise.reject(error);
             }
         } catch (e) {
-            console.log(e)
-            toast.error("Token expired. Please login again.");
+            toast.error('Token expired. Please login again.');
             store.dispatch({ type: actiontypes.USER_LOGOUT });
             window.location.href = '/login';
+            return Promise.reject(e);
         }
     }
+
     if (error.response?.status === 401 && !refreshToken) {
         toast.error('No refresh token available. Please login again.');
         store.dispatch({ type: actiontypes.USER_LOGOUT });

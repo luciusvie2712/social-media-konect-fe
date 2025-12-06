@@ -16,6 +16,9 @@ const loginUserAPI = (email, password) => {
         password
     })
 }
+const updateAuser = (dataUpdate) => {
+    return axios.put('/api/update-user', dataUpdate)
+}
 const getAUserByIdAPI = (id) => {
     const API_URL = `/api/get-a-user?id=${id}`
     return axios.get(API_URL)
@@ -144,10 +147,12 @@ const getUserStats = () => {
 const getPostStats = () => {
     return axios.get(`/api/stats/posts`)
 }
+const statusAccount = (status, userId) => {
+    return axios.post(`/api/account-status?status=${status}&&userId=${userId}`)
+}
 export {
-    createUserAPI,
-    loginUserAPI,
-    getAUserByIdAPI,
+    createUserAPI, loginUserAPI,
+    getAUserByIdAPI, updateAuser,
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
@@ -163,5 +168,6 @@ export {
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
     saveHistorySearch, searchUserByName, getHistorySearch,
-    getAdminSummary, getUserStats, getPostStats
+    getAdminSummary, getUserStats, getPostStats,
+    statusAccount
 }
