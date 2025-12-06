@@ -65,7 +65,7 @@ const RegisterForm = ({ setFormType }) => {
                         <button
                             type="button"
                             onClick={() => setFormType("login")}
-                            className="text-blue-500 underline"
+                            className="text-blue-500 underline px-1"
                         >
                             Login
                         </button>
@@ -73,8 +73,8 @@ const RegisterForm = ({ setFormType }) => {
                     
                 </div>
             </div>
-            <div className="w-full flex justify-center mb-5">
-                <button  className="w-[200px] py-2 bg-amber-100 rounded font-medium text-[20px]">Register</button>
+            <div className="w-full flex justify-center mb-5 text-[20px]">
+                <button  className="w-[250px] py-2 bg-blue-400 text-white rounded font-semibold">Register</button>
             </div>
         </form>
     )

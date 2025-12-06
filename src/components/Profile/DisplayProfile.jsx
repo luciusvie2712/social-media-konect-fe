@@ -68,7 +68,7 @@ const DisplayProfile = ({ info, mode }) => {
             <div className="w-[100%] flex justify-center py-2">
                 <div className="w-[70%] flex gap-4">
                     {activeTab === "posts" && (
-                        <PostActive />
+                        <PostActive userId={info?.id}/>
                     )}
                     {activeTab === "about" && (
                         <AboutActive />

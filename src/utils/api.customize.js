@@ -42,6 +42,9 @@ const createPostAPI = (formData) => {
 const getPost = (id) => {
     return axios.get(`/api/get-post?id=${id}`)
 }
+const getPostAUser = (userId) => {
+    return axios.get(`/api/get-post-a-user?userId=${userId}`)
+}
 const LikePost = (userId, postId) => {
     return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)
 }
@@ -148,7 +151,7 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
-    getPost, sharePost,
+    getPost, sharePost, getPostAUser,
     getDataUserLoginGoogle,
     getListUserChatted, getConversation, sendMessage,
     GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends,

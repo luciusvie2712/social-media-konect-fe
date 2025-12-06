@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as action from "../../store/Export";
-import { faLandmarkFlag } from "@fortawesome/free-solid-svg-icons";
+import iconGG from "../../assets/image/icon_gg.png"
 
 const LoginForm = ({ setFormType }) => {
   const [email, setEmail] = useState("");
@@ -40,7 +40,7 @@ const LoginForm = ({ setFormType }) => {
         className="w-[max(30vw,400px)] bg-white rounded pt-2 pb-4"
       >
         <div className="flex items-center justify-center pt-3 pb-2">
-          <div className="h-full font-semibold text-2xl">LOGIN ACCOUNT</div>
+          <div className="h-full font-bold text-3xl text-blue-400">LOGIN ACCOUNT</div>
         </div>
         <hr />
         <div className="flex flex-col gap-4 mt-5 px-4 mb-2">
@@ -78,7 +78,7 @@ const LoginForm = ({ setFormType }) => {
           </div>
         </div>
         <div className="w-full flex justify-center mb-4 text-[20px]">
-          <button className="w-[250px] py-2 bg-amber-100 rounded font-semibold">
+          <button className="w-[250px] py-2 bg-blue-400 text-white rounded font-semibold">
             Login
           </button>
         </div>
@@ -92,7 +92,7 @@ const LoginForm = ({ setFormType }) => {
             className=" w-[50px] h-[50px] cursor-pointer"
             onClick={handleLoginGoogle}
           >
-            <i className="fa-brands fa-google text-[40px] rounded-full border-[rgba(85,85,85,0.52)] border-1 py-1 px-1"></i>
+            <img src={iconGG} alt="" />
           </div>
         </div>
         <div className="flex w-full justify-center mt-3">

@@ -12,7 +12,7 @@ const PostList = () => {
     )
 
   return (
-    <div className="w-[100%] flex flex-col items-center justify-center gap-6 px-4">
+    <div className="w-[100%] flex flex-col items-center justify-start gap-6 px-4">
       {posts?.length > 0 ? (
         posts.map((post, index) => <PostCard post={post} key={index} />)
       ) : (

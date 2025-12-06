@@ -19,8 +19,20 @@ const NavBar = () => {
   const [nameSearch, setNameSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [typingTimeout, setTypingTimeout] = useState(null);
-
+  const [openAvatarMenu, setOpenAvatarMenu] = useState(false);
+  const avatarRef = useRef(null);
   const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+        setOpenAvatarMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -212,24 +224,49 @@ const NavBar = () => {
         >
           <i className="fa-solid fa-envelope"></i>
         </NavLink>
-        <div className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 cursor-pointer hover:bg-blue-400 hover:!text-white flex justify-center">
-          <i className="fa-solid fa-gear"></i>
+        <div className="relative" ref={avatarRef}>
+          <div
+            onClick={() => setOpenAvatarMenu(!openAvatarMenu)}
+            className="cursor-pointer border-2 border-gray-200 hover:border-blue-400 rounded-full"
+          >
+            <img
+              src={account?.avatar || avatar}
+              className="w-8 h-8 rounded-full"
+            />
+          </div>
+
+          {openAvatarMenu && (
+            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200 animate-fadeIn z-50">
+              
+              <NavLink
+                to={`/profile/${account?.id}`}
+                onClick={() => setOpenAvatarMenu(false)}
+                className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 no-underline!"
+              >
+                Xem trang cá nhân
+              </NavLink>
+              <div
+                onClick={() => {
+                  setOpenAvatarMenu(false);
+                  navigate("/settings"); // nếu có route
+                }}
+                className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 cursor-pointer"
+              >
+                <i class="fa-solid fa-gear w-5"></i>Cài đặt
+              </div>
+              <div
+                onClick={() => {
+                  setOpenAvatarMenu(false);
+                  handleLogout();
+                }}
+                className="block px-4 py-2 hover:bg-gray-100 text-sm text-red-500 cursor-pointer"
+              >
+                <i className="fa-solid fa-right-from-bracket w-5"></i>Đăng xuất
+              </div>
+
+            </div>
+          )}
         </div>
-        <div
-          onClick={handleLogout}
-          className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 cursor-pointer hover:bg-blue-400 hover:!text-white flex justify-center"
-        >
-          <i className="fa-solid fa-right-from-bracket"></i>
-        </div>
-        <NavLink
-          to={`/profile/${account?.id}`}
-          className=" border-2 border-gray-200 hover:border-blue-400 rounded-full"
-        >
-          <img
-            src={account?.avatar || avatar}
-            className="w-8 h-8 rounded-full"
-          />
-        </NavLink>
       </div>
     </div>
   );

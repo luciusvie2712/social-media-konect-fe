@@ -1,5 +1,27 @@
-import PostList from "../Post/PostList"
-const PostActive = () => {
+import { useEffect, useState } from "react"
+import { getPostAUser } from "../../utils/api.customize"
+const PostActive = ({ userId }) => {
+    const [loading, setLoading] = useState(false)
+    const [userPost, setUserPost] = useState([])
+    console.log("FE userId: ", typeof userId)
+    useEffect(() => {
+        const fetchUserPost = async () => {
+            try {
+                setLoading(true)
+                const res = await getPostAUser(userId)
+                console.log("User post:", res)
+            } catch (error) {
+                console.error("Error fetch user Posts: ", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (userId) {
+            fetchUserPost();
+        }
+    }, [userId])
+
     return (
         <div className="w-full flex items-start gap-3 justify-center">
             <div className="flex flex-col gap-3 w-[30%]">
@@ -18,7 +40,10 @@ const PostActive = () => {
                 </div>
             </div>
             <div className="flex w-[70%] overflow-y-auto">
-                <PostList />
+                <div className="w-full flex flex-col items-center">
+
+
+                </div>
             </div>
             
         </div>
