@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { getAUserByIdAPI } from "../../utils/api.customize";
 import { toast } from "react-toastify";
-import avatar from "../../assets/download.png";
 import "../../styles/ProfilePage.scss";
 import { useParams } from "react-router-dom";
-import bgDemo from "../../assets/image/bg_image_profile_2.jpg";
 import { useSelector } from "react-redux";
 import DisplayProfile from "../../components/Profile/DisplayProfile";
+import { checkRelationShip } from "../../utils/api.customize";
 
 const ProfilePage = ({data, type = null}) => {
   const { id } = useParams()
   const user = useSelector((state) => state.user.account)
   const [otherUser, setOtherUser] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  
 
   useEffect(() => {
     const fetchUser = async () => {

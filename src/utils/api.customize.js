@@ -60,6 +60,13 @@ const getComment = (postId) => {
 const deleteComment = (commentId,) => {
     return axios.delete(`/api/delete-comment?commentId=${commentId}`)
 }
+const authorDeletePost = (postId) => {
+    return axios.delete(`/api/author/delete-post?id=${postId}`)
+}
+const updatePost = (data) => {
+    return axios.post(`/api/update-post`, data)
+}
+
 const deletePost = (postId) => {
     return axios.delete(`/api/delete/post?id=${postId}`)
 }
@@ -101,6 +108,9 @@ const getFriendRequest = (userId) => {
 }
 const getListFriends = () => {
     return axios.get(`/api/get-listfriend`)
+}
+const checkRelationShip = (userId, otherUserId) => {
+    return axios.get(`/api/relationship/status?user1=${userId}&&user2=${otherUserId}`)
 }
 
 const getNotifications = (id) => {
@@ -154,20 +164,15 @@ const statusAccount = (status, userId) => {
     return axios.post(`/api/account-status?status=${status}&&userId=${userId}`)
 }
 export {
-    createUserAPI, loginUserAPI,
+    createUserAPI, loginUserAPI, getDataUserLoginGoogle,
     getAUserByIdAPI, updateAuser,
     forgotPasswordAPI,
     resetPasswordAPI,
-    createPostAPI,
-    getPost, sharePost, getPostAUser, getPostById,
-    getDataUserLoginGoogle,
+    createPostAPI, getPost, sharePost, getPostAUser, getPostById, authorDeletePost, LikePost, createComment, getComment, deleteComment, updatePost,
     getListUserChatted, getConversation, sendMessage,
-    GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends,
-    LikePost,
+    GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends, checkRelationShip,
     getNotifications, maskAsReadAPI,
     getAllUserTable, deleteUserTable,
-    createComment,
-    getComment, deleteComment,
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,
     createLogo,
     saveHistorySearch, searchUserByName, getHistorySearch,

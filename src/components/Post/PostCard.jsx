@@ -2,24 +2,25 @@ import { use, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import { useSelector } from "react-redux";
 import {
-  deletePost,
   getPostById,
   handleReportPost,
   LikePost,
+  authorDeletePost,
   sharePost,
 } from "../../utils/api.customize";
 import avatar from "../../assets/download.png";
 import { useComment } from "../../hook/useComment";
 import CommentItem from "./CommentItem";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { timeAgo } from "../../utils/timeAgo";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import ModalSharePost from "../Modal/ModalSharePost";
 import Caption from "./Caption";
+import ModalEditPost from "../Modal/editPost.modal";
 
-const PostCard = ({ post, index }) => {
+const PostCard = ({ post, index, onUpdatePost }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
   const [statusLike, setStatusLike] = useState({});
@@ -34,6 +35,8 @@ const PostCard = ({ post, index }) => {
   const [shareModalShow, setShareModalShow] = useState(false);
   const [sharedPostData, setSharedPostData] = useState(null);
   const [loadingSharedPost, setLoadingSharedPost] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate()
   
   // Check if this is a shared post
   const isSharedPost = post?.sharedPost;
@@ -67,6 +70,10 @@ const PostCard = ({ post, index }) => {
     "Vi phạm bản quyền",
   ];
 
+  // Chỉ lấy tối đa 4 comments để hiển thị
+  const displayedComments = comments.slice(0, 4);
+  const hasMoreComments = comments.length > 4;
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeText(timeAgo(post.createdAt));
@@ -87,7 +94,8 @@ const PostCard = ({ post, index }) => {
 
   const handleDeletePost = async (postId) => {
     try {
-      const res = await deletePost(postId);
+      const res = await authorDeletePost(postId);
+      console.log("Xoas baif viet ")
       if (res?.Ec === 0) {
         toast.success("Đã gỡ bỏ bài viết");
       } else toast.warn(res?.Mes);
@@ -177,13 +185,14 @@ const PostCard = ({ post, index }) => {
       fetchSharedPost();
     }
   }, [post.sharedPost, isSharedPost]);
-  console.log("Shared: ", post)
+
   const renderMedia = () => {
     if (mediaList[0]?.type === "video") {
       const video = mediaList[0];
       return (
         <div className="relative w-full rounded overflow-hidden bg-black aspect-video">
           <video
+            onClick={() => navigate(`/post/${post._id}`)}
             src={video.url}
             className="w-full h-full object-cover"
             controls
@@ -197,6 +206,7 @@ const PostCard = ({ post, index }) => {
         <div className="w-full overflow-hidden flex">
           <div className="w-full flex justify-center bg-[#e5e5e5]">
             <img
+              onClick={() => navigate(`/post/${post._id}`)}
               src={mediaList[0].url}
               className="object-contain max-w-full max-h-[600px]"
               alt="post media"
@@ -209,6 +219,7 @@ const PostCard = ({ post, index }) => {
     const hiddenCount = mediaList.length - 9;
     return (
       <div
+        onClick={() => navigate(`/post/${post._id}`)}
         className={`grid ${
           displayImageList.length === 2
             ? "grid-cols-2"
@@ -355,7 +366,7 @@ const PostCard = ({ post, index }) => {
             </div>
             <div className="flex items-center gap-1">
               <i className="fa-regular fa-comment"></i>
-              <span>{sharedPostData?.comments?.length || 0}</span>
+              <span>{sharedPostData?.commentCount || 0}</span>
             </div>
           </div>
         </div>
@@ -404,6 +415,20 @@ const PostCard = ({ post, index }) => {
     if (success) await fetchComments(post._id);
   };
 
+  // Xử lý cập nhật bài viết 
+  const handleUpdateSuccess = (updatedPost) => {
+    setDataPost(prev => prev.map(p => 
+      p._id === updatedPost._id ? { ...p, ...updatedPost } : p
+    ));
+    
+    if (onUpdatePost) {
+      onUpdatePost(updatedPost);
+    }
+    setShowEditModal(false);
+  };
+
+
+
   const handleReport = async () => {
     const response = await handleReportPost(postIdReport, userId, reasonReport);
     if (response?.Ec === 0) {
@@ -415,6 +440,8 @@ const PostCard = ({ post, index }) => {
       toast.warning(response?.Mes);
     }
   };
+
+  
   
   const showModalChooseReason = (postId) => {
     setShow(true);
@@ -425,12 +452,14 @@ const PostCard = ({ post, index }) => {
     setShareContent(post);
     setShareModalShow(true);
   };
-
+  
+  console.log(post)
   return (
     <>
       <div
         key={index}
-        className="w-full rounded bg-[#ffffff] px-3 py-2 border-[1px] border-gray-200 text-black shadow-sm"
+        className="w-full rounded bg-[#ffffff] px-3 py-2 border-[1px] border-gray-200 text-black shadow-sm transition-all duration-300"
+        data-post-id={post._id}
       >
         <div className="w-full flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -478,18 +507,31 @@ const PostCard = ({ post, index }) => {
           >
             <i className="fa-solid fa-ellipsis w-[24px] text-[20px] text-gray-600"></i>
             {openMenu && (
-              <div className="absolute top-6 right-0 bg-white rounded-lg border border-gray-300 shadow-lg z-10 w-[140px] flex flex-col py-1">
+              <div className="absolute top-6 right-0 bg-white rounded-lg border border-gray-300 shadow-lg z-50 min-w-[150px] flex flex-col py-1">
                 {post?.author?._id === userId ? (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeletePost(post._id);
-                    }}
-                    className="hover:bg-gray-100 px-3 py-2 text-left text-red-600 cursor-pointer"
-                  >
-                    <i className="fa-solid fa-trash mr-2"></i>
-                    Gỡ bài viết
-                  </div>
+                  <>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowEditModal(true);
+                        setOpenMenu(false);
+                      }}
+                      className="hover:bg-gray-100 px-3 py-2 text-left text-blue-600 cursor-pointer border-b border-gray-100"
+                    >
+                      <i className="fa-solid fa-pen mr-2"></i>
+                      Chỉnh sửa
+                    </div>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeletePost(post._id);
+                      }}
+                      className="hover:bg-gray-100 px-3 py-2 text-left text-red-600 cursor-pointer"
+                    >
+                      <i className="fa-solid fa-trash mr-2"></i>
+                      Gỡ bài viết
+                    </div>
+                  </>
                 ) : (
                   <div
                     className="hover:bg-gray-100 px-3 py-2 text-left text-gray-700 cursor-pointer"
@@ -568,22 +610,22 @@ const PostCard = ({ post, index }) => {
               />
               <button
                 onClick={() => onCreate(newComment)}
-                className="w-[15%] flex justify-center bg-blue-500 text-white font-medium py-2 rounded-lg cursor-pointer hover:bg-blue-600 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-[15%] flex justify-center bg-blue-500 text-white font-medium py-2 rounded cursor-pointer hover:bg-blue-600 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!newComment.trim()}
               >
                 Đăng
               </button>
             </div>
 
-            {/* Display comments */}
+            {/* Display comments - Chỉ hiển thị tối đa 4 comments */}
             <div className="w-full flex flex-col gap-3 mt-3 mb-3">
               {loading ? (
                 <div className="text-gray-400 text-center py-4">
                   <i className="fa-solid fa-spinner fa-spin mr-2"></i>
                   Đang tải bình luận...
                 </div>
-              ) : comments?.length > 0 ? (
-                comments.map((comment) => (
+              ) : displayedComments.length > 0 ? (
+                displayedComments.map((comment) => (
                   <CommentItem
                     key={comment._id}
                     comment={comment}
@@ -599,10 +641,14 @@ const PostCard = ({ post, index }) => {
               )}
             </div>
             
-            {comments?.length > 3 && (
-              <div className="w-full flex items-center justify-center text-blue-500 hover:text-blue-700 cursor-pointer text-sm font-medium">
+            {/* Chỉ hiển thị nút "Xem tất cả bình luận" khi có nhiều hơn 4 comments */}
+            {hasMoreComments && (
+              <div 
+                onClick={() => navigate(`/post/${post._id}`)} 
+                className="w-full flex items-center justify-center text-blue-500 hover:text-blue-700 cursor-pointer text-sm font-medium"
+              >
                 <i className="fa-solid fa-chevron-down mr-1"></i>
-                Xem tất cả bình luận
+                Xem tất cả bình luận ({comments.length})
               </div>
             )}
           </div>
@@ -660,6 +706,14 @@ const PostCard = ({ post, index }) => {
         setShareModalShow={setShareModalShow}
         setShareContent={setShareContent}
         userId={userId}
+      />
+
+      {/* Edit Modal */}
+      <ModalEditPost
+        show={showEditModal}
+        onHide={() => setShowEditModal(false)}
+        post={post}
+        onUpdateSuccess={handleUpdateSuccess}
       />
     </>
   );

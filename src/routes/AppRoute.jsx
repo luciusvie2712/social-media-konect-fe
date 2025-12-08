@@ -53,7 +53,7 @@ const AppRoute = () => {
         <Route path="message-box" element={<Message />} />
         <Route path="friends" element={<FriendPage />} />
         <Route path="friends/:type/:friendId?" element={<FriendDetail />} />
-        <Route path="post/:id" element={<PostDetail />} />
+        <Route path="post/:postId" element={<PostDetail />} />
 
       </Route>
     </Routes>

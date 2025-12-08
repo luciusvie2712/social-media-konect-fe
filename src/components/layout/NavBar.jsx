@@ -22,7 +22,6 @@ const NavBar = () => {
   const [openAvatarMenu, setOpenAvatarMenu] = useState(false);
   const avatarRef = useRef(null);
   const wrapperRef = useRef(null);
-
   useEffect(() => {
     const handleClick = (e) => {
       if (avatarRef.current && !avatarRef.current.contains(e.target)) {
@@ -245,6 +244,15 @@ const NavBar = () => {
               >
                 Xem trang cá nhân
               </NavLink>
+              {account?.role === "admin" && (
+                <NavLink
+                  to="/admin"
+                  onClick={() => setOpenAvatarMenu(false)}
+                  className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700 no-underline!"
+                >
+                  <i className="fa-solid fa-crown w-5 mr-2"></i>Trang quản trị
+                </NavLink>
+              )}
               <div
                 onClick={() => {
                   setOpenAvatarMenu(false);

@@ -80,7 +80,6 @@ const MiniChat = () => {
         setMessageSegment(prev => [...prev, message]);
         scrollToBottom();
       }
-      
       // Cập nhật danh sách chat realtime
       updateChatRealTime(message);
     });
@@ -130,7 +129,6 @@ const MiniChat = () => {
       toast.error("Không thể tải đoạn chat");
     }
     
-    // Focus vào input
     setTimeout(() => {
       if (messageInputRef.current) {
         messageInputRef.current.focus();
@@ -138,7 +136,6 @@ const MiniChat = () => {
     }, 100);
   };
 
-  // Chọn file ảnh
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
@@ -170,7 +167,6 @@ const MiniChat = () => {
       
       setSelectedFiles(prev => [...prev, ...filesWithPreview]);
       
-      // Reset input file
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -211,7 +207,6 @@ const MiniChat = () => {
         setMessageInput("");
         setSelectedFiles([]);
         scrollToBottom();
-        
         // Cập nhật last message trong danh sách
         updateChatAfterSending();
       } else {
@@ -508,7 +503,7 @@ const MiniChat = () => {
             listUserChat.map((item) => (
               <div
                 key={item.userId}
-                className="flex items-center p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100"
+                className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 gap-2"
                 onClick={() => openChatWithUser(item)}
               >
                 <div className="relative flex-shrink-0">
@@ -518,16 +513,16 @@ const MiniChat = () => {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 </div>
-                <div className="ml-3 flex-1 min-w-0">
+                <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center">
-                    <p className="font-medium text-sm truncate">{item.name}</p>
+                    <span className="font-medium text-sm truncate">{item.name}</span>
                     <span className="text-xs text-gray-500">
                       {item.time ? new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 truncate mt-1">
+                  <span className="text-xs text-gray-500 truncate mt-1">
                     {item.lastMessage || "Bắt đầu cuộc trò chuyện"}
-                  </p>
+                  </span>
                 </div>
               </div>
             ))
