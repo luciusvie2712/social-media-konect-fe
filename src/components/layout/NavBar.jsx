@@ -6,8 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import NotificationModal from "../Modal/Notification.modal";
 import axios from "../../utils/axios.customize";
 import { getHistorySearch, searchUserByName } from "../../utils/api.customize";
-import { set } from "lodash";
-import { data } from "react-router";
+
 const NavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
