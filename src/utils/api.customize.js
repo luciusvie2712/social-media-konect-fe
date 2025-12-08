@@ -66,6 +66,9 @@ const deletePost = (postId) => {
 const sharePost = (data) => {
     return axios.post('/api/share-post', data)
 }
+const getPostById = (postId) => {
+    return axios.get(`/api/get-post-by-id?postId=${postId}`)
+}
 
 const getListUserChatted = (userId) => {
     return axios.get(`/user-chatted-byId?userId=${userId}`)
@@ -156,7 +159,7 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI,
-    getPost, sharePost, getPostAUser,
+    getPost, sharePost, getPostAUser, getPostById,
     getDataUserLoginGoogle,
     getListUserChatted, getConversation, sendMessage,
     GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends,

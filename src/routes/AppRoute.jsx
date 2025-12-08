@@ -17,6 +17,7 @@ import ManageLogo from "../views/admin/ManageLogo/ManageLogo";
 import Pagebanned from "../ErrorPage";
 import AdminPages from "../views/admin/AdminPage";
 import AdminDashboard from "../views/admin/AdminDashboard";
+import PostDetail from "../views/user/PostDetail";
 
 const AppRoute = () => {
   return (
@@ -52,6 +53,8 @@ const AppRoute = () => {
         <Route path="message-box" element={<Message />} />
         <Route path="friends" element={<FriendPage />} />
         <Route path="friends/:type/:friendId?" element={<FriendDetail />} />
+        <Route path="post/:id" element={<PostDetail />} />
+
       </Route>
     </Routes>
   );
