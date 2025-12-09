@@ -1,28 +1,35 @@
 .friend-container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: row;
     background-color: #ffffff;
     align-items: center;
     justify-content: center;
     padding-inline: 10px !important;
+    overflow: auto;
+    
     .nav-left {
         width: 25%;
         height: 100%;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        border-right: 1px solid #cdcdcd;
+        border-right: 1px solid #e5e7eb;
         padding-top: 30px;
         padding-right: 10px;
+        background-color: #f9fafb;
+        
         .header-nav {
             display: flex;
             align-items: center;
             gap: 8px;
             font-weight: 600;
             font-size: 20px;
+            color: #1f2937;
             margin-bottom: 5px;
+            padding: 0 4px;
+            
             .btn-back {
                 display: flex;
                 align-items: center;
@@ -30,48 +37,129 @@
                 font-size: 15px;
                 opacity: 60%;
                 cursor: pointer;
-                padding-block: 10px;
-                padding-inline: 10px;
+                padding: 10px;
                 border-radius: 100%;
+                transition: all 0.2s ease;
+                
                 &:hover {
-                    background-color: #cccccc;
+                    background-color: #e5e7eb;
+                    opacity: 1;
+                    transform: translateX(-2px);
                 }
             }
         }
+        
         .friend-search {
             width: 100%;
             display: flex;
             align-items: center;
-            background-color: #cccccc;
-            padding-block: 4px;
-            padding-inline: 10px;
-            border-radius: 10px;
+            background-color: #f3f4f6;
+            padding: 10px 12px;
+            border-radius: 12px;
             gap: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            
+            &:focus-within {
+                background-color: white;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+            
+            i {
+                color: #6b7280;
+            }
+            
             input {
                 width: 100%;
+                background: transparent;
+                border: none;
+                color: #374151;
+                font-size: 14px;
+                
                 &:focus {
                     outline: none;
                 }
+                
+                &::placeholder {
+                    color: #9ca3af;
+                }
             }
         }
+        
         .show-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            
+            &::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background: #d1d5db;
+                border-radius: 10px;
+            }
+            
+            &::-webkit-scrollbar-thumb:hover {
+                background: #9ca3af;
+            }
         }
     }
+    
     .display {
-        width: 80%;
+        width: 75%;
         height: 100%;
         overflow: auto;
         display: flex;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        &::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+    .friend-container {
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        span {
-            font-weight: 500;
-            font-size: 20px;
-            opacity: 50%;
+        height: auto;
+        min-height: 100vh;
+        
+        .nav-left {
+            width: 100%;
+            height: auto;
+            max-height: 50vh;
+            border-right: none;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 20px;
+        }
+        
+        .display {
+            width: 100%;
+            height: auto;
+            min-height: 50vh;
         }
     }
 }

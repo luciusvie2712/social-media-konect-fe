@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { createComment, deleteComment, getComment } from "../utils/api.customize"
+import { createComment, getComment, deleteComment } from "../utils/api.customize"
 import { toast } from "react-toastify"
 
 export const useComment = () => {

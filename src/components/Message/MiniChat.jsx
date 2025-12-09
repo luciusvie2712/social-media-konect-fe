@@ -188,7 +188,7 @@ const MiniChat = () => {
   const handleSendMessage = async () => {
     if ((!messageInput.trim() && selectedFiles.length === 0) || !currentReceiverId) return;
     
-    setIsUploading(true);
+    setIsUploading(true); 
     
     const formData = new FormData();
     formData.append("senderId", userId);

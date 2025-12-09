@@ -453,7 +453,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     setShareModalShow(true);
   };
   
-  console.log(post)
   return (
     <>
       <div

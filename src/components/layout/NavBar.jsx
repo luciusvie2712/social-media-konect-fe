@@ -71,7 +71,7 @@ const NavBar = () => {
     }
   };
   const clickProfileUser = (item) => {
-    //  navigate(`/profile/${item.targetUserId.id}`);
+    navigate(`/profile/${item}`);
     setShowHistory(false);
   };
   const handleSearchName = async (name) => {

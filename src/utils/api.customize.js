@@ -103,11 +103,14 @@ const rejectFriendRequest = (requesterId, recipientId) => {
 const acceptFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/accept-friend-request`, { requesterId, recipientId })
 }
+const unFriend = (requesterId, recipentId) => {
+    return axios.post(`/api/unfriend`, { requesterId, recipentId })
+}
 const getFriendRequest = (userId) => {
     return axios.get(`/api/get-accept-request?userId=${userId}`)
 }
-const getListFriends = () => {
-    return axios.get(`/api/get-listfriend`)
+const getListFriends = (userId) => {
+    return axios.get(`/api/get-listfriend?id=${userId}`)
 }
 const checkRelationShip = (userId, otherUserId) => {
     return axios.get(`/api/relationship/status?user1=${userId}&&user2=${otherUserId}`)
@@ -170,7 +173,7 @@ export {
     resetPasswordAPI,
     createPostAPI, getPost, sharePost, getPostAUser, getPostById, authorDeletePost, LikePost, createComment, getComment, deleteComment, updatePost,
     getListUserChatted, getConversation, sendMessage,
-    GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends, checkRelationShip,
+    GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends, checkRelationShip, unFriend,
     getNotifications, maskAsReadAPI,
     getAllUserTable, deleteUserTable,
     getTablePost, deletePost, handleProcessReportPost, handleReportPost, handleSharePost,

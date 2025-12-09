@@ -78,6 +78,7 @@ const Message = () => {
     const socket = createSocket(userId);
     socket.on("receive_message", (data) => {
       const message = data.newMess;
+      console.log("Mees", message)
       const isCurrent =
         message.senderId === currentReceiverId ||
         message.receiverId === currentReceiverId;
@@ -118,8 +119,7 @@ const Message = () => {
   };
   
   const handleSendMessage = async () => {
-    if ((!_.isEmpty(formSendMess.message) && selectedFiles.length === 0) && 
-        (!_.isEmpty(formSendMess.message) || selectedFiles.length === 0)) {
+    if (_.isEmpty(formSendMess.message) && selectedFiles.length === 0) {
       return;
     }
     

@@ -1,4 +1,3 @@
-// src/components/RightSideBar.jsx (chỉ phần render list sửa)
 import { useSelector } from "react-redux";
 import ShowListFriends from "../Friends/ShowListFriends";
 import { useFriendList } from "../../hook/useFriendList";
@@ -14,13 +13,17 @@ const RightSideBar = () => {
 
   return (
     <div className="w-full text-black flex flex-col gap-2 !pt-4">
-      <div className="w-full flex items-center gap-2">
+      <div className="w-full flex items-center gap-2 px-3">
         <span className="bg-gray-300 h-[1px] w-4"></span>
         <span className="font-medium">Bạn bè liên hệ</span>
         <span className="bg-gray-300 h-[1px] w-10"></span>
       </div>
       <div className="w-full px-3 flex flex-col items-center">
-        {friends?.length > 0 ? (
+        {loading ? (
+          <div className="w-full flex justify-center py-4">
+            <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+          </div>
+        ) : friends?.length > 0 ? (
           friends.map((item, index) => (
             <div
               key={item._id || index}
@@ -31,7 +34,13 @@ const RightSideBar = () => {
             </div>
           ))
         ) : (
-          <span>Không có bạn bè</span>
+          <div className="w-full text-center py-6 select-none">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+              <i className="fa-solid fa-user-group text-gray-400"></i>
+            </div>
+            <p className="text-gray-600 text-sm font-medium">Chưa có bạn bè</p>
+            <p className="text-gray-400 text-xs mt-1">Kết nối để thêm bạn bè</p>
+          </div>
         )}
       </div>
     </div>

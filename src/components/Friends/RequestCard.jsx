@@ -1,10 +1,11 @@
 import { useSelector } from "react-redux";
-import { useAcceptRequest } from "../../hook/useAcceptRequest";
+import { useFriendActions } from "../../hook/useFriendActions";
 import avatar from "../../assets/download.png";
 
 const RequestCard = ({ index, item }) => {
   const user = useSelector((state) => state.user.account);
-  const { status, handleAcceptFriendRequest } = useAcceptRequest();
+  const { status, handleAcceptFriendRequest, handleRejectFriendRequest } =
+    useFriendActions();
 
   const onAcceptRequest = async () => {
     try {
@@ -14,35 +15,57 @@ const RequestCard = ({ index, item }) => {
     }
   };
 
+  const onRejectRequest = async () => {
+    try {
+      await handleRejectFriendRequest(item._id, user.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="w-[180px] border-1 border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
-      <img
-        src={item?.avatar || avatar}
-        className="rounded-t-[4px]"
-      />
+    <div className="w-[180px] border border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
+      <img src={item?.avatar || avatar} className="rounded-t-[4px]" />
+
+      {/* Info */}
       <div className="w-full flex flex-col item-center pt-2">
-        <span className="text-[15px] font-semibold px-2">
-          {item?.name}
-        </span>
+        <span className="text-[15px] font-semibold px-2">{item?.name}</span>
         <span className="text-[13px] px-2 opacity-50">
           {item.mutualFriends} bạn chung
         </span>
       </div>
+
+      {/* Action buttons */}
       <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">
-        {status === "idle" ? (
+
+        {status === "idle" && (
           <>
             <button
               onClick={onAcceptRequest}
-              className="font-semibold py-1 rounded w-full hover:bg-blue-400 bg-blue-300 text-black"
+              className="font-semibold py-1 rounded w-full bg-blue-300 hover:bg-blue-400 transition"
             >
               Xác nhận
             </button>
-            <button className="font-semibold py-1 rounded w-full hover:bg-gray-400 bg-gray-300 text-black]">
+
+            <button
+              onClick={onRejectRequest}
+              className="font-semibold py-1 rounded w-full bg-gray-300 hover:bg-gray-400 transition"
+            >
               Từ chối
             </button>
           </>
-        ) : (
-          <span>Đã là bạn bè</span>
+        )}
+
+        {status === "accepted" && (
+          <span className="text-green-600 font-semibold">Đã là bạn bè</span>
+        )}
+
+        {status === "rejected" && (
+          <span className="text-red-600 font-semibold">Đã từ chối</span>
+        )}
+
+        {status === "loading" && (
+          <span className="opacity-60 italic">Đang xử lý...</span>
         )}
       </div>
     </div>

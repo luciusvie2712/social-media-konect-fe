@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
-import { getPostById, LikePost, deletePost, handleReportPost } from "../../utils/api.customize"
+import { getPostById, LikePost, deletePost, handleReportPost, authorDeletePost } from "../../utils/api.customize"
 import { useComment } from "../../hook/useComment"
 import { timeAgo } from "../../utils/timeAgo"
 import avatar from "../../assets/download.png"
@@ -152,7 +152,7 @@ const PostDetail = () => {
 
     const handleDeletePost = async () => {
         try {
-            const res = await deletePost(postData._id)
+            const res = await authorDeletePost(postData._id)
             if (res?.Ec === 0) {
                 toast.success("Đã xóa bài viết")
                 navigate(-1)

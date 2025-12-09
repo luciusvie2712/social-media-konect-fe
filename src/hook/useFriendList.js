@@ -19,7 +19,7 @@ export const useFriendList = (type, userId) => {
                     dataRes = await GetfriendSuggestion(userId)
                     break
                 case "all":
-                    dataRes = await getListFriends()
+                    dataRes = await getListFriends(userId)
                     break
                 default:
                     console.warn("Invalid type in useFriendList:", type)

@@ -1,101 +1,536 @@
-import { useState } from "react";
-import bgDemo from "../../assets/image/bg_image_profile_2.jpg";
-import PostActive from "./PostActive";
-import AboutActive from "./AboutActive";
-import FriendActive from "./FriendActive";
+import { useEffect, useState } from "react";
 import { useFriendList } from "../../hook/useFriendList";
+import { getPostAUser, unFriend } from "../../utils/api.customize";
+import avatar from "../../assets/download.png"
+import PostCard from "../../components/Post/PostCard"
+import PostActive from "./PostActive"
+import FriendActive from "./FriendActive"
+import { useFriendActions } from "../../hook/useFriendActions";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const DisplayProfile = ({ info, mode }) => {
-    const [activeTab, setActiveTab] = useState("posts");
-    const { friends } = useFriendList("all", info.id);
+const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship = false, onRelationshipUpdate = null, compact = false }) => {
+  const { friends, loading: friendsLoading, refetch: refetchFriends } = useFriendList("all", info.id)
+  const [dataPost, setDataPost] = useState([])
+  const [loadingPosts, setLoadingPosts] = useState(true)
+  const [activeTab, setActiveTab] = useState("posts")
+  const [isProcessing, setIsProcessing] = useState(false)
+  const user = useSelector((state) => state.user.account)
+  const navigate = useNavigate()
+  
+  const {
+    status,
+    handleSendFriendRequest,
+    handleAcceptFriendRequest,
+    handleRejectFriendRequest,
+  } = useFriendActions();
 
-    return (
-        <div className="w-full h-full flex flex-col items-center gap-4">
-            <div className="w-full bg-[#fafafa] flex flex-col items-center pb-4 shadow-sm">
-                <div className="w-[70%] h-60 rounded-xl overflow-hidden">
-                    <img
-                        src={info?.background || bgDemo}
-                        className="w-full h-full object-cover"
-                    />
+  // Fetch posts của user
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoadingPosts(true)
+        const res = await getPostAUser(info.id)
+        console.log("Post", res)
+        if (res?.Ec === 0) {
+          setDataPost(Array.isArray(res.Data) ? res.Data : [res.Data])
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error)
+        setDataPost([]);
+      } finally {
+        setLoadingPosts(false)
+      }
+    };
+    
+    if (info?.id) {
+      fetchPosts()
+    }
+  }, [info?.id])
+  
+  const getRelationshipStatusText = () => {
+    switch (mode) {
+      case "owner":
+        return "Hồ sơ của bạn"
+      case "friend":
+        return "Bạn bè"
+      case "pending_outgoing":
+        return "Đã gửi lời mời kết bạn"
+      case "pending_incoming":
+        return "Đã nhận lời mời kết bạn"
+      case "stranger":
+        return "Chưa kết bạn"
+      default:
+        return ""
+    }
+  };
+
+  const getRelationshipBadgeColor = () => {
+    switch (mode) {
+      case "owner":
+        return "bg-blue-100 text-blue-800 border border-blue-200"
+      case "friend":
+        return "bg-green-100 text-green-800 border border-green-200"
+      case "pending_outgoing":
+        return "bg-yellow-100 text-yellow-800 border border-yellow-200"
+      case "pending_incoming":
+        return "bg-orange-100 text-orange-800 border border-orange-200"
+      case "stranger":
+        return "bg-gray-100 text-gray-800 border border-gray-200"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  };
+
+  const getRelationshipIcon = () => {
+    switch (mode) {
+      case "owner":
+        return "fa-user"
+      case "friend":
+        return "fa-user-check"
+      case "pending_outgoing":
+        return "fa-clock"
+      case "pending_incoming":
+        return "fa-user-clock"
+      case "stranger":
+        return "fa-user"
+      default:
+        return "fa-user"
+    }
+  }
+
+  // Xử lý gửi lời mời kết bạn
+  const handleSendRequest = async () => {
+    try {
+      setIsProcessing(true)
+      const res = await handleSendFriendRequest(user?.id, info.id)
+      if (res?.Ec === 0) {
+        toast.success("Đã gửi lời mời kết bạn")
+        if (onRelationshipUpdate) {
+          onRelationshipUpdate({ 
+            status: "pending", 
+            requester: user?.id, 
+            recipient: info.id 
+          })
+        }
+        // Cập nhật mode nếu có callback
+        if (typeof window !== 'undefined') {
+          window.location.reload(); // Hoặc cập nhật state
+        }
+      } else {
+        toast.error(res?.Mes || "Có lỗi xảy ra")
+      }
+    } catch (error) {
+      console.error("Error sending friend request:", error)
+      toast.error("Có lỗi xảy ra khi gửi lời mời")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Xử lý chấp nhận lời mời kết bạn
+  const handleAcceptRequest = async () => {
+    try {
+      setIsProcessing(true)
+      const res = await handleAcceptFriendRequest(relationship?.requester, relationship?.recipient)
+      if (res?.Ec === 0) {
+        toast.success("Đã chấp nhận lời mời kết bạn")
+        if (onRelationshipUpdate) {
+          onRelationshipUpdate({ 
+            status: "accepted", 
+            requester: relationship?.requester, 
+            recipient: relationship?.recipient 
+          })
+        }
+        refetchFriends()
+      } else {
+        toast.error(res?.Mes || "Có lỗi xảy ra")
+      }
+    } catch (error) {
+      console.error("Error accepting friend request:", error)
+      toast.error("Có lỗi xảy ra khi chấp nhận lời mời")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Xử lý từ chối lời mời kết bạn
+  const handleRejectRequest = async () => {
+    try {
+      setIsProcessing(true)
+      const res = await handleRejectFriendRequest(relationship?.requester, relationship?.recipient)
+      if (res?.Ec === 0) {
+        toast.success("Đã từ chối lời mời kết bạn")
+        if (onRelationshipUpdate) {
+          onRelationshipUpdate({ 
+            status: "rejected", 
+            requester: relationship?.requester, 
+            recipient: relationship?.recipient 
+          })
+        }
+      } else {
+        toast.error(res?.Mes || "Có lỗi xảy ra")
+      }
+    } catch (error) {
+      console.error("Error rejecting friend request:", error)
+      toast.error("Có lỗi xảy ra khi từ chối lời mời")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Xử lý hủy lời mời kết bạn
+  const handleCancelRequest = async () => {
+    try {
+      setIsProcessing(true)
+      const res = await handleRejectFriendRequest(user?.id, info.id)
+      if (res?.Ec === 0) {
+        toast.success("Đã hủy lời mời kết bạn")
+        if (onRelationshipUpdate) {
+          onRelationshipUpdate(null) // Reset relationship
+        }
+      } else {
+        toast.error(res?.Mes || "Có lỗi xảy ra")
+      }
+    } catch (error) {
+      console.error("Error canceling friend request:", error)
+      toast.error("Có lỗi xảy ra khi hủy lời mời")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Xử lý hủy kết bạn
+  const handleUnfriend = async () => {
+    try {
+      setIsProcessing(true)
+      const res = await unFriend(user?.id, info.id)
+      if (res?.Ec === 0) {
+        toast.success("Đã hủy kết bạn")
+        if (onRelationshipUpdate) {
+          onRelationshipUpdate(null) // Reset relationship
+        }
+        refetchFriends()
+      } else {
+        toast.error(res?.Mes || "Có lỗi xảy ra")
+      }
+    } catch (error) {
+      console.error("Error unfriending:", error)
+      toast.error("Có lỗi xảy ra khi hủy kết bạn")
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Xử lý nhắn tin
+  const handleMessage = () => {
+    navigate(`/messages/${info.id}`)
+  }
+
+  // Xử lý chỉnh sửa hồ sơ
+  const handleEditProfile = () => {
+    navigate('/settings/profile')
+  }
+
+  // Xử lý chia sẻ hồ sơ
+  const handleShareProfile = () => {
+    const shareUrl = `${window.location.origin}/profile/${info.id}`
+    if (navigator.share) {
+      navigator.share({
+        title: `Hồ sơ của ${info.name}`,
+        text: `Xem hồ sơ của ${info.name}`,
+        url: shareUrl,
+      })
+    } else {
+      navigator.clipboard.writeText(shareUrl)
+      toast.success("Đã sao chép link hồ sơ")
+    }
+  }
+
+  const renderActionButtons = () => {
+    const buttonClass = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 font-medium text-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed";
+    
+    switch (mode) {
+      case "owner":
+        return (
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={handleEditProfile}
+              className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow`}
+            >
+              <i className="fa-solid fa-pen"></i>
+              Chỉnh sửa hồ sơ
+            </button>
+            <button 
+              onClick={handleShareProfile}
+              className={`${buttonClass} bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400`}
+            >
+              <i className="fa-solid fa-share"></i>
+              Chia sẻ
+            </button>
+          </div>
+        );
+        
+      case "friend":
+        return (
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={handleMessage}
+              className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow`}
+            >
+              <i className="fa-solid fa-message"></i>
+              Nhắn tin
+            </button>
+            <button 
+              onClick={handleUnfriend}
+              disabled={isProcessing}
+              className={`${buttonClass} bg-white text-red-600 border border-red-200 hover:bg-red-50 hover:border-red-300`}
+            >
+              {isProcessing ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                  Đang xử lý...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-user-xmark"></i>
+                  Hủy kết bạn
+                </>
+              )}
+            </button>
+          </div>
+        );
+        
+      case "pending_outgoing":
+        return (
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={handleCancelRequest}
+              disabled={isProcessing}
+              className={`${buttonClass} bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200`}
+            >
+              {isProcessing ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                  Đang xử lý...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-clock"></i>
+                  Hủy lời mời
+                </>
+              )}
+            </button>
+          </div>
+        );
+        
+      case "pending_incoming":
+        return (
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={handleAcceptRequest}
+              disabled={isProcessing}
+              className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow`}
+            >
+              {isProcessing ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                  Đang xử lý...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-check"></i>
+                  Chấp nhận
+                </>
+              )}
+            </button>
+            <button 
+              onClick={handleRejectRequest}
+              disabled={isProcessing}
+              className={`${buttonClass} bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400`}
+            >
+              {isProcessing ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                  Đang xử lý...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-xmark"></i>
+                  Từ chối
+                </>
+              )}
+            </button>
+          </div>
+        );
+        
+      case "stranger":
+        return (
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={handleSendRequest}
+              disabled={isProcessing}
+              className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow`}
+            >
+              {isProcessing ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin"></i>
+                  Đang gửi...
+                </>
+              ) : (
+                <>
+                  <i className="fa-solid fa-user-plus"></i>
+                  Kết bạn
+                </>
+              )}
+            </button>
+            <button 
+              onClick={handleMessage}
+              className={`${buttonClass} bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400`}
+            >
+              <i className="fa-solid fa-message"></i>
+              Nhắn tin
+            </button>
+          </div>
+        );
+        
+      default:
+        return null
+    }
+  }
+
+  const renderTabContent = () => {
+    if (activeTab === "posts") {
+        return <PostActive userData={info} friends={friends} posts={dataPost} loadingPosts={loadingPosts} mode={mode} />
+    } else {
+      return <FriendActive friends={friends} loading={friendsLoading} />
+    }
+  }
+
+  return (
+    <div className="w-full min-h-screen flex flex-col bg-gray-50">
+      {/* Profile header */}
+      <div className="w-full bg-white shadow-sm">
+        <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+          {/* Cover photo */}
+          <div className="w-full h-64 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+            {info?.background ? (
+              <img 
+                src={info.background} 
+                alt="Cover" 
+                className="w-full h-full object-cover" 
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col justify-center items-center bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+                <i className="fa-solid fa-images text-4xl text-white/70 mb-2"></i>
+                <span className="text-white/80 italic text-sm">Chưa có ảnh bìa</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Profile info section */}
+          <div className="w-full px-6 -mt-16">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 px-10 py-4">
+              {/* Left side: Avatar and basic info */}
+              <div className="flex gap-4 items-center">
+                {/* Avatar */}
+                <div className="w-32 h-32 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                  <img 
+                    src={info?.avatar || avatar} 
+                    alt={info?.name || "User"}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-
-                <div className="w-[70%] flex items-center gap-4 px-5 relative">
-                    <img
-                        src={info?.avatar}
-                        alt="avatar"
-                        className="w-[110px] h-[110px] rounded-full object-cover border-4 border-white -mt-12 shadow-md"
-                    />
-
-                    <div className="flex flex-col mt-3">
-                        <b className="text-[22px]">{info?.name}</b>
-                        {info?.email && (
-                            <span className="text-gray-600 text-[15px] font-light">
-                                {info.email}
-                            </span>
-                        )}
-                        <span className="text-gray-600 text-[16px] font-light">
-                            15 bài viết • {friends?.length || 0} bạn bè
-                        </span>
-                    </div>
-
-                    <div className="ml-auto! flex items-center gap-3">
-                        {mode === "owner" && (
-                            <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-[16px] hover:bg-blue-600 transition">
-                                Chỉnh sửa thông tin
-                            </button>
-                        )}
-                        {mode === "all" && (
-                            <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-[16px] hover:bg-blue-600 transition">
-                                Nhắn tin
-                            </button>
-                        )}
-                        {mode === "suggestion" && (
-                            <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-[16px] hover:bg-blue-600 transition">
-                                Thêm bạn bè
-                            </button>
-                        )}
-                        {mode === "request" && (
-                            <>
-                                <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded-lg text-[16px] hover:bg-blue-600 transition">
-                                    Chấp nhận
-                                </button>
-                                <button className="bg-gray-200 text-black font-medium px-4 py-2 rounded-lg text-[16px] hover:bg-gray-300 transition">
-                                    Từ chối
-                                </button>
-                            </>
-                        )}
-                    </div>
+                
+                {/* User info */}
+                <div className="flex flex-col gap-2 justify-center">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl md:text-3xl font-bold text-gray-900">{info?.name || "Chưa có tên"}</span>
+                    {!isLoadingRelationship && (
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getRelationshipBadgeColor()}`}>
+                        <i className={`fa-solid ${getRelationshipIcon()} mr-1`}></i>
+                        {getRelationshipStatusText()}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {info?.email && (
+                    <span className="text-gray-600 text-sm flex items-center gap-1.5">
+                      <i className="fa-solid fa-envelope text-gray-400"></i>
+                      {info.email}
+                    </span>
+                  )}
+                  
+                  <div className="flex items-center gap-4 text-gray-600 text-sm">
+                    <span className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-newspaper text-gray-400"></i>
+                      <span className="font-medium">{dataPost.length}</span> bài viết
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <i className="fa-solid fa-user-group text-gray-400"></i>
+                      <span className="font-medium">{friends?.length || 0}</span> bạn bè
+                    </span>
+                  </div>
                 </div>
-
-                <div className="w-[70%] flex items-center gap-6 border-t border-gray-300 mt-3 pt-3">
-                    {["posts", "about", "friend"].map((tab) => (
-                        <div
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`px-2 pb-1 text-[17px] font-medium cursor-pointer transition 
-                            ${
-                                activeTab === tab
-                                    ? "border-b-2 border-blue-500 text-blue-600"
-                                    : "border-b-2 border-transparent text-gray-600 hover:text-blue-500 hover:border-blue-300"
-                            }`}
-                        >
-                            {tab === "posts" && "Bài viết"}
-                            {tab === "about" && "Giới thiệu"}
-                            {tab === "friend" && "Bạn bè"}
-                        </div>
-                    ))}
-                </div>
+              </div>
+              
+              {/* Right side: Action buttons */}
+              <div className="mb-4">
+                {renderActionButtons()}
+              </div>
             </div>
-
-            <div className="w-full flex justify-center">
-                <div className="w-[70%] flex gap-4">
-                    {activeTab === "posts" && <PostActive userId={info?.id} friends={friends} />}
-                    {activeTab === "about" && <AboutActive />}
-                    {activeTab === "friend" && <FriendActive friends={friends} />}
-                </div>
+          </div>
+          
+          {/* Tabs navigation */}
+          <div className="w-full border-t border-gray-200 mt-2">
+            <div className="w-full flex justify-start">
+              <button
+                onClick={() => setActiveTab("posts")}
+                className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
+                  activeTab === "posts" 
+                    ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                <i className="fa-solid fa-newspaper"></i>
+                Bài viết
+                {dataPost?.length > 0 && (
+                  <span className="bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-full">
+                    {dataPost.length}
+                  </span>
+                )}
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("friends")}
+                className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
+                  activeTab === "friends" 
+                    ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                <i className="fa-solid fa-user-group"></i>
+                Bạn bè
+                {friends?.length > 0 && (
+                  <span className="bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-full">
+                    {friends.length}
+                  </span>
+                )}
+              </button>
             </div>
+          </div>
         </div>
-    );
+      </div>
+      
+      {/* Main content */}
+      <div className="w-full flex justify-center py-4 flex-1">
+        <div className={`${compact ? "w-full" : "w-full 2xl:w-[80%]"} flex`}>
+          {renderTabContent()}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default DisplayProfile;
