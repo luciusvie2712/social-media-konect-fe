@@ -1,4 +1,19 @@
+
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"
+
 const FriendActive = ({ friends, loading = false }) => {
+  const userId = useSelector((state) => state.user.account.id)
+  const navigate = useNavigate()
+  const handleOpenChat = (friend) => {
+    const event = new CustomEvent('openMiniChat', {
+      detail: {
+        friendId: friend.id || friend._id,
+        friendData: friend
+      }
+    })
+    window.dispatchEvent(event)
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
       {/* Header with search */}
@@ -85,16 +100,18 @@ const FriendActive = ({ friends, loading = false }) => {
 
                 {/* Action buttons */}
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <button className="flex-1 sm:flex-none bg-blue-600 text-white font-medium px-2 py-1 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                  <button onClick={() => navigate(`/profile/${friend._id}`)} className="flex-1 sm:flex-none bg-blue-600 text-white font-medium px-2 py-1 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
                     <i className="fa-solid fa-user text-xs"></i>
                     <span className="hidden lg:inline text-[16px]! opacity-100">Trang cá nhân</span>
                     <span className="lg:hidden text-[16px]! opacity-100">Xem</span>
                   </button>
-                  <button className="flex-1 sm:flex-none bg-white text-gray-700 font-medium px-2 py-1 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
-                    <i className="fa-solid fa-message text-xs"></i>
-                    <span className="hidden lg:inline text-[16px]! opacity-100">Nhắn tin</span>
-                    <span className="lg:hidden text-[16px]! opacity-100">Chat</span>
-                  </button>
+                  {friend._id !== userId && (
+                    <button onClick={() => handleOpenChat(friend)} className="flex-1 sm:flex-none bg-white text-gray-700 font-medium px-2 py-1 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+                      <i className="fa-solid fa-message text-xs"></i>
+                      <span className="hidden lg:inline text-[16px]! opacity-100">Nhắn tin</span>
+                      <span className="lg:hidden text-[16px]! opacity-100">Chat</span>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

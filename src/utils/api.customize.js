@@ -10,7 +10,6 @@ const createUserAPI = (name, email, password) => {
 }
 const loginUserAPI = (email, password) => {
     const API_URL = '/api/login-User'
-    console.log("......a.s fas")
     return axios.post(API_URL, {
         email,
         password
@@ -42,8 +41,8 @@ const createPostAPI = (formData) => {
         },
     });
 }
-const getPost = (id) => {
-    return axios.get(`/api/get-post?id=${id}`)
+const getPost = () => {
+    return axios.get(`/api/get-post`)
 }
 const getPostAUser = (userId) => {
     return axios.get(`/api/get-post-a-user?userId=${userId}`)
@@ -66,7 +65,6 @@ const authorDeletePost = (postId) => {
 const updatePost = (data) => {
     return axios.post(`/api/update-post`, data)
 }
-
 const deletePost = (postId) => {
     return axios.delete(`/api/delete/post?id=${postId}`)
 }
@@ -103,8 +101,8 @@ const rejectFriendRequest = (requesterId, recipientId) => {
 const acceptFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/accept-friend-request`, { requesterId, recipientId })
 }
-const unFriend = (requesterId, recipentId) => {
-    return axios.post(`/api/unfriend`, { requesterId, recipentId })
+const unFriend = (requesterId, recipientId) => {
+    return axios.post(`/api/unfriend`, { requesterId, recipientId })
 }
 const getFriendRequest = (userId) => {
     return axios.get(`/api/get-accept-request?userId=${userId}`)

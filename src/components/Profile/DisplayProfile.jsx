@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useFriendList } from "../../hook/useFriendList";
 import { getPostAUser, unFriend } from "../../utils/api.customize";
-import avatar from "../../assets/download.png"
-import PostCard from "../../components/Post/PostCard"
-import PostActive from "./PostActive"
-import FriendActive from "./FriendActive"
+import avatar from "../../assets/download.png";
+import PostActive from "./PostActive";
+import FriendActive from "./FriendActive";
 import { useFriendActions } from "../../hook/useFriendActions";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import EditProfileModal from "../Modal/EditProfile.modal"; // Import component mới
 
 const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship = false, onRelationshipUpdate = null, compact = false }) => {
   const { friends, loading: friendsLoading, refetch: refetchFriends } = useFriendList("all", info.id)
@@ -16,6 +16,9 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
   const [loadingPosts, setLoadingPosts] = useState(true)
   const [activeTab, setActiveTab] = useState("posts")
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [profileInfo, setProfileInfo] = useState(info)
+  
   const user = useSelector((state) => state.user.account)
   const navigate = useNavigate()
   
@@ -26,13 +29,16 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     handleRejectFriendRequest,
   } = useFriendActions();
 
-  // Fetch posts của user
+  // Cập nhật thông tin profile khi prop info thay đổi
+  useEffect(() => {
+    setProfileInfo(info)
+  }, [info])
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoadingPosts(true)
-        const res = await getPostAUser(info.id)
-        console.log("Post", res)
+        const res = await getPostAUser(profileInfo.id)
         if (res?.Ec === 0) {
           setDataPost(Array.isArray(res.Data) ? res.Data : [res.Data])
         }
@@ -44,10 +50,10 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
       }
     };
     
-    if (info?.id) {
+    if (profileInfo?.id) {
       fetchPosts()
     }
-  }, [info?.id])
+  }, [profileInfo?.id])
   
   const getRelationshipStatusText = () => {
     switch (mode) {
@@ -100,23 +106,33 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý gửi lời mời kết bạn
+  const handleEditProfile = () => {
+    setIsEditModalOpen(true)
+  }
+
+  const handleUpdateSuccess = (updatedData) => {
+    setProfileInfo(prev => ({
+      ...prev,
+      ...updatedData
+    }))
+    
+    if (typeof onRelationshipUpdate === 'function') {
+      onRelationshipUpdate(updatedData)
+    }
+  }
+
   const handleSendRequest = async () => {
     try {
       setIsProcessing(true)
-      const res = await handleSendFriendRequest(user?.id, info.id)
+      const res = await handleSendFriendRequest(user?.id, profileInfo.id)
       if (res?.Ec === 0) {
         toast.success("Đã gửi lời mời kết bạn")
         if (onRelationshipUpdate) {
           onRelationshipUpdate({ 
             status: "pending", 
             requester: user?.id, 
-            recipient: info.id 
+            recipient: profileInfo.id 
           })
-        }
-        // Cập nhật mode nếu có callback
-        if (typeof window !== 'undefined') {
-          window.location.reload(); // Hoặc cập nhật state
         }
       } else {
         toast.error(res?.Mes || "Có lỗi xảy ra")
@@ -129,7 +145,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý chấp nhận lời mời kết bạn
   const handleAcceptRequest = async () => {
     try {
       setIsProcessing(true)
@@ -155,7 +170,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý từ chối lời mời kết bạn
   const handleRejectRequest = async () => {
     try {
       setIsProcessing(true)
@@ -180,11 +194,10 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý hủy lời mời kết bạn
   const handleCancelRequest = async () => {
     try {
       setIsProcessing(true)
-      const res = await handleRejectFriendRequest(user?.id, info.id)
+      const res = await handleRejectFriendRequest(user?.id, profileInfo.id)
       if (res?.Ec === 0) {
         toast.success("Đã hủy lời mời kết bạn")
         if (onRelationshipUpdate) {
@@ -201,11 +214,10 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý hủy kết bạn
   const handleUnfriend = async () => {
     try {
       setIsProcessing(true)
-      const res = await unFriend(user?.id, info.id)
+      const res = await unFriend(user?.id, profileInfo.id)
       if (res?.Ec === 0) {
         toast.success("Đã hủy kết bạn")
         if (onRelationshipUpdate) {
@@ -223,23 +235,16 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     }
   }
 
-  // Xử lý nhắn tin
   const handleMessage = () => {
-    navigate(`/messages/${info.id}`)
+    navigate(`/messages/${profileInfo.id}`)
   }
 
-  // Xử lý chỉnh sửa hồ sơ
-  const handleEditProfile = () => {
-    navigate('/settings/profile')
-  }
-
-  // Xử lý chia sẻ hồ sơ
   const handleShareProfile = () => {
-    const shareUrl = `${window.location.origin}/profile/${info.id}`
+    const shareUrl = `${window.location.origin}/profile/${profileInfo.id}`
     if (navigator.share) {
       navigator.share({
-        title: `Hồ sơ của ${info.name}`,
-        text: `Xem hồ sơ của ${info.name}`,
+        title: `Hồ sơ của ${profileInfo.name}`,
+        text: `Xem hồ sơ của ${profileInfo.name}`,
         url: shareUrl,
       })
     } else {
@@ -276,7 +281,7 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
         return (
           <div className="flex flex-wrap gap-2">
             <button 
-              onClick={handleMessage}
+              onClick={handleOpenChat}
               className={`${buttonClass} bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow`}
             >
               <i className="fa-solid fa-message"></i>
@@ -402,134 +407,148 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
 
   const renderTabContent = () => {
     if (activeTab === "posts") {
-        return <PostActive userData={info} friends={friends} posts={dataPost} loadingPosts={loadingPosts} mode={mode} />
+        return <PostActive userData={profileInfo} friends={friends} posts={dataPost} loadingPosts={loadingPosts} mode={mode} />
     } else {
       return <FriendActive friends={friends} loading={friendsLoading} />
     }
   }
 
+  const handleOpenChat = () => {
+    const event = new CustomEvent('openMiniChat', {
+      detail: {
+        friendId: profileInfo.id || profileInfo._id,
+        friendData: profileInfo
+      }
+    })
+    window.dispatchEvent(event)
+  };
+
   return (
-    <div className="w-full min-h-screen flex flex-col bg-gray-50">
-      {/* Profile header */}
-      <div className="w-full bg-white shadow-sm">
-        <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
-          {/* Cover photo */}
-          <div className="w-full h-64 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-            {info?.background ? (
-              <img 
-                src={info.background} 
-                alt="Cover" 
-                className="w-full h-full object-cover" 
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col justify-center items-center bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
-                <i className="fa-solid fa-images text-4xl text-white/70 mb-2"></i>
-                <span className="text-white/80 italic text-sm">Chưa có ảnh bìa</span>
-              </div>
-            )}
-          </div>
-          
-          {/* Profile info section */}
-          <div className="w-full px-6 -mt-16">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 px-10 py-4">
-              {/* Left side: Avatar and basic info */}
-              <div className="flex gap-4 items-center">
-                {/* Avatar */}
-                <div className="w-32 h-32 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
-                  <img 
-                    src={info?.avatar || avatar} 
-                    alt={info?.name || "User"}
-                    className="w-full h-full object-cover"
-                  />
+    <>
+      <div className="w-full min-h-screen flex flex-col bg-gray-50">
+        {/* Profile header */}
+        <div className="w-full bg-white shadow-sm">
+          <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+            <div className="w-full h-64 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+              {profileInfo?.background ? (
+                <img 
+                  src={profileInfo.background} 
+                  alt="Cover" 
+                  className="w-full h-full object-cover" 
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col justify-center items-center bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+                  <i className="fa-solid fa-images text-4xl text-white/70 mb-2"></i>
+                  <span className="text-white/80 italic text-sm">Chưa có ảnh bìa</span>
                 </div>
-                
-                {/* User info */}
-                <div className="flex flex-col gap-2 justify-center">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl md:text-3xl font-bold text-gray-900">{info?.name || "Chưa có tên"}</span>
-                    {!isLoadingRelationship && (
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getRelationshipBadgeColor()}`}>
-                        <i className={`fa-solid ${getRelationshipIcon()} mr-1`}></i>
-                        {getRelationshipStatusText()}
+              )}
+            </div>
+            
+            <div className="w-full px-1 lg:px-6!">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 px-10 py-4">
+                <div className="flex gap-4 items-center">
+                  <div className=" w-20! h-20 xl:w-32! xl:h-32 rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                    <img 
+                      src={profileInfo?.avatar || avatar} 
+                      alt={profileInfo?.name || "User"}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col gap-2 justify-center">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg xl:text-3xl font-bold text-gray-900">{profileInfo?.name || "Chưa có tên"}</span>
+                      {!isLoadingRelationship && (
+                        <span className={`hidden xl:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getRelationshipBadgeColor()}`}>
+                          <i className={`fa-solid ${getRelationshipIcon()} mr-2!`}></i>
+                          {getRelationshipStatusText()}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {profileInfo?.email && (
+                      <span className="text-gray-600 text-sm flex items-center gap-1.5">
+                        <i className="fa-solid fa-envelope text-gray-400"></i>
+                        {profileInfo.email}
                       </span>
                     )}
-                  </div>
-                  
-                  {info?.email && (
-                    <span className="text-gray-600 text-sm flex items-center gap-1.5">
-                      <i className="fa-solid fa-envelope text-gray-400"></i>
-                      {info.email}
-                    </span>
-                  )}
-                  
-                  <div className="flex items-center gap-4 text-gray-600 text-sm">
-                    <span className="flex items-center gap-1.5">
-                      <i className="fa-solid fa-newspaper text-gray-400"></i>
-                      <span className="font-medium">{dataPost.length}</span> bài viết
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <i className="fa-solid fa-user-group text-gray-400"></i>
-                      <span className="font-medium">{friends?.length || 0}</span> bạn bè
-                    </span>
+                    
+                    <div className="flex items-center gap-4 text-gray-600 text-sm">
+                      <span className="flex items-center gap-1.5">
+                        <i className="fa-solid fa-newspaper text-gray-400"></i>
+                        <span className="font-medium">{dataPost.length}</span> bài viết
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <i className="fa-solid fa-user-group text-gray-400"></i>
+                        <span className="font-medium">{friends?.length || 0}</span> bạn bè
+                      </span>
+                    </div>
                   </div>
                 </div>
+                
+                <div className="mb-4">
+                  {renderActionButtons()}
+                </div>
               </div>
-              
-              {/* Right side: Action buttons */}
-              <div className="mb-4">
-                {renderActionButtons()}
+            </div>
+            
+            {/* Tabs navigation */}
+            <div className="w-full border-t border-gray-200 mt-2 px-1 lg:px-6!">
+              <div className="w-full flex justify-start gap-3">
+                <button
+                  onClick={() => setActiveTab("posts")}
+                  className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
+                    activeTab === "posts" 
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  <i className="fa-solid fa-newspaper"></i>
+                  Bài viết
+                  {dataPost?.length > 0 && (
+                    <span className="bg-gray-200 text-gray-700 text-xs px-1.5! py-0.5! rounded-full">
+                      {dataPost.length}
+                    </span>
+                  )}
+                </button>
+                
+                <button
+                  onClick={() => setActiveTab("friends")}
+                  className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
+                    activeTab === "friends" 
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+                >
+                  <i className="fa-solid fa-user-group"></i>
+                  Bạn bè
+                  {friends?.length > 0 && (
+                    <span className="bg-gray-200 text-gray-700 text-xs px-1.5! py-0.5! rounded-full">
+                      {friends.length}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
-          
-          {/* Tabs navigation */}
-          <div className="w-full border-t border-gray-200 mt-2">
-            <div className="w-full flex justify-start">
-              <button
-                onClick={() => setActiveTab("posts")}
-                className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
-                  activeTab === "posts" 
-                    ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-              >
-                <i className="fa-solid fa-newspaper"></i>
-                Bài viết
-                {dataPost?.length > 0 && (
-                  <span className="bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-full">
-                    {dataPost.length}
-                  </span>
-                )}
-              </button>
-              
-              <button
-                onClick={() => setActiveTab("friends")}
-                className={`flex items-center justify-center gap-2 py-3 px-6 text-sm font-medium transition-colors ${
-                  activeTab === "friends" 
-                    ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50" 
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-              >
-                <i className="fa-solid fa-user-group"></i>
-                Bạn bè
-                {friends?.length > 0 && (
-                  <span className="bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-full">
-                    {friends.length}
-                  </span>
-                )}
-              </button>
-            </div>
+        </div>
+        
+        {/* Main content */}
+        <div className="w-full flex justify-center py-4 flex-1">
+          <div className={`${compact ? "w-full" : "w-full 2xl:w-[80%]"} flex`}>
+            {renderTabContent()}
           </div>
         </div>
       </div>
-      
-      {/* Main content */}
-      <div className="w-full flex justify-center py-4 flex-1">
-        <div className={`${compact ? "w-full" : "w-full 2xl:w-[80%]"} flex`}>
-          {renderTabContent()}
-        </div>
-      </div>
-    </div>
+
+      {/* Modal chỉnh sửa hồ sơ */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        userInfo={profileInfo}
+        onUpdateSuccess={handleUpdateSuccess}
+      />
+    </>
   );
 };
 

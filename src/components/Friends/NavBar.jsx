@@ -19,10 +19,6 @@ const NavBar = () => {
                     <i className="fa-solid fa-address-book w-4"></i>
                     <span>Tất cả bạn bè</span>
                 </NavLink>
-                <div className="w-full flex items-center gap-3 py-2 hover:bg-[#cdcdcd] cursor-pointer rounded px-2 transition-all">
-                    <i className="fa-solid fa-user-check w-4"></i>
-                    <span>Lời mời đã gửi</span>
-                </div>
             </div>
         </div>
     )

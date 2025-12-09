@@ -9,10 +9,9 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPass] = useState("");
   const navigate = useNavigate();
   const handleResetPass = async (e) => {
-    console.log("eqweqweqw");
     e.preventDefault();
     if (!comparePassword()) {
-      toast.error("mat khau nhap lai khong chinh xac");
+      toast.error("Mat khau nhap lai khong chinh xac");
       return;
     }
     try {

@@ -9,8 +9,6 @@ import _ from "lodash";
 const MiniChat = () => {
   const user = useSelector((state) => state.user.account);
   const userId = user?.id;
-  
-  // States
   const [isOpen, setIsOpen] = useState(false);
   const [listUserChat, setListUserChat] = useState([]);
   const [messageSegment, setMessageSegment] = useState([]);
@@ -28,13 +26,10 @@ const MiniChat = () => {
   useEffect(() => {
     const handleOpenMiniChat = (event) => {
       const { friendId, friendData } = event.detail;
-      
-      // Mở MiniChat nếu đang đóng
       if (!isOpen) {
         setIsOpen(true);
       }
       
-      // Load conversation với bạn bè được click
       clickViewMessageSegment(friendId, friendData);
     };
 
@@ -65,15 +60,13 @@ const MiniChat = () => {
     }
   };
 
-  // Socket cho realtime chat
+
   useEffect(() => {
     if (!userId || !isOpen) return;
-    
     const socket = createSocket(userId);
-    
+
     socket.on("receive_message", (data) => {
       const message = data.newMess;
-      
       // Nếu đang trong chat với người gửi
       if (currentReceiverId && 
           (message.senderId === currentReceiverId || message.receiverId === currentReceiverId)) {
@@ -83,7 +76,6 @@ const MiniChat = () => {
       // Cập nhật danh sách chat realtime
       updateChatRealTime(message);
     });
-
     return () => {
       socket.off("receive_message");
     };
@@ -107,11 +99,11 @@ const MiniChat = () => {
     });
   };
 
-  // Xem đoạn chat cụ thể
+
   const clickViewMessageSegment = async (receiverId, userInfo) => {
     setCurrentReceiverId(receiverId);
     setCurrentReceiverInfo(userInfo);
-    setSelectedFiles([]); // Reset selected files khi chuyển người chat
+    setSelectedFiles([]);
     
     try {
       const res = await getConversation(userId, receiverId);
@@ -119,7 +111,6 @@ const MiniChat = () => {
         setMessageSegment(res.dataMes);
         scrollToBottom();
       } else if (res?.Ec === -2 || res?.Mes === "Not found") {
-        // Chưa có đoạn chat, tạo mới
         setMessageSegment([]);
       } else {
         toast.error(res?.Mes);
@@ -140,14 +131,12 @@ const MiniChat = () => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
       
-      // Kiểm tra số lượng file
       const maxFiles = 10;
       if (files.length > maxFiles) {
         toast.error(`Chỉ có thể chọn tối đa ${maxFiles} ảnh`);
         return;
       }
-      
-      // Kiểm tra định dạng file
+
       const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       const invalidFiles = files.filter(file => !validTypes.includes(file.type));
       
@@ -156,7 +145,6 @@ const MiniChat = () => {
         return;
       }
       
-      // Tạo preview cho từng file
       const filesWithPreview = files.map(file => ({
         file,
         id: Math.random().toString(36).substr(2, 9),
@@ -173,7 +161,6 @@ const MiniChat = () => {
     }
   };
 
-  // Xóa ảnh đã chọn
   const removeSelectedFile = (id) => {
     setSelectedFiles(prev => {
       const fileToRemove = prev.find(f => f.id === id);
@@ -184,7 +171,6 @@ const MiniChat = () => {
     });
   };
 
-  // Gửi tin nhắn (có thể kèm ảnh)
   const handleSendMessage = async () => {
     if ((!messageInput.trim() && selectedFiles.length === 0) || !currentReceiverId) return;
     
@@ -195,7 +181,6 @@ const MiniChat = () => {
     formData.append("message", messageInput);
     formData.append("receiverId", currentReceiverId);
     
-    // Thêm tất cả file ảnh vào formData
     selectedFiles.forEach(fileItem => {
       formData.append("media", fileItem.file);
     });
@@ -203,11 +188,11 @@ const MiniChat = () => {
     try {
       let res = await sendMessage(formData);
       if (res?.Ec === 0) {
-        // Reset form
+
         setMessageInput("");
         setSelectedFiles([]);
         scrollToBottom();
-        // Cập nhật last message trong danh sách
+
         updateChatAfterSending();
       } else {
         toast.error(res?.Mes);
@@ -251,28 +236,24 @@ const MiniChat = () => {
     }
   };
 
-  // Mở danh sách chat (khi click vào button chat bubble)
   const openChatList = () => {
     setIsOpen(true);
-    // Giữ nguyên current chat nếu đang có
   };
 
-  // Đóng hoàn toàn
+
   const handleCloseChat = () => {
     setIsOpen(false);
-    // Reset current chat khi đóng
+
     setCurrentReceiverId("");
     setCurrentReceiverInfo(null);
     setMessageSegment([]);
     setSelectedFiles([]);
   };
 
-  // Mở chat với người khác từ danh sách
   const openChatWithUser = (user) => {
     clickViewMessageSegment(user.userId, user);
   };
 
-  // Xử lý phím Enter để gửi
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -280,21 +261,18 @@ const MiniChat = () => {
     }
   };
 
-  // Lấy tên hiển thị
   const getDisplayName = () => {
     if (currentReceiverInfo?.name) return currentReceiverInfo.name;
     if (messageSegment[0]?.receiverId?.name) return messageSegment[0].receiverId.name;
     return "Người dùng";
   };
 
-  // Lấy avatar hiển thị
   const getDisplayAvatar = () => {
     if (currentReceiverInfo?.avatar) return currentReceiverInfo.avatar;
     if (messageSegment[0]?.receiverId?.avatar) return messageSegment[0].receiverId.avatar;
     return avatar;
   };
 
-  // Render preview ảnh đã chọn
   const renderSelectedFilesPreview = () => {
     if (selectedFiles.length === 0) return null;
     
@@ -332,7 +310,6 @@ const MiniChat = () => {
     );
   };
 
-  // Render nút mở chat (khi đóng)
   const renderChatBubble = () => (
     <div className="fixed bottom-6 right-6 z-50">
       <button
@@ -344,9 +321,7 @@ const MiniChat = () => {
     </div>
   );
 
-  // Render cửa sổ chat (khi mở)
   const renderChatWindow = () => {
-    // Nếu đang có current chat, hiển thị khung chat
     if (currentReceiverId) {
       return (
         <div className="flex flex-col h-full w-full">
@@ -390,9 +365,9 @@ const MiniChat = () => {
                   >
                     {msg.message && <p className="text-sm mb-2!">{msg.message}</p>}
                     {msg.media && msg.media.length > 0 && (
-                      <div className="mt-2 space-y-2">
+                      <div className="flex justify-center items-center gap-1">
                         {msg.media.map((file, idx) => (
-                          <div key={file._id || idx} className="mt-1">
+                          <div key={file._id || idx} className="w-auto h-full">
                             {file.type === 'image' ? (
                               <img
                                 src={file.url}
@@ -428,13 +403,11 @@ const MiniChat = () => {
             )}
           </div>
 
-          {/* Preview ảnh đã chọn */}
           {renderSelectedFilesPreview()}
 
           {/* Input */}
           <div className="border-t p-2 bg-white border-gray-200">
             <div className="flex items-center gap-2">
-              {/* Nút chọn ảnh */}
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="w-10 h-10 rounded-full! flex items-center justify-center text-blue-500 hover:bg-blue-50 transition-colors"
@@ -485,7 +458,6 @@ const MiniChat = () => {
       );
     }
     
-    // Nếu không có current chat, hiển thị danh sách
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between border-b border-gray-200 px-2 py-3">
@@ -537,7 +509,6 @@ const MiniChat = () => {
     );
   };
 
-  // Render chính
   if (!isOpen) {
     return renderChatBubble();
   }

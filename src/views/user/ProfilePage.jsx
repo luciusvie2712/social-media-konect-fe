@@ -14,7 +14,6 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
   const [loading, setLoading] = useState(true)
   const [relationshipLoading, setRelationshipLoading] = useState(false)
   const [mode, setMode] = useState("all")
-  console.log("Data Props: ", data)
 
   const determineMode = (relationshipStatus, isOwner) => {
     if (isOwner) return "owner"
@@ -64,7 +63,7 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
         const fetchedUser = fetched?.data
 
         if (!fetchedUser) {
-          toast.error("Khong tim thay nguoi dung")
+          toast.error("Không tìm thấy người dùng")
           return
         }
         const normalized = { 
@@ -94,54 +93,54 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
   useEffect(() => {
     const loadProfileData = async () => {
       setLoading(true);
-      
-      // Trường hợp 1: Không có id trong params (hoặc id là của user hiện tại)
-      if (!id || id === user?.id) {
-        setProfileData(user);
-        setMode("owner");
-        setLoading(false);
-        return;
-      }
-      // Trường hợp 2: Có id khác với user hiện tại
+
       try {
-        const userRes = await getAUserByIdAPI(id);
+        const targetId = id || user?.id;
+
+        const userRes = await getAUserByIdAPI(targetId);
         const fetchedUser = userRes?.data || null;
-        
+
         if (!fetchedUser) {
           toast.error("Không tìm thấy người dùng");
           setProfileData(null);
-          setLoading(false);
+          setMode("stranger");
           return;
         }
+
         const fetchId = {
           ...fetchedUser,
-          id: fetchedUser.id || fetchedUser._id
-        }
-        
+          id: fetchedUser.id || fetchedUser._id,
+        };
+
         setProfileData(fetchId);
-        // Fetch relationship giữa user hiện tại và profile user
-        if (user?.id) {
-          const rel = await fetchRelationship(user.id, id);
+
+        if (targetId === user?.id) {
+          setMode("owner");
+        } 
+        else if (user?.id) {
+          const rel = await fetchRelationship(user.id, targetId);
           const calculatedMode = determineMode(rel, false);
-          console.log("Check relation:", rel)
           setMode(calculatedMode);
-        } else {
+        } 
+        else {
           setMode("stranger");
         }
-        
+
       } catch (error) {
         console.error("Error loading profile:", error);
         toast.error("Có lỗi xảy ra khi tải thông tin");
         setProfileData(null);
+        setMode("stranger");
       } finally {
         setLoading(false);
       }
     };
-    
+
     if (!data) {
       loadProfileData();
     }
   }, [id, user, data]);
+
 
   if (loading) {
     return (
@@ -180,6 +179,7 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
       </div>
     );
   }
+  console.log("profile Data: ", profileData)
 
   return (
     <div className="w-full h-full flex flex-col items-center overflow-y-auto">

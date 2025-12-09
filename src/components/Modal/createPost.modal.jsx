@@ -157,7 +157,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
 
         <div className="p-4 flex-1 overflow-y-auto">
           <div className="flex gap-3 items-center mb-3">
-            <img src={avatar} className="rounded-full w-10 h-10" />
+            <img src={account.avatar} className="rounded-full w-10 h-10" />
             <div className="flex flex-col">
               <div className="font-semibold text-sm sm:text-base">
                 {account.name}

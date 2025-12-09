@@ -11,11 +11,11 @@ export const useGetPost = () => {
             try {
                 setLoading(true)
                 const resData = await getPost()
-                if (resData.Ec === 0) {
+                if (resData?.Ec === 0) {
 
-                    setPosts(Array.isArray(resData.Data) ? resData.Data : [resData.Data])
+                    setPosts(Array.isArray(resData?.Data) ? resData?.Data : [resData?.Data])
                 } else {
-                    console.warn("Error get post: ", resData.Mes)
+                    console.warn("Error get post: ", resData?.Mes)
                     setPosts(null)
                 }
             } catch (error) {

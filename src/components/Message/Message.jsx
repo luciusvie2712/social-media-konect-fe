@@ -11,6 +11,7 @@ import _, { assign } from "lodash";
 import { toast } from "react-toastify";
 import { createSocket } from "../../socket/socket";
 import { useFriendList } from "../../hook/useFriendList";
+import { useLocation } from "react-router-dom";
 
 const Message = () => {
   const user = useSelector((state) => state.user.account);
@@ -321,6 +322,8 @@ const Message = () => {
     );
   };
 
+  console.log("Mes", messageSegment.receiverId)
+
   return (
     <div className="message-container">
       <div className="message-content">
@@ -442,7 +445,7 @@ const Message = () => {
                   >
                     {msg.senderId !== userId && (
                       <div className="img-receiver">
-                        <img src={msg.receiverId.avatar || avatar} />
+                        <img src={msg.receiverId.avatar} />
                       </div>
                     )}
                     <span

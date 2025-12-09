@@ -30,7 +30,6 @@ const NotificationModal = (props) => {
     setError(null)
     try {
       const response = await getNotifications(userId)
-      console.log(">> Notifications: ",response)
       if (response?.Ec === 0) {
         setNotification(response?.data || [])
       } else {

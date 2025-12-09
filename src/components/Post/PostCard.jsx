@@ -70,7 +70,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     "Vi phạm bản quyền",
   ];
 
-  // Chỉ lấy tối đa 4 comments để hiển thị
   const displayedComments = comments.slice(0, 4);
   const hasMoreComments = comments.length > 4;
 
@@ -158,7 +157,7 @@ const PostCard = ({ post, index, onUpdatePost }) => {
       } else {
         toast.error(response?.Mes);
       }
-    } catch (e) {
+    } catch (error) {
       console.error("Lỗi like:", error);
     }
   };

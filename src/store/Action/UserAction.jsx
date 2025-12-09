@@ -5,7 +5,7 @@ import actiontypes from "./ActionTypes";
 export const loginUserRedux = (email, password) => {
   return async (dispatch, getState) => {
     let res = await loginUserAPI(email, password);
-    console.log(res);
+    console.log(">>>>safdsa",res );
     try {
       if (res?.Ec === 0) {
         dispatch({
@@ -30,3 +30,8 @@ export const loginUserRedux = (email, password) => {
 export const logoutUser = () => ({
   type: actiontypes.USER_LOGOUT
 })
+
+export const updateUserInfoAction = (data) => ({
+    type: actiontypes.UPDATE_USER_INFO,
+    data,
+});

@@ -21,6 +21,11 @@ const NavBar = () => {
   const [openAvatarMenu, setOpenAvatarMenu] = useState(false);
   const avatarRef = useRef(null);
   const wrapperRef = useRef(null);
+
+  useEffect(() => {
+
+  }, [account.avatar])
+
   useEffect(() => {
     const handleClick = (e) => {
       if (avatarRef.current && !avatarRef.current.contains(e.target)) {
@@ -52,8 +57,7 @@ const NavBar = () => {
   }, []);
   const fetchLogo = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/logo"); //env
-      console.log(res.logo);
+      const res = await axios.get("/api/logo"); //env
       setLogo(res?.logo);
     } catch (err) {
       console.error(err);
@@ -103,7 +107,7 @@ const NavBar = () => {
       return [];
     }
   };
-  console.log("searchResult", searchResult);
+
   return (
     <div className="fixed top-0 left-0 w-full bg-[#ffffff] shadow-md z-50 flex items-center justify-between px-4 py-2 text-black">
       <div className="flex items-center">

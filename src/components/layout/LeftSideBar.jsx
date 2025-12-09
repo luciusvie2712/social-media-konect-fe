@@ -6,7 +6,7 @@ const LeftSidebar = ({ setIsCreateOpen }) => {
   const { account } = useSelector((state) => state.user)
 
   return (
-    <div className="w-full h-full p-4 rounded flex flex-col gap-6">
+    <div className="w-full h-full pt-4 rounded flex flex-col gap-6">
       <div className="w-full flex flex-col items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100">
         <div className="relative w-full flex justify-center">
           <img

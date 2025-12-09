@@ -16,8 +16,6 @@ const INITIAL_STATE = {
 };
 
 const UserReducer = (state = INITIAL_STATE, action) => {
-  console.log(action);
-
   switch (action.type) {
     case actiontypes.USER_LOGIN_SUCCESS:
       return {
@@ -46,6 +44,14 @@ const UserReducer = (state = INITIAL_STATE, action) => {
         ...state,
         account: null,
         isauthentic: false,
+      };
+    case actiontypes.UPDATE_USER_INFO:
+      return {
+        ...state,
+        account: {
+          ...state.account,
+          ...action.data,
+        }
       };
     default:
       return state;
