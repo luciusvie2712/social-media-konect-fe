@@ -19,7 +19,6 @@ export const useFriendActions = () => {
     const handleAcceptFriendRequest = async (requesterId, recipientId) => {
         try {
             const dataRes = await acceptFriendRequest(requesterId, recipientId)
-            console.log(">>> Data Accepted: ", dataRes)
             if (dataRes.Ec === 0) {
                 setStatus("accepted")
             } else {
@@ -30,7 +29,7 @@ export const useFriendActions = () => {
             setStatus('idle')
             throw error
         }
-    } 
+    }
 
     const handleRejectFriendRequest = async (requesterId, recipientId) => {
         try {
@@ -47,7 +46,7 @@ export const useFriendActions = () => {
             throw error
         }
     }
-    
+
 
     return { status, handleSendFriendRequest, handleAcceptFriendRequest, handleRejectFriendRequest }
 }

@@ -16,7 +16,7 @@ const ShowListFriends = ({ item, typeList, index, onSelect }) => {
   const onSendRequest = async () => {
     try {
       await handleSendFriendRequest(requesterId, item._id);
-      console.log(">>> Đã gửi lời mời!");
+      toast.info(">>> Đã gửi lời mời!");
     } catch (err) {
       console.log(">>> Gửi lời mời thất bại:", err);
     }
@@ -25,7 +25,7 @@ const ShowListFriends = ({ item, typeList, index, onSelect }) => {
   const onAccept = async () => {
     try {
       await handleAcceptFriendRequest(item._id, requesterId);
-      console.log(">>> Đã chấp nhận!");
+      toast.info(">>> Đã chấp nhận!");
     } catch (err) {
       console.log(">>> Lỗi accept:", err);
     }
@@ -34,7 +34,7 @@ const ShowListFriends = ({ item, typeList, index, onSelect }) => {
   const onReject = async () => {
     try {
       await handleRejectFriendRequest(item._id, requesterId);
-      console.log(">>> Đã từ chối!");
+      toast.warning(">>> Đã từ chối!");
     } catch (err) {
       console.log(">>> Lỗi reject:", err);
     }

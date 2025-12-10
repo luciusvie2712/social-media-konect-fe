@@ -22,9 +22,7 @@ const NavBar = () => {
   const avatarRef = useRef(null);
   const wrapperRef = useRef(null);
 
-  useEffect(() => {
-
-  }, [account.avatar])
+  useEffect(() => {}, [account.avatar]);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -36,7 +34,6 @@ const NavBar = () => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -47,7 +44,7 @@ const NavBar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [wrapperRef]);
   const handleLogout = () => {
     dispatch(action.logoutUser());
     navigate("/auth");
@@ -63,12 +60,11 @@ const NavBar = () => {
       console.error(err);
     }
   };
-  const filelogo = `http://localhost:8080${logo}`; //env
+  const filelogo = logo ? `http://localhost:8080${logo}` : avatar; //env
   const clickInputSearch = async () => {
+    if (showHistory) return;
+
     setShowHistory(true);
-    if (showHistory) {
-      return;
-    }
     const historySearch = await getHistorySearch();
     if (historySearch.Ec === 0) {
       setDataHistory(historySearch?.data);
@@ -103,7 +99,7 @@ const NavBar = () => {
       if (res.Ec === 0) return res.data;
       return [];
     } catch (e) {
-      console.log(err);
+      console.log(e);
       return [];
     }
   };
@@ -239,7 +235,6 @@ const NavBar = () => {
 
           {openAvatarMenu && (
             <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200 animate-fadeIn z-50">
-              
               <NavLink
                 to={`/profile/${account?.id}`}
                 onClick={() => setOpenAvatarMenu(false)}
@@ -274,7 +269,6 @@ const NavBar = () => {
               >
                 <i className="fa-solid fa-right-from-bracket w-5"></i>Đăng xuất
               </div>
-
             </div>
           )}
         </div>

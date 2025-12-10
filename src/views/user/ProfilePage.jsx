@@ -7,37 +7,36 @@ import { useSelector } from "react-redux";
 import DisplayProfile from "../../components/Profile/DisplayProfile";
 
 const ProfilePage = ({ data = null, type = null, compact }) => {
-  const { id } = useParams()
-  const user = useSelector((state) => state.user.account)
-  const [profileData, setProfileData] = useState(null)
-  const [relationship, setRelationship] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [relationshipLoading, setRelationshipLoading] = useState(false)
-  const [mode, setMode] = useState("all")
+  const { id } = useParams();
+  const user = useSelector((state) => state.user.account);
+  const [profileData, setProfileData] = useState(null);
+  const [relationship, setRelationship] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [relationshipLoading, setRelationshipLoading] = useState(false);
+  const [mode, setMode] = useState("all");
 
   const determineMode = (relationshipStatus, isOwner) => {
-    if (isOwner) return "owner"
-    
+    if (isOwner) return "owner";
+
     switch (relationshipStatus?.status) {
       case "accepted":
-        return "friend"
+        return "friend";
       case "pending":
-        const isRequester = relationshipStatus?.requester === user?.id
-        return isRequester ? "pending_outgoing" : "pending_incoming"
+        const isRequester = relationshipStatus?.requester === user?.id;
+        return isRequester ? "pending_outgoing" : "pending_incoming";
       case "rejected":
-        return "stranger"
+        return "stranger";
       default:
-        return "stranger"
+        return "stranger";
     }
   };
 
   const fetchRelationship = async (userId, otherUserId) => {
     if (!userId || !otherUserId || userId === otherUserId) return null;
-    
+
     try {
       setRelationshipLoading(true);
       const res = await checkRelationShip(userId, otherUserId);
-      console.log("fetch", res)
       if (res) {
         setRelationship(res);
         return res;
@@ -53,25 +52,24 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
 
   // Xử lý khi có data truyền vào từ props
   useEffect(() => {
-    if (!data) return 
+    if (!data) return;
     const loadDataFromProps = async () => {
-      setLoading(true)
+      setLoading(true);
 
       try {
-        const fetched = await getAUserByIdAPI(data._id || data.id)
-        console.log("fetch:", fetched)
-        const fetchedUser = fetched?.data
+        const fetched = await getAUserByIdAPI(data._id || data.id);
+        const fetchedUser = fetched?.data;
 
         if (!fetchedUser) {
-          toast.error("Không tìm thấy người dùng")
-          return
+          toast.error("Không tìm thấy người dùng");
+          return;
         }
-        const normalized = { 
-          ...fetchedUser, 
-          id: fetchedUser._id || fetchedUser.id 
-        }
+        const normalized = {
+          ...fetchedUser,
+          id: fetchedUser._id || fetchedUser.id,
+        };
 
-        setProfileData(normalized)
+        setProfileData(normalized);
         if (type !== "owner" && user?.id && normalized.id !== user.id) {
           const rel = await fetchRelationship(user.id, normalized.id);
           setMode(determineMode(rel, false));
@@ -79,14 +77,14 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
           setMode("owner");
         }
       } catch (error) {
-        console.error(error)
-        toast.error("Lỗi khi tải profile (props mode)")
+        console.error(error);
+        toast.error("Lỗi khi tải profile (props mode)");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadDataFromProps()
+    loadDataFromProps();
   }, [data, type, user]);
 
   // Xử lý khi không có data từ props, lấy từ URL params
@@ -116,16 +114,13 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
 
         if (targetId === user?.id) {
           setMode("owner");
-        } 
-        else if (user?.id) {
+        } else if (user?.id) {
           const rel = await fetchRelationship(user.id, targetId);
           const calculatedMode = determineMode(rel, false);
           setMode(calculatedMode);
-        } 
-        else {
+        } else {
           setMode("stranger");
         }
-
       } catch (error) {
         console.error("Error loading profile:", error);
         toast.error("Có lỗi xảy ra khi tải thông tin");
@@ -140,7 +135,6 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
       loadProfileData();
     }
   }, [id, user, data]);
-
 
   if (loading) {
     return (
@@ -160,8 +154,12 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
           <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100">
             <i className="fa-solid fa-user-slash text-4xl text-gray-400"></i>
           </div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Người dùng không tồn tại</h2>
-          <p className="text-gray-500">Không thể tìm thấy thông tin người dùng này.</p>
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            Người dùng không tồn tại
+          </h2>
+          <p className="text-gray-500">
+            Không thể tìm thấy thông tin người dùng này.
+          </p>
         </div>
       </div>
     );
@@ -170,8 +168,8 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
   if (relationshipLoading) {
     return (
       <div className="w-full h-full flex flex-col items-center">
-        <DisplayProfile 
-          info={profileData} 
+        <DisplayProfile
+          info={profileData}
           mode={mode}
           relationship={relationship}
           isLoadingRelationship={true}
@@ -179,12 +177,11 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
       </div>
     );
   }
-  console.log("profile Data: ", profileData)
 
   return (
     <div className="w-full h-full flex flex-col items-center overflow-y-auto">
-      <DisplayProfile 
-        info={profileData} 
+      <DisplayProfile
+        info={profileData}
         mode={mode}
         relationship={relationship}
         onRelationshipUpdate={(newRelationship) => {

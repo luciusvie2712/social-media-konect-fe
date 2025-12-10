@@ -4,7 +4,7 @@ import { updateAuser } from "../../utils/api.customize";
 import { useDispatch } from "react-redux";
 import * as action from "../../store/Export";
 
-const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
+const EditProfileModal = ({ isOpen, onClose, userInfo, onUpdateSuccess }) => {
   const [editForm, setEditForm] = useState({
     name: "",
     avatar: "",
@@ -18,7 +18,7 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isOpen && userInfo) {
@@ -37,27 +37,27 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
 
   const handleEditFormChange = (e) => {
     const { name, value, files } = e.target;
-    
-    if ((name === 'avatar' || name === 'background') && files && files[0]) {
+
+    if ((name === "avatar" || name === "background") && files && files[0]) {
       const file = files[0];
-      
+
       if (file.size > 5 * 1024 * 1024) {
         toast.error("File quá lớn! Vui lòng chọn file dưới 5MB");
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditForm(prev => ({
+        setEditForm((prev) => ({
           ...prev,
-          [name]: reader.result
+          [name]: reader.result,
         }));
       };
       reader.readAsDataURL(file);
     } else {
-      setEditForm(prev => ({
+      setEditForm((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -67,9 +67,28 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
       toast.error("Tên không được để trống");
       return;
     }
+
+    if (!isFormChanged()) {
+      toast.info("Bạn chưa thay đổi thông tin nào");
+      return;
+    }
+
     setIsPasswordModalOpen(true);
   };
+  const isFormChanged = () => {
+    if (!userInfo) return false;
 
+    return (
+      editForm.name !== (userInfo.name || "") ||
+      editForm.avatar !== (userInfo.avatar || "") ||
+      editForm.background !== (userInfo.background || "") ||
+      editForm.gender !== (userInfo.gender || "") ||
+      editForm.address !== (userInfo.address || "") ||
+      editForm.education !== (userInfo.education || "") ||
+      editForm.bio !== (userInfo.bio || "") ||
+      editForm.website !== (userInfo.website || "")
+    );
+  };
   const handleConfirmUpdate = async () => {
     if (!password) {
       toast.error("Vui lòng nhập mật khẩu hiện tại");
@@ -78,7 +97,7 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
 
     try {
       setIsSaving(true);
-      
+
       const updateData = {
         _id: userInfo.id,
         name: editForm.name,
@@ -93,15 +112,17 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
       };
 
       const res = await updateAuser(updateData);
-      
+
       if (res?.Ec === 0) {
         toast.success("Cập nhật hồ sơ thành công");
-        
-        dispatch(action.updateUserInfoAction({
-          name: editForm.name,
-          avatar: editForm.avatar,
-          background: editForm.background,
-        }))
+
+        dispatch(
+          action.updateUserInfoAction({
+            name: editForm.name,
+            avatar: editForm.avatar,
+            background: editForm.background,
+          })
+        );
 
         if (onUpdateSuccess) {
           onUpdateSuccess({
@@ -115,7 +136,7 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
             website: editForm.website,
           });
         }
-        
+
         setIsPasswordModalOpen(false);
         onClose();
         setPassword("");
@@ -132,9 +153,9 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
   };
 
   const handleRemoveImage = (field) => {
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
-      [field]: ""
+      [field]: "",
     }));
   };
 
@@ -145,13 +166,16 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
       {/* Modal chỉnh sửa hồ sơ */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
         <div className="absolute inset-0" onClick={onClose}></div>
-        
-        <div className="bg-white rounded w-full max-w-5xl max-h-[90vh] overflow-auto z-10 shadow-2xl">
 
+        <div className="bg-white rounded w-full max-w-5xl max-h-[90vh] overflow-auto z-10 shadow-2xl">
           <div className="w-full sticky top-0 left-0 z-51 flex justify-between items-center border-b border-gray-200 bg-gray-50 shadow-sm px-4 py-3">
             <div className="flex flex-col justify-center">
-              <span className="text-xl font-bold text-blue-700">Chỉnh sửa hồ sơ</span>
-              <span className="text-sm text-gray-600 italic">Cập nhật thông tin cá nhân của bạn</span>
+              <span className="text-xl font-bold text-blue-700">
+                Chỉnh sửa hồ sơ
+              </span>
+              <span className="text-sm text-gray-600 italic">
+                Cập nhật thông tin cá nhân của bạn
+              </span>
             </div>
             <button
               onClick={onClose}
@@ -173,9 +197,9 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
                   <div className="flex flex-col items-center">
                     <div className="relative w-28 h-28 overflow-hidden mb-4">
                       {editForm.avatar ? (
-                        <img 
-                          src={editForm.avatar} 
-                          alt="Avatar preview" 
+                        <img
+                          src={editForm.avatar}
+                          alt="Avatar preview"
                           className="w-full h-full object-cover rounded-full"
                         />
                       ) : (
@@ -185,18 +209,22 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
                       )}
                       {editForm.avatar && (
                         <button
-                          onClick={() => handleRemoveImage('avatar')}
+                          onClick={() => handleRemoveImage("avatar")}
                           className="absolute top-0 right-1 w-7 h-7 bg-red-500 text-white rounded-full! flex items-center justify-center hover:bg-red-600"
                         >
                           <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
                       )}
                     </div>
-                    
+
                     <label className="w-full">
                       <div className="w-full px-4 py-2 rounded-lg border border-gray-300 hover:border-blue-500 cursor-pointer text-center transition-colors">
-                        <p className="text-sm font-medium text-gray-700">Tải ảnh lên</p>
-                        <p className="text-xs text-gray-500 mt-1">JPG, PNG • Tối đa 5MB</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          Tải ảnh lên
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          JPG, PNG • Tối đa 5MB
+                        </p>
                       </div>
                       <input
                         type="file"
@@ -217,31 +245,37 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
                   <div className="flex flex-col items-center">
                     <div className="relative w-full h-32 rounded border border-gray-200 bg-gray-50 overflow-hidden mb-4">
                       {editForm.background ? (
-                        <img 
-                          src={editForm.background} 
-                          alt="Background preview" 
+                        <img
+                          src={editForm.background}
+                          alt="Background preview"
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center">
                           <i className="fa-solid fa-image text-2xl text-gray-400 mb-2"></i>
-                          <p className="text-sm text-gray-500">Chưa có ảnh bìa</p>
+                          <p className="text-sm text-gray-500">
+                            Chưa có ảnh bìa
+                          </p>
                         </div>
                       )}
                       {editForm.background && (
                         <button
-                          onClick={() => handleRemoveImage('background')}
+                          onClick={() => handleRemoveImage("background")}
                           className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full! flex items-center justify-center hover:bg-red-600"
                         >
                           <i className="fa-solid fa-xmark text-xs"></i>
                         </button>
                       )}
                     </div>
-                    
+
                     <label className="w-full">
                       <div className="w-full px-4 py-3 rounded-lg border border-gray-300 hover:border-blue-500 cursor-pointer text-center transition-colors">
-                        <p className="text-sm font-medium text-gray-700">Tải ảnh bìa lên</p>
-                        <p className="text-xs text-gray-500 mt-1">JPG, PNG • Tối đa 5MB</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          Tải ảnh bìa lên
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          JPG, PNG • Tối đa 5MB
+                        </p>
                       </div>
                       <input
                         type="file"
@@ -258,7 +292,7 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
               {/* Cột phải - Thông tin */}
               <div className="w-full">
                 {/* Tên */}
-                <div className="w-full flex flex-col justify-center"> 
+                <div className="w-full flex flex-col justify-center">
                   <label className="block text-sm font-medium text-gray-900 mb-2">
                     <span className="text-red-500">*</span> Tên hiển thị
                   </label>
@@ -356,7 +390,13 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
                     <div className="text-xs text-gray-500">
                       Tối đa 1000 ký tự
                     </div>
-                    <div className={`text-sm ${editForm.bio.length > 900 ? 'text-red-500' : 'text-gray-500'}`}>
+                    <div
+                      className={`text-sm ${
+                        editForm.bio.length > 900
+                          ? "text-red-500"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {editForm.bio.length}/1000
                     </div>
                   </div>
@@ -388,13 +428,20 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
       {/* Modal xác nhận mật khẩu */}
       {isPasswordModalOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
-          <div className="absolute inset-0" onClick={() => setIsPasswordModalOpen(false)}></div>
-          
+          <div
+            className="absolute inset-0"
+            onClick={() => setIsPasswordModalOpen(false)}
+          ></div>
+
           <div className="relative bg-white rounded w-full max-w-md z-10 shadow-2xl">
             {/* Header */}
             <div className="w-full border-b border-gray-200 flex flex-col px-3 py-2">
-              <span className="text-lg font-bold text-red-500">Xác nhận mật khẩu</span>
-              <span className="text-sm text-gray-600 italic">Chúng tôi cần xác nhận bạn là chủ tài khoản này</span>
+              <span className="text-lg font-bold text-red-500">
+                Xác nhận mật khẩu
+              </span>
+              <span className="text-sm text-gray-600 italic">
+                Chúng tôi cần xác nhận bạn là chủ tài khoản này
+              </span>
             </div>
 
             {/* Form mật khẩu */}
@@ -433,7 +480,7 @@ const EditProfileModal = ({ isOpen, onClose, userInfo,onUpdateSuccess }) => {
                       <span>Đang xử lý...</span>
                     </div>
                   ) : (
-                    'Xác nhận'
+                    "Xác nhận"
                   )}
                 </button>
               </div>

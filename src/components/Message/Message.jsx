@@ -55,7 +55,7 @@ const Message = () => {
   formData.append("senderId", formSendMess.senderId);
   formData.append("message", formSendMess.message);
   formData.append("receiverId", formSendMess.receiverId);
-  selectedFiles.forEach(fileItem => {
+  selectedFiles.forEach((fileItem) => {
     formData.append("media", fileItem.file);
   });
 
@@ -64,7 +64,7 @@ const Message = () => {
       getListUser();
     }
   }, [user]);
-  
+
   const getListUser = async () => {
     let res = await getListUserChatted(userId);
     if (res?.Ec === 0) {
@@ -73,13 +73,12 @@ const Message = () => {
       toast.error(res?.Mes);
     }
   };
-  
+
   useEffect(() => {
     if (!userId) return;
     const socket = createSocket(userId);
     socket.on("receive_message", (data) => {
       const message = data.newMess;
-      console.log("Mees", message)
       const isCurrent =
         message.senderId === currentReceiverId ||
         message.receiverId === currentReceiverId;
@@ -106,11 +105,11 @@ const Message = () => {
       return [update, ...others];
     });
   };
-  
+
   const clickViewMessageSegment = async (receiverId) => {
     setCurrentReceiverId(receiverId);
     setSelectedFiles([]); // Reset selected files khi chuyển người chat
-    
+
     const res = await getConversation(userId, receiverId);
     if (res?.Ec === 0) {
       setMessageSegment(res.dataMes);
@@ -118,14 +117,14 @@ const Message = () => {
       toast.error(res?.Mes);
     }
   };
-  
+
   const handleSendMessage = async () => {
     if (_.isEmpty(formSendMess.message) && selectedFiles.length === 0) {
       return;
     }
-    
+
     setIsUploading(true);
-    
+
     try {
       let res = await sendMessage(formData);
       if (res?.Ec === 0) {
@@ -135,27 +134,29 @@ const Message = () => {
           media: [],
         }));
         setSelectedFiles([]);
-        
+
         // Update last message in list
         updateChatAfterSending();
       } else {
         toast.error(res?.Mes);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
       toast.error("Gửi tin nhắn thất bại");
     } finally {
       setIsUploading(false);
     }
   };
-  
+
   const updateChatAfterSending = () => {
     if (!currentReceiverId) return;
-    
-    const lastMessage = selectedFiles.length > 0 
-      ? `Đã gửi ${selectedFiles.length} ảnh${formSendMess.message ? ' và tin nhắn' : ''}`
-      : formSendMess.message;
-    
+
+    const lastMessage =
+      selectedFiles.length > 0
+        ? `Đã gửi ${selectedFiles.length} ảnh${
+            formSendMess.message ? " và tin nhắn" : ""
+          }`
+        : formSendMess.message;
+
     setListUserChat((prev = []) => {
       const existing = prev.find((item) => item.userId === currentReceiverId);
       const others = prev.filter((item) => item.userId !== currentReceiverId);
@@ -174,97 +175,98 @@ const Message = () => {
   const chooseFileSendMess = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
-      
+
       // Kiểm tra số lượng file
       const maxFiles = 10;
       if (files.length > maxFiles) {
         toast.error(`Chỉ có thể chọn tối đa ${maxFiles} ảnh`);
         return;
       }
-      
+
       // Kiểm tra định dạng file
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-      const invalidFiles = files.filter(file => !validTypes.includes(file.type));
-      
+      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      const invalidFiles = files.filter(
+        (file) => !validTypes.includes(file.type)
+      );
+
       if (invalidFiles.length > 0) {
-        toast.error('Chỉ chấp nhận file ảnh (JPEG, PNG, GIF, WebP)');
+        toast.error("Chỉ chấp nhận file ảnh (JPEG, PNG, GIF, WebP)");
         return;
       }
-      
+
       // Tạo preview cho từng file
-      const filesWithPreview = files.map(file => ({
+      const filesWithPreview = files.map((file) => ({
         file,
         id: Math.random().toString(36).substr(2, 9),
         preview: URL.createObjectURL(file),
         name: file.name,
-        size: file.size
+        size: file.size,
       }));
-      
-      setSelectedFiles(prev => [...prev, ...filesWithPreview]);
-      
+
+      setSelectedFiles((prev) => [...prev, ...filesWithPreview]);
+
       // Reset input file
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
 
   // Xóa ảnh đã chọn
   const removeSelectedFile = (id) => {
-    setSelectedFiles(prev => {
-      const fileToRemove = prev.find(f => f.id === id);
+    setSelectedFiles((prev) => {
+      const fileToRemove = prev.find((f) => f.id === id);
       if (fileToRemove && fileToRemove.preview) {
         URL.revokeObjectURL(fileToRemove.preview);
       }
-      return prev.filter(f => f.id !== id);
+      return prev.filter((f) => f.id !== id);
     });
   };
 
   // Tìm kiếm + mở đoạn chat mới
-  const [friendSearchText, setFriendSearchText] = useState("")
-  const [friendSearchResult, setfriendSearchResult] = useState([])
-  const { friends } = useFriendList("all", userId)
+  const [friendSearchText, setFriendSearchText] = useState("");
+  const [friendSearchResult, setfriendSearchResult] = useState([]);
+  const { friends } = useFriendList("all", userId);
 
   useEffect(() => {
     if (!friendSearchText.trim()) {
-      setfriendSearchResult([]) 
-      return
+      setfriendSearchResult([]);
+      return;
     }
 
-    const result = friends.filter(f => 
+    const result = friends.filter((f) =>
       f.name.toLowerCase().includes(friendSearchText.toLowerCase())
-    )
+    );
 
-    setfriendSearchResult(result)
-    console.log(friendSearchResult)
-  }, [friendSearchText, friends])
+    setfriendSearchResult(result);
+  }, [friendSearchText, friends]);
 
   // Tạo đoạn chat mới
   const handleCreateNewChat = async (friendId) => {
     try {
-      const res = await getConversation(userId, friendId)
+      const res = await getConversation(userId, friendId);
       // Trường hợp đã có đoạn chat
       if (res?.Ec === 0) {
-        setCurrentReceiverId(friendId)
-        setMessageSegment(res.dataMes)
-        setSelectedFiles([])
-      } 
+        setCurrentReceiverId(friendId);
+        setMessageSegment(res.dataMes);
+        setSelectedFiles([]);
+      }
       // Trường hợp CHƯA có đoạn chat
       else if (res?.Ec === -2 || res?.Mes === "Not found") {
-        setCurrentReceiverId(friendId)
-        setMessageSegment([]) // mở UI chat rỗng
-        setSelectedFiles([])
+        setCurrentReceiverId(friendId);
+        setMessageSegment([]); // mở UI chat rỗng
+        setSelectedFiles([]);
       } else {
-        toast.error(res?.Mes)
-        return
+        toast.error(res?.Mes);
+        return;
       }
 
       // Update danh sách chat
       setListUserChat((prev = []) => {
-        const exist = prev.find((i) => i.userId === friendId)
-        if (exist) return prev
+        const exist = prev.find((i) => i.userId === friendId);
+        if (exist) return prev;
 
-        const friend = friends.find((f) => f._id === friendId)
+        const friend = friends.find((f) => f._id === friendId);
 
         const newChat = {
           userId: friend._id,
@@ -274,20 +276,20 @@ const Message = () => {
           time: new Date().toISOString(),
         };
 
-        return [newChat, ...prev]
+        return [newChat, ...prev];
       });
 
-      setFriendSearchText("")
-      setfriendSearchResult([])
+      setFriendSearchText("");
+      setfriendSearchResult([]);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
   };
 
   // Render preview ảnh đã chọn
   const renderSelectedFilesPreview = () => {
     if (selectedFiles.length === 0) return null;
-    
+
     return (
       <div className="selected-files-preview">
         <div className="preview-header">
@@ -302,7 +304,7 @@ const Message = () => {
           </button>
         </div>
         <div className="files-grid">
-          {selectedFiles.map(fileItem => (
+          {selectedFiles.map((fileItem) => (
             <div key={fileItem.id} className="file-preview">
               <img
                 src={fileItem.preview}
@@ -322,8 +324,6 @@ const Message = () => {
     );
   };
 
-  console.log("Mes", messageSegment.receiverId)
-
   return (
     <div className="message-container">
       <div className="message-content">
@@ -341,29 +341,32 @@ const Message = () => {
               <div>
                 <i className="fa-solid fa-magnifying-glass"></i>
               </div>
-              <input 
-                type="search" 
-                name="search" 
-                placeholder="Tìm kiếm" 
+              <input
+                type="search"
+                name="search"
+                placeholder="Tìm kiếm"
                 value={friendSearchText}
                 onChange={(e) => setFriendSearchText(e.target.value)}
               />
             </label>
             {/* Hiển thị kết quả tìm kiếm */}
             {friendSearchResult.length > 0 && (
-            <div className="absolute z-50 top-full left-0 w-full bg-white border border-gray-200 shadow-md max-h-60 overflow-y-auto"> 
-              {friendSearchResult.map((fr) => (
-                <div
-                  key={fr?.userId}         
-                  onClick={() => handleCreateNewChat(fr._id)}   
-                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 cursor-pointer"    
-                >
-                  <img src={fr.avatar || avatar} className="w-10 h-10 rounded-full" />
-                  <span className="text-base">{fr.name}</span>
-                </div>
-              ))}
-            </div>
-          )}
+              <div className="absolute z-50 top-full left-0 w-full bg-white border border-gray-200 shadow-md max-h-60 overflow-y-auto">
+                {friendSearchResult.map((fr) => (
+                  <div
+                    key={fr?.userId}
+                    onClick={() => handleCreateNewChat(fr._id)}
+                    className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    <img
+                      src={fr.avatar || avatar}
+                      className="w-10 h-10 rounded-full"
+                    />
+                    <span className="text-base">{fr.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="left__subtitle">Tin nhắn</div>
@@ -485,10 +488,10 @@ const Message = () => {
                   </div>
                 ))}
               </div>
-              
+
               {/* Preview ảnh đã chọn */}
               {renderSelectedFilesPreview()}
-              
+
               <div
                 className="center__send"
                 onKeyDown={(e) => {
@@ -503,7 +506,11 @@ const Message = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder={selectedFiles.length > 0 ? "Nhập tin nhắn (tùy chọn)..." : "Tin nhắn ...."}
+                    placeholder={
+                      selectedFiles.length > 0
+                        ? "Nhập tin nhắn (tùy chọn)..."
+                        : "Tin nhắn ...."
+                    }
                     value={formSendMess["message"]}
                     onChange={(e) =>
                       setFormSendMess((prev) => ({

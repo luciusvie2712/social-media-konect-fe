@@ -1,7 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import avatar from "../../assets/download.png";
-import { getConversation, sendMessage, getListUserChatted } from "../../utils/api.customize";
+import {
+  getConversation,
+  sendMessage,
+  getListUserChatted,
+} from "../../utils/api.customize";
 import { toast } from "react-toastify";
 import { createSocket } from "../../socket/socket";
 import _ from "lodash";
@@ -17,7 +21,7 @@ const MiniChat = () => {
   const [messageInput, setMessageInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   const chatBodyRef = useRef(null);
   const messageInputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -29,14 +33,14 @@ const MiniChat = () => {
       if (!isOpen) {
         setIsOpen(true);
       }
-      
+
       clickViewMessageSegment(friendId, friendData);
     };
 
-    window.addEventListener('openMiniChat', handleOpenMiniChat);
-    
+    window.addEventListener("openMiniChat", handleOpenMiniChat);
+
     return () => {
-      window.removeEventListener('openMiniChat', handleOpenMiniChat);
+      window.removeEventListener("openMiniChat", handleOpenMiniChat);
     };
   }, [isOpen]);
 
@@ -60,7 +64,6 @@ const MiniChat = () => {
     }
   };
 
-
   useEffect(() => {
     if (!userId || !isOpen) return;
     const socket = createSocket(userId);
@@ -68,9 +71,12 @@ const MiniChat = () => {
     socket.on("receive_message", (data) => {
       const message = data.newMess;
       // Nếu đang trong chat với người gửi
-      if (currentReceiverId && 
-          (message.senderId === currentReceiverId || message.receiverId === currentReceiverId)) {
-        setMessageSegment(prev => [...prev, message]);
+      if (
+        currentReceiverId &&
+        (message.senderId === currentReceiverId ||
+          message.receiverId === currentReceiverId)
+      ) {
+        setMessageSegment((prev) => [...prev, message]);
         scrollToBottom();
       }
       // Cập nhật danh sách chat realtime
@@ -82,11 +88,12 @@ const MiniChat = () => {
   }, [userId, isOpen, currentReceiverId]);
 
   const updateChatRealTime = (message) => {
-    const chatPartnerId = message.senderId === userId ? message.receiverId : message.senderId;
-    setListUserChat(prev => {
-      const existing = prev.find(item => item.userId === chatPartnerId);
-      const others = prev.filter(item => item.userId !== chatPartnerId);
-      
+    const chatPartnerId =
+      message.senderId === userId ? message.receiverId : message.senderId;
+    setListUserChat((prev) => {
+      const existing = prev.find((item) => item.userId === chatPartnerId);
+      const others = prev.filter((item) => item.userId !== chatPartnerId);
+
       const updatedChat = {
         userId: chatPartnerId,
         name: existing?.name || message.senderId?.name || "Người dùng",
@@ -94,17 +101,16 @@ const MiniChat = () => {
         lastMessage: message.message || "Đã gửi một ảnh",
         time: new Date().toISOString(),
       };
-      
+
       return [updatedChat, ...others];
     });
   };
-
 
   const clickViewMessageSegment = async (receiverId, userInfo) => {
     setCurrentReceiverId(receiverId);
     setCurrentReceiverInfo(userInfo);
     setSelectedFiles([]);
-    
+
     try {
       const res = await getConversation(userId, receiverId);
       if (res?.Ec === 0) {
@@ -119,7 +125,7 @@ const MiniChat = () => {
       console.error("Error loading conversation:", error);
       toast.error("Không thể tải đoạn chat");
     }
-    
+
     setTimeout(() => {
       if (messageInputRef.current) {
         messageInputRef.current.focus();
@@ -130,65 +136,70 @@ const MiniChat = () => {
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
-      
+
       const maxFiles = 10;
       if (files.length > maxFiles) {
         toast.error(`Chỉ có thể chọn tối đa ${maxFiles} ảnh`);
         return;
       }
 
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-      const invalidFiles = files.filter(file => !validTypes.includes(file.type));
-      
+      const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      const invalidFiles = files.filter(
+        (file) => !validTypes.includes(file.type)
+      );
+
       if (invalidFiles.length > 0) {
-        toast.error('Chỉ chấp nhận file ảnh (JPEG, PNG, GIF, WebP)');
+        toast.error("Chỉ chấp nhận file ảnh (JPEG, PNG, GIF, WebP)");
         return;
       }
-      
-      const filesWithPreview = files.map(file => ({
+
+      const filesWithPreview = files.map((file) => ({
         file,
         id: Math.random().toString(36).substr(2, 9),
         preview: URL.createObjectURL(file),
         name: file.name,
-        size: file.size
+        size: file.size,
       }));
-      
-      setSelectedFiles(prev => [...prev, ...filesWithPreview]);
-      
+
+      setSelectedFiles((prev) => [...prev, ...filesWithPreview]);
+
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
 
   const removeSelectedFile = (id) => {
-    setSelectedFiles(prev => {
-      const fileToRemove = prev.find(f => f.id === id);
+    setSelectedFiles((prev) => {
+      const fileToRemove = prev.find((f) => f.id === id);
       if (fileToRemove && fileToRemove.preview) {
         URL.revokeObjectURL(fileToRemove.preview);
       }
-      return prev.filter(f => f.id !== id);
+      return prev.filter((f) => f.id !== id);
     });
   };
 
   const handleSendMessage = async () => {
-    if ((!messageInput.trim() && selectedFiles.length === 0) || !currentReceiverId) return;
-    
-    setIsUploading(true); 
-    
+    if (
+      (!messageInput.trim() && selectedFiles.length === 0) ||
+      !currentReceiverId
+    )
+      return;
+
+    setIsUploading(true);
+
     const formData = new FormData();
     formData.append("senderId", userId);
     formData.append("message", messageInput);
     formData.append("receiverId", currentReceiverId);
-    
-    selectedFiles.forEach(fileItem => {
+
+    selectedFiles.forEach((fileItem) => {
       formData.append("media", fileItem.file);
     });
-    
+
     try {
       let res = await sendMessage(formData);
       if (res?.Ec === 0) {
-
         setMessageInput("");
         setSelectedFiles([]);
         scrollToBottom();
@@ -207,15 +218,18 @@ const MiniChat = () => {
 
   const updateChatAfterSending = () => {
     if (!currentReceiverInfo) return;
-    
-    const lastMessage = selectedFiles.length > 0 
-      ? `Đã gửi ${selectedFiles.length} ảnh${messageInput ? ' và tin nhắn' : ''}`
-      : messageInput;
-    
-    setListUserChat(prev => {
-      const existing = prev.find(item => item.userId === currentReceiverId);
-      const others = prev.filter(item => item.userId !== currentReceiverId);
-      
+
+    const lastMessage =
+      selectedFiles.length > 0
+        ? `Đã gửi ${selectedFiles.length} ảnh${
+            messageInput ? " và tin nhắn" : ""
+          }`
+        : messageInput;
+
+    setListUserChat((prev) => {
+      const existing = prev.find((item) => item.userId === currentReceiverId);
+      const others = prev.filter((item) => item.userId !== currentReceiverId);
+
       const updatedChat = {
         userId: currentReceiverId,
         name: currentReceiverInfo.name || "Người dùng",
@@ -223,7 +237,7 @@ const MiniChat = () => {
         lastMessage,
         time: new Date().toISOString(),
       };
-      
+
       return [updatedChat, ...others];
     });
   };
@@ -240,7 +254,6 @@ const MiniChat = () => {
     setIsOpen(true);
   };
 
-
   const handleCloseChat = () => {
     setIsOpen(false);
 
@@ -255,7 +268,7 @@ const MiniChat = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -263,19 +276,21 @@ const MiniChat = () => {
 
   const getDisplayName = () => {
     if (currentReceiverInfo?.name) return currentReceiverInfo.name;
-    if (messageSegment[0]?.receiverId?.name) return messageSegment[0].receiverId.name;
+    if (messageSegment[0]?.receiverId?.name)
+      return messageSegment[0].receiverId.name;
     return "Người dùng";
   };
 
   const getDisplayAvatar = () => {
     if (currentReceiverInfo?.avatar) return currentReceiverInfo.avatar;
-    if (messageSegment[0]?.receiverId?.avatar) return messageSegment[0].receiverId.avatar;
+    if (messageSegment[0]?.receiverId?.avatar)
+      return messageSegment[0].receiverId.avatar;
     return avatar;
   };
 
   const renderSelectedFilesPreview = () => {
     if (selectedFiles.length === 0) return null;
-    
+
     return (
       <div className="p-1 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between mb-2">
@@ -290,7 +305,7 @@ const MiniChat = () => {
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {selectedFiles.map(fileItem => (
+          {selectedFiles.map((fileItem) => (
             <div key={fileItem.id} className="relative group">
               <img
                 src={fileItem.preview}
@@ -334,7 +349,9 @@ const MiniChat = () => {
                   alt={getDisplayName()}
                   className="w-8 h-8 rounded-full mr-3 object-cover"
                 />
-                <span className="font-medium text-[20px]">{getDisplayName()}</span>
+                <span className="font-medium text-[20px]">
+                  {getDisplayName()}
+                </span>
               </div>
             </div>
             <button
@@ -346,7 +363,7 @@ const MiniChat = () => {
           </div>
 
           {/* Nội dung chat */}
-          <div 
+          <div
             ref={chatBodyRef}
             className="flex-1 overflow-y-auto p-3 bg-gray-50"
           >
@@ -354,27 +371,31 @@ const MiniChat = () => {
               messageSegment.map((msg, index) => (
                 <div
                   key={msg._id || index}
-                  className={`flex ${msg.senderId === userId ? 'justify-end' : 'justify-start'} mb-1`}
+                  className={`flex ${
+                    msg.senderId === userId ? "justify-end" : "justify-start"
+                  } mb-1`}
                 >
                   <div
                     className={`max-w-[70%] rounded-lg px-3 py-2 ${
                       msg.senderId === userId
-                        ? 'bg-blue-500 text-white rounded-br-none'
-                        : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-white border border-gray-200 rounded-bl-none shadow-sm"
                     }`}
                   >
-                    {msg.message && <p className="text-sm mb-2!">{msg.message}</p>}
+                    {msg.message && (
+                      <p className="text-sm mb-2!">{msg.message}</p>
+                    )}
                     {msg.media && msg.media.length > 0 && (
                       <div className="flex justify-center items-center gap-1">
                         {msg.media.map((file, idx) => (
                           <div key={file._id || idx} className="w-auto h-full">
-                            {file.type === 'image' ? (
+                            {file.type === "image" ? (
                               <img
                                 src={file.url}
                                 alt=""
                                 className="max-w-full h-auto rounded max-h-40 object-cover"
                               />
-                            ) : file.type === 'video' ? (
+                            ) : file.type === "video" ? (
                               <video
                                 controls
                                 className="max-w-full h-auto rounded max-h-40"
@@ -386,8 +407,17 @@ const MiniChat = () => {
                         ))}
                       </div>
                     )}
-                    <div className={`text-xs ${msg.senderId === userId ? 'text-blue-100' : 'text-gray-500'}`}>
-                      {new Date(msg.createdAt || msg.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    <div
+                      className={`text-xs ${
+                        msg.senderId === userId
+                          ? "text-blue-100"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {new Date(msg.createdAt || msg.time).toLocaleTimeString(
+                        [],
+                        { hour: "2-digit", minute: "2-digit" }
+                      )}
                     </div>
                   </div>
                 </div>
@@ -398,7 +428,9 @@ const MiniChat = () => {
                   <i className="fas fa-user-friends text-blue-500 text-2xl"></i>
                 </div>
                 <h4 className="font-medium text-lg mb-1">{getDisplayName()}</h4>
-                <p className="text-gray-500 text-sm text-center">Bắt đầu cuộc trò chuyện với {getDisplayName()}</p>
+                <p className="text-gray-500 text-sm text-center">
+                  Bắt đầu cuộc trò chuyện với {getDisplayName()}
+                </p>
               </div>
             )}
           </div>
@@ -415,7 +447,7 @@ const MiniChat = () => {
               >
                 <i className="fas fa-image text-lg"></i>
               </button>
-              
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -425,25 +457,33 @@ const MiniChat = () => {
                 className="hidden"
                 disabled={isUploading}
               />
-              
+
               <input
                 ref={messageInputRef}
                 type="text"
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={selectedFiles.length > 0 ? "Nhập tin nhắn (tùy chọn)..." : "Nhập tin nhắn..."}
+                placeholder={
+                  selectedFiles.length > 0
+                    ? "Nhập tin nhắn (tùy chọn)..."
+                    : "Nhập tin nhắn..."
+                }
                 className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isUploading}
               />
-              
+
               <button
                 onClick={handleSendMessage}
-                disabled={(!messageInput.trim() && selectedFiles.length === 0) || isUploading}
+                disabled={
+                  (!messageInput.trim() && selectedFiles.length === 0) ||
+                  isUploading
+                }
                 className={`ml-2 w-10 h-10 rounded-full! flex items-center justify-center transition-colors ${
-                  (messageInput.trim() || selectedFiles.length > 0) && !isUploading
-                    ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  (messageInput.trim() || selectedFiles.length > 0) &&
+                  !isUploading
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 {isUploading ? (
@@ -457,7 +497,7 @@ const MiniChat = () => {
         </div>
       );
     }
-    
+
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between border-b border-gray-200 px-2 py-3">
@@ -469,7 +509,7 @@ const MiniChat = () => {
             <i className="fa-regular fa-circle-xmark"></i>
           </button>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           {listUserChat.length > 0 ? (
             listUserChat.map((item) => (
@@ -487,9 +527,16 @@ const MiniChat = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center">
-                    <span className="font-medium text-sm truncate">{item.name}</span>
+                    <span className="font-medium text-sm truncate">
+                      {item.name}
+                    </span>
                     <span className="text-xs text-gray-500">
-                      {item.time ? new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                      {item.time
+                        ? new Date(item.time).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : ""}
                     </span>
                   </div>
                   <span className="text-xs text-gray-500 truncate mt-1">

@@ -25,7 +25,6 @@ export const useComment = () => {
 
     const handleCreateComment = useCallback(async (dataComment) => {
         try {
-            console.log(dataComment)
             const res = await createComment(dataComment)
             if (res?.Ec === 0) {
                 toast.success("Đã đăng bình luận!")

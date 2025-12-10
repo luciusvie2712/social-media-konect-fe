@@ -23,7 +23,6 @@ const AdminDashboard = () => {
   const [summary, setSummary] = useState({});
   const [userStats, setUserStats] = useState([]);
   const [postStats, setPostStats] = useState([]);
-  console.log("Render AdminDashboard", summary, userStats, postStats);
   useEffect(() => {
     fetchData();
   }, []);
