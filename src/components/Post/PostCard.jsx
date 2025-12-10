@@ -33,13 +33,12 @@ const PostCard = ({ post, index, onUpdatePost }) => {
   const [postIdReport, setPostIdReport] = useState();
   const [shareContent, setShareContent] = useState("");
   const [shareModalShow, setShareModalShow] = useState(false);
-  const [sharedPostData, setSharedPostData] = useState(null);
-  const [loadingSharedPost, setLoadingSharedPost] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const navigate = useNavigate();
 
   // Check if this is a shared post
   const isSharedPost = post?.sharedPost;
+  const sharedPostData = post?.sharedPost;
 
   const mediaList = Array.isArray(post?.media)
     ? post.media.filter((m) => m?.url)
@@ -161,28 +160,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     }
   };
 
-  // Fetch shared post data
-  useEffect(() => {
-    const fetchSharedPost = async () => {
-      if (!post?.sharedPost) return;
-
-      try {
-        setLoadingSharedPost(true);
-        const res = await getPostById(post.sharedPost);
-        if (res?.Ec === 0 && res?.Data) {
-          setSharedPostData(res.Data);
-        }
-      } catch (error) {
-        console.error("Error fetching shared post:", error);
-      } finally {
-        setLoadingSharedPost(false);
-      }
-    };
-
-    if (isSharedPost) {
-      fetchSharedPost();
-    }
-  }, [post.sharedPost, isSharedPost])
   
   const renderMedia = () => {
     if (mediaList[0]?.type === "video") {
@@ -244,7 +221,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     );
   };
 
-  // Render shared post content
   const renderSharedPost = () => {
     if (!isSharedPost || !sharedPostData) return null;
 
@@ -259,7 +235,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
 
     return (
       <div className="w-full mt-3 border border-gray-300 rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
-        {/* Shared post header */}
         <div className="px-3 py-2 border-b border-gray-200 bg-gray-100">
           <div className="flex items-center gap-2">
             <i className="fa-solid fa-share text-blue-500"></i>
@@ -269,10 +244,7 @@ const PostCard = ({ post, index, onUpdatePost }) => {
             </span>
           </div>
         </div>
-
-        {/* Shared post content */}
         <div className="p-3">
-          {/* Shared post author info */}
           <div className="flex items-center gap-2 mb-2">
             <NavLink
               to={`/profile/${sharedAuthor?._id}`}
@@ -336,9 +308,21 @@ const PostCard = ({ post, index, onUpdatePost }) => {
                     alt="shared media"
                   />
                 </div>
+              ) : sharedMediaList.length === 2 ?(
+                <div className="grid grid-cols-2 gap-1">
+                  {sharedMediaList.map((media, index) => (
+                    <div key={index} className="aspect-square overflow-hidden">
+                      <img
+                        src={media.url}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <div className="grid grid-cols-3 gap-1">
-                  {sharedMediaList.slice(0, 4).map((media, index) => (
+                  {sharedMediaList.slice(0, 6).map((media, index) => (
                     <div key={index} className="aspect-square overflow-hidden">
                       <img
                         src={media.url}

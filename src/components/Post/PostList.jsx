@@ -20,7 +20,7 @@ const PostList = () => {
 
   if (loading)
     return (
-      <div className="flex flex-col justify-center items-center min-h-[70vh]">
+      <div className="flex flex-col justify-center items-center min-h-[70vh] w-full">
         <div className="w-14 h-14 border-[3px] border-gray-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
         <p className="text-gray-600 text-lg">Đang tải bài viết...</p>
         <p className="text-gray-400 text-sm mt-2">Vui lòng chờ trong giây lát</p>

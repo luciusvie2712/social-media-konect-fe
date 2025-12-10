@@ -96,7 +96,7 @@ const sendFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/send-friend-request`, { requesterId, recipientId })
 }
 const rejectFriendRequest = (requesterId, recipientId) => {
-    return axios.post(`/api/reject-friend-request`, { requesterId, recipientId })
+    return axios.delete(`/api/reject-friend-request`, { data : {requesterId, recipientId} })
 }
 const acceptFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/accept-friend-request`, { requesterId, recipientId })

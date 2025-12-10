@@ -390,13 +390,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
                 </>
               )}
             </button>
-            <button 
-              onClick={handleMessage}
-              className={`${buttonClass} bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400`}
-            >
-              <i className="fa-solid fa-message"></i>
-              Nhắn tin
-            </button>
           </div>
         );
         
