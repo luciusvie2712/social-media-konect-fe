@@ -23,8 +23,7 @@ const GoogleCallback = () => {
         console.log("RES:", res);
 
         // ✅ CHỈ THÀNH CÔNG KHI Ec === 0
-        if (res?.Ec === 0) {
-          const { token, refreshToken, user } = res.data;
+          const { token, refreshToken, user } = res;
 
           // ✅ LƯU LOCALSTORAGE
           localStorage.setItem("access_token", token);
@@ -45,9 +44,7 @@ const GoogleCallback = () => {
 
           toast.success("Đăng nhập Google thành công");
           navigate("/home");
-        } else {
-          toast.error(res?.Mes || "Đăng nhập Google thất bại");
-        }
+
       } catch (err) {
         console.error(err);
         toast.error("Đăng nhập Google thất bại");

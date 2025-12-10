@@ -18,7 +18,7 @@ import Pagebanned from "../ErrorPage";
 import AdminPages from "../views/admin/AdminPage";
 import AdminDashboard from "../views/admin/AdminDashboard";
 import PostDetail from "../views/user/PostDetail";
-
+import SettingPage from "../views/user/SettingPage"
 const AppRoute = () => {
   return (
     <Routes>
@@ -54,7 +54,7 @@ const AppRoute = () => {
         <Route path="friends" element={<FriendPage />} />
         <Route path="friends/:type/:friendId?" element={<FriendDetail />} />
         <Route path="post/:postId" element={<PostDetail />} />
-
+        <Route path="settings" element={<SettingPage />} />
       </Route>
     </Routes>
   );

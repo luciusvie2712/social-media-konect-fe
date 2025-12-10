@@ -164,6 +164,11 @@ const getPostStats = () => {
 const statusAccount = (status, userId) => {
     return axios.post(`/api/account-status?status=${status}&&userId=${userId}`)
 }
+
+// logo 
+const getLogo = () => {
+    return axios.get(`/api/logo`)
+}
 export {
     createUserAPI, loginUserAPI, getDataUserLoginGoogle,
     getAUserByIdAPI, updateAuser,
@@ -178,5 +183,6 @@ export {
     createLogo,
     saveHistorySearch, searchUserByName, getHistorySearch,
     getAdminSummary, getUserStats, getPostStats,
-    statusAccount
+    statusAccount,
+    getLogo
 }

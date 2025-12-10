@@ -17,7 +17,7 @@ const HomePage = () => {
       <div className="flex w-[70%] xl:w-[50%] h-full overflow-y-auto items-start!">
         <PostList />
       </div>
-      <div className="hidden  xl:w-[25%] xl:sticky top-14 h-[calc(100vh-56px)]">
+      <div className="hidden xl:block xl:w-[25%]! xl:sticky! top-14 h-[calc(100vh-56px)]">
         <RightSideBar />
       </div>
       <CreatePostsModal

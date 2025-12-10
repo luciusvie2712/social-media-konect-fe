@@ -182,7 +182,8 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     if (isSharedPost) {
       fetchSharedPost();
     }
-  }, [post.sharedPost, isSharedPost]);
+  }, [post.sharedPost, isSharedPost])
+  
   const renderMedia = () => {
     if (mediaList[0]?.type === "video") {
       const video = mediaList[0];
@@ -279,7 +280,7 @@ const PostCard = ({ post, index, onUpdatePost }) => {
             >
               <img
                 src={sharedAuthor?.avatar || avatar}
-                className="rounded-full w-8 h-8"
+                className="rounded-full w-8 h-8 object-cover"
                 alt="author avatar"
               />
             </NavLink>
@@ -464,7 +465,7 @@ const PostCard = ({ post, index, onUpdatePost }) => {
             >
               <img
                 src={dataPost[0]?.author?.avatar || avatar}
-                className="rounded-full w-10 h-10"
+                className="rounded-full w-10 h-10 object-cover"
                 alt="user avatar"
               />
             </NavLink>

@@ -5,7 +5,7 @@ import * as action from "../../store/Export";
 import { useEffect, useRef, useState } from "react";
 import NotificationModal from "../Modal/Notification.modal";
 import axios from "../../utils/axios.customize";
-import { getHistorySearch, searchUserByName } from "../../utils/api.customize";
+import { getHistorySearch, getLogo, searchUserByName } from "../../utils/api.customize";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -54,7 +54,7 @@ const NavBar = () => {
   }, []);
   const fetchLogo = async () => {
     try {
-      const res = await axios.get("/api/logo"); //env
+      const res = await getLogo();
       setLogo(res?.logo);
     } catch (err) {
       console.error(err);
@@ -105,12 +105,12 @@ const NavBar = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#ffffff] shadow-md z-50 flex items-center justify-between px-4 py-2 text-black">
+    <div className="fixed top-0 left-0 w-full bg-[#ffffff] shadow-md z-50 flex items-center justify-between px-20! py-2 text-black">
       <div className="flex items-center">
         <NavLink to="/home">
           <img
             src={filelogo || avatar}
-            className="h-10"
+            className="h-10 object-cover"
             crossOrigin="use-credentials"
           />
         </NavLink>
@@ -201,13 +201,13 @@ const NavBar = () => {
       <div className="flex items-center space-x-4 gap-4">
         <NavLink
           to="/friends"
-          className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 hover:bg-blue-400 hover:!text-white flex justify-center"
+          className="text-xl text-blue-600! rounded-full bg-gray-200 px-2 py-2 hover:bg-blue-400 hover:!text-white flex justify-center"
         >
           <i className="fa-solid fa-user-group"></i>
         </NavLink>
         <div
           onClick={() => setOpenNotification(true)}
-          className="relative text-xl text-black rounded-full bg-gray-200 px-2 py-2 cursor-pointer hover:bg-blue-400 hover:!text-white flex justify-center"
+          className="relative text-xl text-blue-600 rounded-full bg-gray-200 px-2 py-2 cursor-pointer hover:bg-blue-400 hover:!text-white flex justify-center"
         >
           <NotificationModal
             show={openModalNotification}
@@ -218,7 +218,7 @@ const NavBar = () => {
         </div>
         <NavLink
           to="/message-box"
-          className="text-xl text-black rounded-full bg-gray-200 px-2 py-2 hover:bg-blue-400 hover:!text-white flex justify-center no-underline!"
+          className="text-xl text-blue-600! rounded-full bg-gray-200 px-2 py-2 hover:bg-blue-400 hover:!text-white flex justify-center no-underline!"
         >
           <i className="fa-solid fa-envelope"></i>
         </NavLink>
@@ -242,7 +242,7 @@ const NavBar = () => {
               >
                 Xem trang cá nhân
               </NavLink>
-              {account?.role === "admin" && (
+              {account?.roleId === "admin" && (
                 <NavLink
                   to="/admin"
                   onClick={() => setOpenAvatarMenu(false)}
