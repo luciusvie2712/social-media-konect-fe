@@ -88,7 +88,9 @@ const sendMessage = (formData) => {
         }
     })
 }
-
+const deleteMessage = (messId) => {
+    return axios.delete(`/delete-message?messId=${messId}`)
+}
 const GetfriendSuggestion = (id) => {
     return axios.get(`/api/get-friend-suggestion?id=${id}`)
 }
@@ -96,7 +98,7 @@ const sendFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/send-friend-request`, { requesterId, recipientId })
 }
 const rejectFriendRequest = (requesterId, recipientId) => {
-    return axios.delete(`/api/reject-friend-request`, { data : {requesterId, recipientId} })
+    return axios.delete(`/api/reject-friend-request`, { data: { requesterId, recipientId } })
 }
 const acceptFriendRequest = (requesterId, recipientId) => {
     return axios.post(`/api/accept-friend-request`, { requesterId, recipientId })
@@ -175,7 +177,7 @@ export {
     forgotPasswordAPI,
     resetPasswordAPI,
     createPostAPI, getPost, sharePost, getPostAUser, getPostById, authorDeletePost, LikePost, createComment, getComment, deleteComment, updatePost,
-    getListUserChatted, getConversation, sendMessage,
+    getListUserChatted, getConversation, sendMessage, deleteMessage,
     GetfriendSuggestion, sendFriendRequest, rejectFriendRequest, getFriendRequest, acceptFriendRequest, getListFriends, checkRelationShip, unFriend,
     getNotifications, maskAsReadAPI,
     getAllUserTable, deleteUserTable,

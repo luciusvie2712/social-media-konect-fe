@@ -5,7 +5,11 @@ import * as action from "../../store/Export";
 import { useEffect, useRef, useState } from "react";
 import NotificationModal from "../Modal/Notification.modal";
 import axios from "../../utils/axios.customize";
-import { getHistorySearch, getLogo, searchUserByName } from "../../utils/api.customize";
+import {
+  getHistorySearch,
+  getLogo,
+  searchUserByName,
+} from "../../utils/api.customize";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -180,11 +184,11 @@ const NavBar = () => {
                         className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-100"
                       >
                         <img
-                          src={item.targetUserId.avatar}
+                          src={item?.targetUserId?.avatar}
                           className="w-8 h-8 rounded-full object-cover"
                         />
                         <span className="text-sm font-medium text-gray-800">
-                          {item.targetUserId.name}
+                          {item?.targetUserId?.name}
                         </span>
                       </div>
                     ))

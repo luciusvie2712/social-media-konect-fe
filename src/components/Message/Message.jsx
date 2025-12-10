@@ -3,6 +3,7 @@ import avatar from "../../assets/download.png";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
+  deleteMessage,
   getConversation,
   getListUserChatted,
   sendMessage,
@@ -20,9 +21,10 @@ const Message = () => {
   const [listUserChat, setListUserChat] = useState();
   const [messageSegment, setMessageSegment] = useState([]);
   const [currentReceiverId, setCurrentReceiverId] = useState("");
-  const [showOptions, setShowOptions] = useState(false);
+  // const [showOptions, setShowOptions] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedIdDelete, setSelectedIdDelete] = useState("");
 
   const [formSendMess, setFormSendMess] = useState({
     message: "",
@@ -171,19 +173,16 @@ const Message = () => {
     });
   };
 
-  // Chọn file ảnh
   const chooseFileSendMess = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
 
-      // Kiểm tra số lượng file
       const maxFiles = 10;
       if (files.length > maxFiles) {
         toast.error(`Chỉ có thể chọn tối đa ${maxFiles} ảnh`);
         return;
       }
 
-      // Kiểm tra định dạng file
       const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       const invalidFiles = files.filter(
         (file) => !validTypes.includes(file.type)
@@ -194,7 +193,6 @@ const Message = () => {
         return;
       }
 
-      // Tạo preview cho từng file
       const filesWithPreview = files.map((file) => ({
         file,
         id: Math.random().toString(36).substr(2, 9),
@@ -205,14 +203,12 @@ const Message = () => {
 
       setSelectedFiles((prev) => [...prev, ...filesWithPreview]);
 
-      // Reset input file
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     }
   };
 
-  // Xóa ảnh đã chọn
   const removeSelectedFile = (id) => {
     setSelectedFiles((prev) => {
       const fileToRemove = prev.find((f) => f.id === id);
@@ -223,7 +219,6 @@ const Message = () => {
     });
   };
 
-  // Tìm kiếm + mở đoạn chat mới
   const [friendSearchText, setFriendSearchText] = useState("");
   const [friendSearchResult, setfriendSearchResult] = useState([]);
   const { friends } = useFriendList("all", userId);
@@ -241,27 +236,22 @@ const Message = () => {
     setfriendSearchResult(result);
   }, [friendSearchText, friends]);
 
-  // Tạo đoạn chat mới
   const handleCreateNewChat = async (friendId) => {
     try {
       const res = await getConversation(userId, friendId);
-      // Trường hợp đã có đoạn chat
       if (res?.Ec === 0) {
         setCurrentReceiverId(friendId);
         setMessageSegment(res.dataMes);
         setSelectedFiles([]);
-      }
-      // Trường hợp CHƯA có đoạn chat
-      else if (res?.Ec === -2 || res?.Mes === "Not found") {
+      } else if (res?.Ec === -2 || res?.Mes === "Not found") {
         setCurrentReceiverId(friendId);
-        setMessageSegment([]); // mở UI chat rỗng
+        setMessageSegment([]);
         setSelectedFiles([]);
       } else {
         toast.error(res?.Mes);
         return;
       }
 
-      // Update danh sách chat
       setListUserChat((prev = []) => {
         const exist = prev.find((i) => i.userId === friendId);
         if (exist) return prev;
@@ -286,7 +276,28 @@ const Message = () => {
     }
   };
 
-  // Render preview ảnh đã chọn
+  const handleDeleteChat = (messId) => {
+    if (selectedIdDelete === messId) {
+      setSelectedIdDelete("");
+    } else {
+      setSelectedIdDelete(messId);
+    }
+  };
+
+  const handleConfirmDelete = async (messId) => {
+    if (!messId) return;
+    try {
+      const res = await deleteMessage(messId);
+      if (res?.Ec === 0) {
+        console.log(res);
+        setSelectedIdDelete("");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Xoá thất bại");
+    }
+  };
+
   const renderSelectedFilesPreview = () => {
     if (selectedFiles.length === 0) return null;
 
@@ -335,7 +346,6 @@ const Message = () => {
             </div>
           </div>
 
-          {/* Ô tìm kiếm và tạo đoạn chat mới */}
           <div className="left__search-chat relative">
             <label htmlFor="">
               <div>
@@ -349,7 +359,6 @@ const Message = () => {
                 onChange={(e) => setFriendSearchText(e.target.value)}
               />
             </label>
-            {/* Hiển thị kết quả tìm kiếm */}
             {friendSearchResult.length > 0 && (
               <div className="absolute z-50 top-full left-0 w-full bg-white border border-gray-200 shadow-md max-h-60 overflow-y-auto">
                 {friendSearchResult.map((fr) => (
@@ -453,10 +462,28 @@ const Message = () => {
                     )}
                     <span
                       className="options"
-                      onClick={() => setShowOptions(!showOptions)}
+                      onClick={() => handleDeleteChat(msg?._id)}
                     >
                       <i className="fa-solid fa-ellipsis w-3"></i>
                     </span>
+
+                    {selectedIdDelete === msg._id && (
+                      <div className="mini-delete-modal">
+                        <div
+                          className="mini-delete-item"
+                          onClick={() => handleConfirmDelete(msg?._id)}
+                        >
+                          🗑 Xoá tin nhắn
+                        </div>
+
+                        <div
+                          className="mini-delete-item cancel"
+                          onClick={() => setSelectedIdDelete("")}
+                        >
+                          ✖ Huỷ
+                        </div>
+                      </div>
+                    )}
 
                     <div className="bubble">
                       {msg.message && msg.message}
@@ -489,7 +516,6 @@ const Message = () => {
                 ))}
               </div>
 
-              {/* Preview ảnh đã chọn */}
               {renderSelectedFilesPreview()}
 
               <div

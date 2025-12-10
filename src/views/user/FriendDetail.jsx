@@ -11,9 +11,11 @@ const FriendDetail = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.account);
   const { friends, loading } = useFriendList(type, user?.id);
-  console.log("Friends: ", friends)
 
-  const selectedFriend = useMemo(() => friends?.find((i) => i?._id?.toString() === friendId), [friends, friendId])
+  const selectedFriend = useMemo(
+    () => friends?.find((i) => i?._id?.toString() === friendId),
+    [friends, friendId]
+  );
 
   return (
     <div className="friend-container">
@@ -71,17 +73,16 @@ const FriendDetail = () => {
               <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center animate-pulse">
                 <i className="fa-solid fa-user-group text-4xl text-blue-500"></i>
               </div>
-              
+
               <h2 className="text-2xl font-bold text-gray-800 mb-3">
                 Chào mừng đến với trang bạn bè
               </h2>
-              
+
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Chọn một người bạn từ danh sách bên trái để xem thông tin chi tiết, 
-                bài viết và ảnh của họ tại đây.
+                Chọn một người bạn từ danh sách bên trái để xem thông tin chi
+                tiết, bài viết và ảnh của họ tại đây.
               </p>
-              
-              
+
               <div className="space-y-3">
                 <p className="text-sm text-gray-500 font-medium">Mẹo nhanh:</p>
                 <ul className="space-y-2 text-left">
@@ -99,8 +100,8 @@ const FriendDetail = () => {
                   </li>
                 </ul>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => navigate("/friends/suggestion")}
                 className="mt-8 px-6! py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg! font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center gap-2 mx-auto"
               >

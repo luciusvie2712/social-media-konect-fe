@@ -310,7 +310,7 @@ const TablePost = (props) => {
           dataReport.map((item) => {
             return (
               <>
-                <div className="report-main">
+                <div className="report-main" key={item._id}>
                   <span
                     style={{
                       fontSize: "15px",
