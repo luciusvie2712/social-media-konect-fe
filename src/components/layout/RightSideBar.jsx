@@ -8,8 +8,22 @@ const RightSideBar = () => {
   const { friends, loading } = useFriendList(type, user?.id);
 
   const handleOpenMini = (friend) => {
-    window.dispatchEvent(new CustomEvent("openMiniChat", { detail: { friendId: friend._id || friend.userId, friendData: friend } }));
+    if (!friend || !friend._id) return;
+
+    window.dispatchEvent(
+      new CustomEvent("openMiniChat", {
+        detail: {
+          friendId: friend._id || friend.userId,
+          friendData: friend,
+        },
+      })
+    );
   };
+
+  const validFriends =
+    friends?.filter(
+      (friend) => friend && (friend._id || friend.userId) && friend.name
+    ) || [];
 
   return (
     <div className="w-full text-black flex flex-col gap-2 !pt-4">
@@ -23,10 +37,10 @@ const RightSideBar = () => {
           <div className="w-full flex justify-center py-4">
             <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
           </div>
-        ) : friends?.length > 0 ? (
-          friends.map((item, index) => (
+        ) : validFriends.length > 0 ? (
+          validFriends.map((item, index) => (
             <div
-              key={item._id || index}
+              key={item._id || item.userId || index}
               className="w-full cursor-pointer"
               onClick={() => handleOpenMini(item)}
             >

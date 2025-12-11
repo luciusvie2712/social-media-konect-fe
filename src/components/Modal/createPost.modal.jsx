@@ -8,7 +8,7 @@ import EmojiPicker from "emoji-picker-react";
 const CreatePost = ({ isOpen, setIsOpen, account }) => {
   if (!isOpen) return null;
   const userId = useSelector((state) => state.user.account.id);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -70,7 +70,7 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
     event.target.value = "";
   };
   const handleCreatePost = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       let res = await createPostAPI(formData);
       if (res?.Ec === 0) {
@@ -83,12 +83,14 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
           mediaPreview: [],
         });
       } else {
-        toast.warn("Xảy ra lỗi khi đăng - đăng bài không thành công!");
+        toast.warn(
+          res?.Mes || "Xảy ra lỗi khi đăng - đăng bài không thành công!"
+        );
       }
     } catch (error) {
-      console.error("Lỗi đăng bài viết: ", error)
+      console.error("Lỗi đăng bài viết: ", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
   const handleRemoveMedia = (index) => {
@@ -257,7 +259,6 @@ const CreatePost = ({ isOpen, setIsOpen, account }) => {
                 Đăng bài viết
               </button>
             )}
-            
           </div>
         </div>
       </form>
