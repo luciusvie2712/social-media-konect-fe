@@ -2,10 +2,12 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useFriendActions } from "../../hook/useFriendActions";
 import avatar from "../../assets/download.png";
+import { useNavigate } from "react-router-dom";
 
 const SuggestionCard = ({ index, item   }) => {
   const user = useSelector((state) => state.user.account);
   const requesterId = user?.id;
+  const navigate = useNavigate()
 
   const {
     status,
@@ -39,8 +41,8 @@ const SuggestionCard = ({ index, item   }) => {
     >
       <img src={item.avatar || avatar} className="rounded-t-[4px]" />
 
-      <div className="w-full flex flex-col item-center pt-2">
-        <span className="text-[15px] font-semibold px-2">{item.name}</span>
+      <div onClick={() => navigate(`/friends/suggestion/${item?.id || item?._id}`)} className="w-full flex flex-col item-center pt-2">
+        <span className="text-[15px] font-semibold px-2 truncate">{item.name}</span>
       </div>
 
       <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">

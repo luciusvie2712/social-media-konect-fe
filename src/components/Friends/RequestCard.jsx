@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux";
 import { useFriendActions } from "../../hook/useFriendActions";
 import avatar from "../../assets/download.png";
+import { useNavigate } from "react-router-dom";
 
 const RequestCard = ({ index, item }) => {
   const user = useSelector((state) => state.user.account);
   const { status, handleAcceptFriendRequest, handleRejectFriendRequest } =
     useFriendActions();
-
+  const navigate = useNavigate()
   const onAcceptRequest = async () => {
     try {
       await handleAcceptFriendRequest(item._id, user.id);
@@ -27,8 +28,8 @@ const RequestCard = ({ index, item }) => {
     <div className="w-[180px] border border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
       <img src={item?.avatar || avatar} className="rounded-t-[4px]" />
 
-      <div className="w-full flex flex-col item-center pt-2">
-        <span className="text-[15px] font-semibold px-2">{item?.name}</span>
+      <div onClick={() => navigate(`/friends/request/${item?.id || item?._id}`)} className="w-full flex flex-col item-center pt-2">
+        <span className="text-[15px] font-semibold px-2 truncate">{item?.name}</span>
       </div>
 
       <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">

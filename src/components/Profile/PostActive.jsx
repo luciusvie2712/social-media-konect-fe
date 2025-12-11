@@ -35,7 +35,7 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
             </div>
             <div className="w-full flex flex-col justify-center">
               {userData.bio && (
-                <div className="mb-1 pb-3 border-b border-gray-100 w-full flex justify-center">
+                <div className="mb-1 pb-3 border-b border-gray-100 w-full flex justify-center break-words text-balance">
                   <p className="text-gray-700 text-sm">{userData.bio}</p>
                 </div>
               )}
@@ -110,11 +110,7 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
                   <span className="text-gray-500 text-xs font-normal ml-1">({friends.length})</span>
                 )}
               </span>
-              {friends?.length > 0 && (
-                <button className="text-blue-600 hover:text-blue-700 text-[15px]! font-medium">
-                  Xem tất cả
-                </button>
-              )}
+
             </div>
             <div className="px-4 py-2">
               {!friends || friends.length === 0 ? (
