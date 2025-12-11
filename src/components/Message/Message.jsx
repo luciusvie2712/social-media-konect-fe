@@ -21,7 +21,7 @@ const Message = () => {
   const [listUserChat, setListUserChat] = useState();
   const [messageSegment, setMessageSegment] = useState([]);
   const [currentReceiverId, setCurrentReceiverId] = useState("");
-  // const [showOptions, setShowOptions] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedIdDelete, setSelectedIdDelete] = useState("");
@@ -286,14 +286,34 @@ const Message = () => {
 
   const handleConfirmDelete = async (messId) => {
     if (!messId) return;
+
+    // ✅ 1. LƯU LẠI STATE CŨ (để restore nếu backend fail)
+    const oldMessages = [...messageSegment];
+
+    // ✅ 2. XOÁ REALTIME TRÊN UI NGAY LẬP TỨC
+    setMessageSegment((prev) =>
+      prev.filter((msg) => msg._id !== messId)
+    );
+
+    // ✅ 3. ĐÓNG MODAL / MENU XOÁ
+    setSelectedIdDelete("");
+
     try {
+      // ✅ 4. GỌI API XOÁ BACKEND
       const res = await deleteMessage(messId);
+
       if (res?.Ec === 0) {
-        console.log(res);
-        setSelectedIdDelete("");
+        toast.success("Đã xoá tin nhắn");
+      } else {
+        // ✅ 5. BACKEND XOÁ FAIL → PHỤC HỒI LẠI UI
+        setMessageSegment(oldMessages);
+        toast.error("Xoá thất bại");
       }
     } catch (err) {
       console.log(err);
+
+      // ✅ 6. LỖI NETWORK → PHỤC HỒI LẠI UI
+      setMessageSegment(oldMessages);
       toast.error("Xoá thất bại");
     }
   };
@@ -460,30 +480,33 @@ const Message = () => {
                         <img src={msg.receiverId.avatar} />
                       </div>
                     )}
-                    <span
-                      className="options"
-                      onClick={() => handleDeleteChat(msg?._id)}
-                    >
-                      <i className="fa-solid fa-ellipsis w-3"></i>
-                    </span>
+                    {msg.senderId === userId && (
+                      <span
+                        className="options"
+                        onClick={() => handleDeleteChat(msg?._id)}
+                      >
+                        <i className="fa-solid fa-ellipsis w-3"></i>
+                        {selectedIdDelete === msg._id && (
+                        <div className="mini-delete-modal">
+                          <div
+                            className="mini-delete-item cursor-pointer"
+                            onClick={() => handleConfirmDelete(msg?._id)}
+                          >
+                            Xoá tin nhắn
+                          </div>
 
-                    {selectedIdDelete === msg._id && (
-                      <div className="mini-delete-modal">
-                        <div
-                          className="mini-delete-item"
-                          onClick={() => handleConfirmDelete(msg?._id)}
-                        >
-                          🗑 Xoá tin nhắn
+                          <div
+                            className="mini-delete-item cancel cursor-pointer"
+                            onClick={() => setSelectedIdDelete("")}
+                          >
+                            Huỷ
+                          </div>
                         </div>
-
-                        <div
-                          className="mini-delete-item cancel"
-                          onClick={() => setSelectedIdDelete("")}
-                        >
-                          ✖ Huỷ
-                        </div>
-                      </div>
+                      )}
+                      </span>
                     )}
+
+                    
 
                     <div className="bubble">
                       {msg.message && msg.message}

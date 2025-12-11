@@ -5,6 +5,7 @@ import * as action from "../../store/Export";
 import { useEffect, useRef, useState } from "react";
 import NotificationModal from "../Modal/Notification.modal";
 import axios from "../../utils/axios.customize";
+import logoPicture from "../../assets/image/logo.jpeg"
 import {
   getHistorySearch,
   getLogo,
@@ -64,7 +65,7 @@ const NavBar = () => {
       console.error(err);
     }
   };
-  const filelogo = logo ? `http://localhost:8080${logo}` : avatar; //env
+  const filelogo = logo ? `http://localhost:8080${logo}` : logoPicture; //env
   const clickInputSearch = async () => {
     if (showHistory) return;
 

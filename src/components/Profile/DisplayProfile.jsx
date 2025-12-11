@@ -528,7 +528,7 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
         
         {/* Main content */}
         <div className="w-full flex justify-center py-4 flex-1">
-          <div className={`${compact ? "w-full" : "w-full 2xl:w-[80%]"} flex`}>
+          <div className={`${compact ? "w-full" : "w-full xl:w-[80%]"} flex`}>
             {renderTabContent()}
           </div>
         </div>
