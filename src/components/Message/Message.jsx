@@ -67,7 +67,6 @@ const Message = () => {
     }
   };
 
-  // Socket connection with cleanup
   useEffect(() => {
     if (!userId) return;
 
@@ -97,7 +96,6 @@ const Message = () => {
 
       if (isCurrent) {
         setMessageSegment((prev) => {
-          // Check for duplicates
           const exists = prev.find((msg) => {
             const normalizedMsgId =
               typeof msg.senderId === "object"
@@ -146,8 +144,6 @@ const Message = () => {
 
       setListUserChat((prev = []) => {
         const existing = prev.find((item) => item.userId === chatPartnerId);
-
-        // Prevent duplicate updates
         if (
           existing &&
           existing.lastMessage === (message.message || "Đã gửi một ảnh")
@@ -192,7 +188,6 @@ const Message = () => {
   };
 
   const handleSendMessage = async () => {
-    // Prevent multiple sends
     if (isUploading || isSending) {
       return;
     }
@@ -205,7 +200,6 @@ const Message = () => {
     setIsUploading(true);
     setIsSending(true);
 
-    // Create new FormData for each send
     const newFormData = new FormData();
     newFormData.append("senderId", formSendMess.senderId);
     newFormData.append("message", formSendMess.message.trim());
@@ -217,7 +211,6 @@ const Message = () => {
     try {
       let res = await sendMessage(newFormData);
       if (res?.Ec === 0) {
-        // Clear form
         setFormSendMess((prev) => ({
           ...prev,
           message: "",
@@ -225,7 +218,6 @@ const Message = () => {
         }));
         setSelectedFiles([]);
 
-        // Update chat list
         updateChatAfterSending(
           formSendMess.message.trim(),
           selectedFiles.length
@@ -238,7 +230,6 @@ const Message = () => {
       toast.error("Gửi tin nhắn thất bại");
     } finally {
       setIsUploading(false);
-      // Reset sending state after delay
       setTimeout(() => setIsSending(false), 1000);
     }
   };
@@ -268,7 +259,6 @@ const Message = () => {
     [currentReceiverId]
   );
 
-  // Debounced send message
   const debouncedSendMessage = useCallback(
     debounce(handleSendMessage, 500, { leading: true, trailing: false }),
     [handleSendMessage]
@@ -449,14 +439,12 @@ const Message = () => {
     );
   };
 
-  // Helper function to get normalized ID
   const getNormalizedId = (id) => {
     if (!id) return "";
     if (typeof id === "object" && id._id) return id._id.toString();
     return id.toString();
   };
 
-  // Get current chat partner info
   const currentChatPartner = listUserChat?.find(
     (user) => user.userId === currentReceiverId
   );

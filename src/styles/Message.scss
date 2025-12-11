@@ -624,7 +624,6 @@
     100% { transform: rotate(360deg); }
 }
 
-// Custom scrollbar
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -681,7 +680,7 @@
     .message-content__left {
         width: 100% !important;
         max-width: none;
-        display: none; // Hide on mobile, you can add toggle button
+        display: none;
 
         &.show {
             display: flex;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import avatar from "../../assets/download.png";
 import {
@@ -21,19 +21,24 @@ const MiniChat = () => {
   const [messageInput, setMessageInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const chatBodyRef = useRef(null);
   const messageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Lắng nghe sự kiện mở chat từ các component khác (RightSideBar)
+  const getNormalizedId = useCallback((id) => {
+    if (!id) return '';
+    if (typeof id === 'object' && id._id) return id._id.toString();
+    return id.toString();
+  }, []);
+
   useEffect(() => {
     const handleOpenMiniChat = (event) => {
       const { friendId, friendData } = event.detail;
       if (!isOpen) {
         setIsOpen(true);
       }
-
       clickViewMessageSegment(friendId, friendData);
     };
 
@@ -44,7 +49,6 @@ const MiniChat = () => {
     };
   }, [isOpen]);
 
-  // Tải danh sách đoạn chat
   useEffect(() => {
     if (userId && isOpen) {
       getListUser();
@@ -55,7 +59,7 @@ const MiniChat = () => {
     try {
       let res = await getListUserChatted(userId);
       if (res?.Ec === 0) {
-        setListUserChat(res.users);
+        setListUserChat(res.users || []);
       } else {
         toast.error(res?.Mes);
       }
@@ -68,43 +72,70 @@ const MiniChat = () => {
     if (!userId || !isOpen) return;
     const socket = createSocket(userId);
 
-    socket.on("receive_message", (data) => {
+    const handleReceiveMessage = (data) => {
       const message = data.newMess;
-      // Nếu đang trong chat với người gửi
-      if (
-        currentReceiverId &&
-        (message.senderId === currentReceiverId ||
-          message.receiverId === currentReceiverId)
-      ) {
-        setMessageSegment((prev) => [...prev, message]);
+      const normalizedCurrentReceiverId = getNormalizedId(currentReceiverId);
+      const normalizedMessageSenderId = getNormalizedId(message.senderId);
+      const normalizedMessageReceiverId = getNormalizedId(message.receiverId);
+      
+      if (currentReceiverId && 
+          (normalizedMessageSenderId === normalizedCurrentReceiverId ||
+           normalizedMessageReceiverId === normalizedCurrentReceiverId)) {
+        setMessageSegment((prev) => {
+
+          const exists = prev.find(msg => {
+            const normalizedMsgSenderId = getNormalizedId(msg.senderId);
+            return normalizedMsgSenderId === normalizedMessageSenderId && 
+                   msg.message === message.message &&
+                   Math.abs(new Date(msg.createdAt).getTime() - new Date(message.createdAt).getTime()) < 1000;
+          });
+          
+          if (exists) return prev;
+          return [...prev, message];
+        });
         scrollToBottom();
       }
-      // Cập nhật danh sách chat realtime
-      updateChatRealTime(message);
-    });
-    return () => {
-      socket.off("receive_message");
-    };
-  }, [userId, isOpen, currentReceiverId]);
 
-  const updateChatRealTime = (message) => {
-    const chatPartnerId =
-      message.senderId === userId ? message.receiverId : message.senderId;
+      updateChatRealTime(message);
+    };
+    
+    socket.on("receive_message", handleReceiveMessage);
+    
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+      socket.disconnect();
+    };
+  }, [userId, isOpen, currentReceiverId, getNormalizedId]);
+
+  const updateChatRealTime = useCallback((message) => {
+    const normalizedUserId = getNormalizedId(userId);
+    const normalizedSenderId = getNormalizedId(message.senderId);
+    
+    const chatPartnerId = normalizedSenderId === normalizedUserId 
+      ? getNormalizedId(message.receiverId)
+      : normalizedSenderId;
+    
     setListUserChat((prev) => {
       const existing = prev.find((item) => item.userId === chatPartnerId);
+      
+      if (existing && existing.lastMessage === (message.message || "Đã gửi một ảnh")) {
+        return prev;
+      }
+      
       const others = prev.filter((item) => item.userId !== chatPartnerId);
-
       const updatedChat = {
         userId: chatPartnerId,
-        name: existing?.name || message.senderId?.name || "Người dùng",
-        avatar: existing?.avatar || message.senderId?.avatar || avatar,
+        name: existing?.name || (typeof message.senderId === 'object' ? message.senderId.name : "Người dùng"),
+        avatar: existing?.avatar || 
+                (typeof message.senderId === 'object' ? message.senderId.avatar : avatar) || 
+                avatar,
         lastMessage: message.message || "Đã gửi một ảnh",
         time: new Date().toISOString(),
       };
 
       return [updatedChat, ...others];
     });
-  };
+  }, [userId, getNormalizedId]);
 
   const clickViewMessageSegment = async (receiverId, userInfo) => {
     setCurrentReceiverId(receiverId);
@@ -114,7 +145,7 @@ const MiniChat = () => {
     try {
       const res = await getConversation(userId, receiverId);
       if (res?.Ec === 0) {
-        setMessageSegment(res.dataMes);
+        setMessageSegment(res.dataMes || []);
         scrollToBottom();
       } else if (res?.Ec === -2 || res?.Mes === "Not found") {
         setMessageSegment([]);
@@ -138,7 +169,7 @@ const MiniChat = () => {
       const files = Array.from(e.target.files);
 
       const maxFiles = 10;
-      if (files.length > maxFiles) {
+if (files.length > maxFiles) {
         toast.error(`Chỉ có thể chọn tối đa ${maxFiles} ảnh`);
         return;
       }
@@ -180,17 +211,20 @@ const MiniChat = () => {
   };
 
   const handleSendMessage = async () => {
-    if (
-      (!messageInput.trim() && selectedFiles.length === 0) ||
-      !currentReceiverId
-    )
+    if (isUploading || isSending) {
       return;
+    }
+
+    if ((!messageInput.trim() && selectedFiles.length === 0) || !currentReceiverId) {
+      return;
+    }
 
     setIsUploading(true);
+    setIsSending(true);
 
     const formData = new FormData();
     formData.append("senderId", userId);
-    formData.append("message", messageInput);
+    formData.append("message", messageInput.trim());
     formData.append("receiverId", currentReceiverId);
 
     selectedFiles.forEach((fileItem) => {
@@ -203,7 +237,6 @@ const MiniChat = () => {
         setMessageInput("");
         setSelectedFiles([]);
         scrollToBottom();
-
         updateChatAfterSending();
       } else {
         toast.error(res?.Mes);
@@ -213,8 +246,14 @@ const MiniChat = () => {
       toast.error("Gửi tin nhắn thất bại");
     } finally {
       setIsUploading(false);
+      setTimeout(() => setIsSending(false), 1000);
     }
   };
+
+  const debouncedSendMessage = useCallback(
+    _.debounce(handleSendMessage, 500, { leading: true, trailing: false }),
+    [handleSendMessage]
+  );
 
   const updateChatAfterSending = () => {
     if (!currentReceiverInfo) return;
@@ -233,7 +272,7 @@ const MiniChat = () => {
       const updatedChat = {
         userId: currentReceiverId,
         name: currentReceiverInfo.name || "Người dùng",
-        avatar: currentReceiverInfo.avatar || avatar,
+avatar: currentReceiverInfo.avatar || avatar,
         lastMessage,
         time: new Date().toISOString(),
       };
@@ -256,7 +295,6 @@ const MiniChat = () => {
 
   const handleCloseChat = () => {
     setIsOpen(false);
-
     setCurrentReceiverId("");
     setCurrentReceiverInfo(null);
     setMessageSegment([]);
@@ -268,9 +306,9 @@ const MiniChat = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !e.repeat) {
       e.preventDefault();
-      handleSendMessage();
+      debouncedSendMessage();
     }
   };
 
@@ -331,7 +369,7 @@ const MiniChat = () => {
         onClick={openChatList}
         className="w-14 h-14 bg-blue-400 text-white rounded-full! shadow-lg hover:bg-blue-600 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
       >
-        <i className="fas fa-comment-dots text-xl"></i>
+<i className="fas fa-comment-dots text-xl"></i>
       </button>
     </div>
   );
@@ -340,7 +378,6 @@ const MiniChat = () => {
     if (currentReceiverId) {
       return (
         <div className="flex flex-col h-full w-full">
-          {/* Header */}
           <div className="w-full flex items-center justify-between px-2 py-2 border-b bg-white border-gray-200">
             <div className="flex items-center w-full">
               <div className="flex items-center gap-2">
@@ -362,66 +399,86 @@ const MiniChat = () => {
             </button>
           </div>
 
-          {/* Nội dung chat */}
           <div
             ref={chatBodyRef}
             className="flex-1 overflow-y-auto p-3 bg-gray-50"
           >
             {messageSegment.length > 0 ? (
-              messageSegment.map((msg, index) => (
-                <div
-                  key={msg._id || index}
-                  className={`flex ${
-                    msg.senderId === userId ? "justify-end" : "justify-start"
-                  } mb-1`}
-                >
+              messageSegment.map((msg, index) => {
+                const normalizedSenderId = getNormalizedId(msg.senderId);
+                const normalizedUserId = getNormalizedId(userId);
+                const isMyMessage = normalizedSenderId === normalizedUserId;
+                
+                return (
                   <div
-                    className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                      msg.senderId === userId
-                        ? "bg-blue-500 text-white rounded-br-none"
-                        : "bg-white border border-gray-200 rounded-bl-none shadow-sm"
-                    }`}
+                    key={msg._id || index}
+                    className={`flex ${
+                      isMyMessage ? "justify-end" : "justify-start"
+                    } mb-3`}
                   >
-                    {msg.message && (
-                      <p className="text-sm mb-2!">{msg.message}</p>
-                    )}
-                    {msg.media && msg.media.length > 0 && (
-                      <div className="flex justify-center items-center gap-1">
-                        {msg.media.map((file, idx) => (
-                          <div key={file._id || idx} className="w-auto h-full">
-                            {file.type === "image" ? (
-                              <img
-                                src={file.url}
-                                alt=""
-                                className="max-w-full h-auto rounded max-h-40 object-cover"
-                              />
-                            ) : file.type === "video" ? (
-                              <video
-                                controls
-                                className="max-w-full h-auto rounded max-h-40"
-                              >
-                                <source src={file.url} />
-                              </video>
-                            ) : null}
-                          </div>
-                        ))}
+                    {!isMyMessage && (
+                      <div className="flex items-end mr-2">
+                        <img
+                          src={
+                            typeof msg.senderId === 'object' 
+                              ? msg.senderId.avatar 
+                              : avatar
+                          }
+                          alt=""
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
                       </div>
                     )}
+
                     <div
-                      className={`text-xs ${
-                        msg.senderId === userId
-                          ? "text-blue-100"
-                          : "text-gray-500"
+                      className={`max-w-[70%] rounded-lg px-3 py-2 ${
+                        isMyMessage
+                          ? "bg-blue-500 text-white rounded-br-none"
+                          : "bg-white border border-gray-200 rounded-bl-none shadow-sm"
                       }`}
                     >
-                      {new Date(msg.createdAt || msg.time).toLocaleTimeString(
-                        [],
-                        { hour: "2-digit", minute: "2-digit" }
+                      {msg.message && (
+                        <p className="text-sm mb-2!">{msg.message}</p>
                       )}
+                      {msg.media && msg.media.length > 0 && (
+                      <div className="flex justify-center items-center gap-1">
+                          {msg.media.map((file, idx) => (
+                            <div key={file._id || idx} className="w-auto h-full">
+                              {file.type === "image" ? (
+                                <img
+                                  src={file.url}
+                                  alt=""
+                                  className="max-w-full h-auto rounded max-h-40 object-cover"
+                                />
+                              ) : file.type === "video" ? (
+                                <video
+                                  controls
+                                  className="max-w-full h-auto rounded max-h-40"
+                                >
+                                  <source src={file.url} />
+                                </video>
+                              ) : null}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <div
+                        className={`text-xs ${
+                          isMyMessage
+                            ? "text-blue-100"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {new Date(msg.createdAt || msg.time).toLocaleTimeString(
+                          [],
+                          { hour: "2-digit", minute: "2-digit" }
+                        )}
+                      </div>
                     </div>
+
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="h-full flex flex-col items-center justify-center p-4">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
@@ -437,7 +494,6 @@ const MiniChat = () => {
 
           {renderSelectedFilesPreview()}
 
-          {/* Input */}
           <div className="border-t p-2 bg-white border-gray-200">
             <div className="flex items-center gap-2">
               <button
@@ -474,7 +530,7 @@ const MiniChat = () => {
               />
 
               <button
-                onClick={handleSendMessage}
+                onClick={debouncedSendMessage}
                 disabled={
                   (!messageInput.trim() && selectedFiles.length === 0) ||
                   isUploading

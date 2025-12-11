@@ -29,7 +29,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     handleRejectFriendRequest,
   } = useFriendActions();
 
-  // Cập nhật thông tin profile khi prop info thay đổi
   useEffect(() => {
     setProfileInfo(info)
   }, [info])
@@ -38,7 +37,7 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
     const fetchPosts = async () => {
       try {
         setLoadingPosts(true)
-        const res = await getPostAUser(profileInfo.id)
+        const res = await getPostAUser(profileInfo.id, user.id)
         if (res?.Ec === 0) {
           setDataPost(Array.isArray(res.Data) ? res.Data : [res.Data])
         }
@@ -201,7 +200,7 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
       if (res?.Ec === 0) {
         toast.success("Đã hủy lời mời kết bạn")
         if (onRelationshipUpdate) {
-          onRelationshipUpdate(null) // Reset relationship
+          onRelationshipUpdate(null)
         }
       } else {
         toast.error(res?.Mes || "Có lỗi xảy ra")
@@ -221,7 +220,7 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
       if (res?.Ec === 0) {
         toast.success("Đã hủy kết bạn")
         if (onRelationshipUpdate) {
-          onRelationshipUpdate(null) // Reset relationship
+          onRelationshipUpdate(null)
         }
         refetchFriends()
       } else {
@@ -419,7 +418,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
   return (
     <>
       <div className="w-full min-h-screen flex flex-col bg-gray-50">
-        {/* Profile header */}
         <div className="w-full bg-white shadow-sm">
           <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
             <div className="w-full h-64 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
@@ -485,7 +483,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
               </div>
             </div>
             
-            {/* Tabs navigation */}
             <div className="w-full border-t border-gray-200 mt-2 px-1 lg:px-6!">
               <div className="w-full flex justify-start gap-3">
                 <button
@@ -526,7 +523,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
           </div>
         </div>
         
-        {/* Main content */}
         <div className="w-full flex justify-center py-4 flex-1">
           <div className={`${compact ? "w-full" : "w-full xl:w-[80%]"} flex`}>
             {renderTabContent()}
@@ -534,7 +530,6 @@ const DisplayProfile = ({ info, mode, relationship = null, isLoadingRelationship
         </div>
       </div>
 
-      {/* Modal chỉnh sửa hồ sơ */}
       <EditProfileModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}

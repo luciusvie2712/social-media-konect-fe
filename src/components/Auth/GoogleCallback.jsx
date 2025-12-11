@@ -22,15 +22,12 @@ const GoogleCallback = () => {
         const res = await getDataUserLoginGoogle(sessionId);
         console.log("RES:", res);
 
-        // ✅ CHỈ THÀNH CÔNG KHI Ec === 0
           const { token, refreshToken, user } = res;
 
-          // ✅ LƯU LOCALSTORAGE
           localStorage.setItem("access_token", token);
           localStorage.setItem("refresh_token", refreshToken);
           localStorage.setItem("user", JSON.stringify(user));
 
-          // ✅ DISPATCH REDUX
           dispatch({
             type: actiontypes.USER_LOGIN_SUCCESS,
             data: {

@@ -17,7 +17,6 @@ const ForgotPage = () => {
       return;
     }
     
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Vui lòng nhập địa chỉ email hợp lệ");
@@ -28,15 +27,15 @@ const ForgotPage = () => {
     try {
       const res = await forgotPasswordAPI(email);
       if (res.Ec === 0) {
-        toast.success("✅ " + res?.Mes);
+        toast.success(res?.Mes);
         setEmail("");
         setIsSubmitted(true);
       } else {
-        toast.warning("⚠ " + res?.Mes);
+        toast.warning(res?.Mes);
       }
     } catch (error) {
       console.error("Forgot password error:", error);
-      toast.error("❌ Đã xảy ra lỗi, vui lòng thử lại!");
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại!");
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +45,6 @@ const ForgotPage = () => {
     <div className="w-screen min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         <div className="w-full flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-          {/* Header */}
           <div className="w-full flex flex-col justify-center items-center py-3 bg-gradient-to-r from-red-500 to-pink-600">
             <div className="flex items-center justify-center mb-2">
               <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
@@ -59,7 +57,6 @@ const ForgotPage = () => {
 
           {!isSubmitted ? (
             <form onSubmit={handleSubmit} className="w-full flex flex-col justify-center">
-              {/* Instructions */}
               <div className="px-3 py-3 bg-blue-50 border border-blue-100">
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-info-circle text-blue-500 mt-0.5"></i>
@@ -72,7 +69,6 @@ const ForgotPage = () => {
                 </div>
               </div>
 
-              {/* Email Input */}
               <div className="w-full flex flex-col justify-center px-3 py-4">
                 <label className="w-full block text-sm font-medium text-gray-700 mb-2">
                   <i className="fa-solid fa-envelope text-red-500 mr-2!"></i>
@@ -97,7 +93,6 @@ const ForgotPage = () => {
                 </div>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading || !email}
@@ -116,7 +111,6 @@ const ForgotPage = () => {
                 )}
               </button>
 
-              {/* Back to Login */}
               <div className="text-center pt-3 py-3">
                 <button
                   type="button"
@@ -130,7 +124,6 @@ const ForgotPage = () => {
               </div>
             </form>
           ) : (
-            /* Success Message */
             <div className="w-full text-center">
               <div className="w-15 h-15 mx-auto mb-2 bg-green-100 rounded-full flex items-center justify-center">
                 <i className="fa-solid fa-check text-4xl text-green-600"></i>
@@ -161,7 +154,6 @@ const ForgotPage = () => {
                 </button>
               </div>
               
-              {/* Tips */}
               <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
                 <div className="flex items-start gap-3">
                   <i className="fa-solid fa-lightbulb text-blue-500 mt-0.5"></i>
@@ -188,7 +180,6 @@ const ForgotPage = () => {
           )}
         </div>
         
-        {/* Security Note */}
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
             <i className="fa-solid fa-shield-alt mr-1"></i>

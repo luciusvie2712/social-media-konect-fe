@@ -33,16 +33,16 @@ const ResetPassword = () => {
       });
       
       if (data?.Ec === 0) {
-        toast.success("✅ " + data.Mes);
+        toast.success(data.Mes);
         navigate("/auth");
         setNewPass("");
         setConfirmPass("");
       } else {
-        toast.error("❌ " + (data?.Mes || "Đã xảy ra lỗi"));
+        toast.error((data?.Mes || "Đã xảy ra lỗi"));
       }
     } catch (e) {
       console.log(e);
-      toast.error("❌ Không thể kết nối đến máy chủ");
+      toast.error("Không thể kết nối đến máy chủ");
     } finally {
       setIsLoading(false);
     }

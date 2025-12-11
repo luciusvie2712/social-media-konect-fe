@@ -16,7 +16,6 @@ const FriendActive = ({ friends, loading = false }) => {
   };
   return (
     <div className="w-full flex flex-col gap-4 bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-      {/* Header with search */}
       <div className="w-full flex flex-col lg:flex-row justify-between items-center gap-3 md:gap-0">
         <div className="flex items-center gap-2">
           <span className="text-[18px] lg:text-[18px]! font-bold text-black flex items-center gap-2 opacity-100">
@@ -42,7 +41,6 @@ const FriendActive = ({ friends, loading = false }) => {
         </div>
       </div>
 
-      {/* Friends list */}
       {loading ? (
         <div className="w-full flex justify-center items-center h-64">
           <div className="flex flex-col items-center gap-3">
@@ -62,13 +60,11 @@ const FriendActive = ({ friends, loading = false }) => {
         </div>
       ) : (
         <div className="w-full flex flex-col gap-3 px-2">
-          {/* Friends grid */}
             {friends.map((friend, idx) => (
               <div
                 key={friend.id || idx}
                 className="w-full flex flex-col sm:flex-row justify-between items-center px-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-sm border border-gray-200 hover:border-gray-300"
               >
-                {/* Friend info */}
                 <div className="flex items-center gap-3 px-2 py-2">
                     <img
                         src={friend.avatar}
@@ -98,7 +94,6 @@ const FriendActive = ({ friends, loading = false }) => {
                     </div>
                 </div>
 
-                {/* Action buttons */}
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button onClick={() => navigate(`/profile/${friend._id}`)} className="flex-1 sm:flex-none bg-blue-600 text-white font-medium px-2 py-1 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
                     <i className="fa-solid fa-user text-xs"></i>
@@ -116,8 +111,6 @@ const FriendActive = ({ friends, loading = false }) => {
               </div>
             ))}
 
-
-          {/* Load more */}
           {friends.length > 8 && (
             <div className="pt-4 mt-2 border-t border-gray-200 flex justify-center">
               <button className="px-5 py-2.5 text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-2">

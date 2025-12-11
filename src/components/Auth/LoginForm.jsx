@@ -48,7 +48,6 @@ const LoginForm = ({ setFormType }) => {
   return (
       <div className="w-full max-w-md">
         <div className="w-full flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-          {/* Header */}
           <div className="w-full flex flex-col items-center justify-center py-4 bg-gradient-to-br from-blue-600 to-pink-500">
             <div className="flex items-center justify-center mb-2">
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
@@ -158,7 +157,6 @@ const LoginForm = ({ setFormType }) => {
           </form>
         </div>
 
-        {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
             Bằng việc đăng nhập, bạn đồng ý với{" "}

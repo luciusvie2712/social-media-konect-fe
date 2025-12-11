@@ -44,8 +44,8 @@ const createPostAPI = (formData) => {
 const getPost = () => {
     return axios.get(`/api/get-post`)
 }
-const getPostAUser = (userId) => {
-    return axios.get(`/api/get-post-a-user?userId=${userId}`)
+const getPostAUser = (userId, viewerId) => {
+    return axios.get(`/api/get-post-a-user?userId=${userId}&&viewerId=${viewerId}`)
 }
 const LikePost = (userId, postId) => {
     return axios.post(`/api/like-post?userId=${userId}&&postId=${postId}`)

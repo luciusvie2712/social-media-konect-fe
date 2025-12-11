@@ -27,15 +27,10 @@ const RequestCard = ({ index, item }) => {
     <div className="w-[180px] border border-[#cdcdcd] rounded flex flex-col items-center cursor-pointer bg-[#eeeeee]">
       <img src={item?.avatar || avatar} className="rounded-t-[4px]" />
 
-      {/* Info */}
       <div className="w-full flex flex-col item-center pt-2">
         <span className="text-[15px] font-semibold px-2">{item?.name}</span>
-        <span className="text-[13px] px-2 opacity-50">
-          {item.mutualFriends} bạn chung
-        </span>
       </div>
 
-      {/* Action buttons */}
       <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">
 
         {status === "idle" && (

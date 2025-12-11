@@ -36,7 +36,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const navigate = useNavigate();
 
-  // Check if this is a shared post
   const isSharedPost = post?.sharedPost;
   const sharedPostData = post?.sharedPost;
 
@@ -222,7 +221,7 @@ const PostCard = ({ post, index, onUpdatePost }) => {
   };
 
   const renderSharedPost = () => {
-    if (!isSharedPost || !sharedPostData) return null;
+    if (!isSharedPost) return null;
 
     const sharedMediaList = Array.isArray(sharedPostData?.media)
       ? sharedPostData.media.filter((m) => m?.url)
@@ -341,7 +340,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
             </div>
           )}
 
-          {/* Shared post stats */}
           <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
             <div className="flex items-center gap-1">
               <i className="fa-regular fa-heart"></i>
@@ -354,7 +352,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
           </div>
         </div>
 
-        {/* View original post button */}
         <div className="px-3 py-2 border-t border-gray-200 bg-gray-100">
           <NavLink
             to={`/post/${sharedPostData?._id}`}
@@ -398,7 +395,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
     if (success) await fetchComments(post._id);
   };
 
-  // Xử lý cập nhật bài viết
   const handleUpdateSuccess = (updatedPost) => {
     setDataPost((prev) =>
       prev.map((p) =>
@@ -526,7 +522,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
           </div>
         </div>
 
-        {/* Main post caption */}
         <div className="w-full flex flex-col mt-2 py-2">
           {dataPost[0]?.caption && (
             <div className="text-[15px] whitespace-pre-wrap mb-3">
@@ -534,16 +529,13 @@ const PostCard = ({ post, index, onUpdatePost }) => {
             </div>
           )}
 
-          {/* Shared post section */}
           {isSharedPost && renderSharedPost()}
 
-          {/* Original post media (if not shared post) */}
           {!isSharedPost && mediaList?.length > 0 && (
             <div className="mt-3">{renderMedia()}</div>
           )}
         </div>
 
-        {/* Post stats and actions */}
         <div className="w-full flex items-center justify-around text-[15px] border-t border-gray-100 pt-2">
           <div
             className="w-[calc(100%/3)] flex items-center justify-center cursor-pointer hover:bg-[#f0f0f0] py-2 gap-2 rounded-lg transition-colors duration-150"
@@ -585,7 +577,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
           </div>
         </div>
 
-        {/* Comments section */}
         {openComment && (
           <div className="w-full flex flex-col items-center gap-2 mt-3 border-t border-gray-100 pt-3">
             <div className="w-full flex items-center gap-2">
@@ -605,7 +596,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
               </button>
             </div>
 
-            {/* Display comments - Chỉ hiển thị tối đa 4 comments */}
             <div className="w-full flex flex-col gap-3 mt-3 mb-3">
               {loading ? (
                 <div className="text-gray-400 text-center py-4">
@@ -629,7 +619,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
               )}
             </div>
 
-            {/* Chỉ hiển thị nút "Xem tất cả bình luận" khi có nhiều hơn 4 comments */}
             {hasMoreComments && (
               <div
                 onClick={() => navigate(`/post/${post._id}`)}
@@ -643,7 +632,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
         )}
       </div>
 
-      {/* Report Modal */}
       <Modal show={show} onHide={() => setShow(false)} backdrop="static">
         <Modal.Header closeButton>
           <Modal.Title>Báo cáo bài viết</Modal.Title>
@@ -687,7 +675,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
         </Modal.Footer>
       </Modal>
 
-      {/* Share Modal */}
       <ModalSharePost
         shareContent={shareContent}
         shareModalShow={shareModalShow}
@@ -696,7 +683,6 @@ const PostCard = ({ post, index, onUpdatePost }) => {
         userId={userId}
       />
 
-      {/* Edit Modal */}
       <ModalEditPost
         show={showEditModal}
         onHide={() => setShowEditModal(false)}

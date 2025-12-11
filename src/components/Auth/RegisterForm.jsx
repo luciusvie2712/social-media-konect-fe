@@ -18,8 +18,8 @@ const RegisterForm = ({ setFormType }) => {
             return
         }
         
-        if (password.length < 6) {
-            toast.error("Mật khẩu phải có ít nhất 6 ký tự")
+        if (password.length < 8) {
+            toast.error("Mật khẩu phải có ít nhất 8 ký tự")
             return
         }
         
@@ -27,7 +27,7 @@ const RegisterForm = ({ setFormType }) => {
         try {
             const res = await createUserAPI(name, email, password)
             if (res.Ec === 0) {
-                toast.success('🎉 Đăng ký tài khoản thành công!')
+                toast.success('Đăng ký tài khoản thành công!')
                 setFormType("login")
             } else {
                 toast.warning(res?.Mes || "Đã xảy ra lỗi") 
@@ -43,7 +43,6 @@ const RegisterForm = ({ setFormType }) => {
     return (
         <div className="w-full max-w-md">
             <div className="w-full flex flex-col bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
-                {/* Header */}
                 <div className="w-full flex flex-col items-center py-2 bg-gradient-to-r from-green-600 to-emerald-600">
                     <div className="flex items-center justify-center mb-2">
                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
@@ -55,7 +54,6 @@ const RegisterForm = ({ setFormType }) => {
                 </div>
 
                 <form onSubmit={handleRegister} className="w-full flex flex-col gap-2 py-3 px-3">
-                    {/* Name Input */}
                     <div className="w-full flex flex-col justify-center">
                         <label className="w-full block text-sm font-medium text-gray-700 mb-2">
                             <i className="fa-solid fa-user text-green-500 mr-2!"></i>
@@ -76,7 +74,6 @@ const RegisterForm = ({ setFormType }) => {
                         </div>
                     </div>
 
-                    {/* Email Input */}
                     <div className="w-full flex flex-col justify-center">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             <i className="fa-solid fa-envelope text-green-500 mr-2!"></i>
@@ -97,7 +94,6 @@ const RegisterForm = ({ setFormType }) => {
                         </div>
                     </div>
 
-                    {/* Password Input */}
                     <div className="w-full flex flex-col justify-center">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             <i className="fa-solid fa-lock text-green-500 mr-2!"></i>
@@ -111,29 +107,28 @@ const RegisterForm = ({ setFormType }) => {
                                 className="w-full pl-10! pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
                                 type="password" 
                                 name="password" 
-                                placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
+                                placeholder="Nhập mật khẩu (ít nhất 8 ký tự)"
                                 required
                                 disabled={isLoading}
                             />
                             {password.length > 0 && (
                                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${password.length >= 6 ? 'bg-green-500' : 'bg-yellow-500'}`}>
-                                        <i className={`fas text-xs text-white ${password.length >= 6 ? 'fa-check' : 'fa-exclamation'}`}></i>
+                                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${password.length >= 8 ? 'bg-green-500' : 'bg-yellow-500'}`}>
+                                        <i className={`fas text-xs text-white ${password.length >= 8 ? 'fa-check' : 'fa-exclamation'}`}></i>
                                     </div>
                                 </div>
                             )}
                         </div>
                         <div className="mt-2 flex items-center justify-between">
                             <span className="text-xs text-gray-500">
-                                {password.length > 0 && `${password.length}/6 ký tự`}
+                                {password.length > 0 && `${password.length}/8 ký tự`}
                             </span>
-                            <span className={`text-xs ${password.length >= 6 ? 'text-green-600' : 'text-yellow-600'}`}>
-                                {password.length > 0 && (password.length >= 6 ? '✔ Mật khẩu hợp lệ' : '⚠ Cần 6 ký tự')}
+                            <span className={`text-xs ${password.length >= 8 ? 'text-green-600' : 'text-yellow-600'}`}>
+                                {password.length > 0 && (password.length >= 8 ? 'Mật khẩu hợp lệ' : 'Cần 6 ký tự')}
                             </span>
                         </div>
                     </div>
 
-                    {/* Terms and Conditions */}
                     <div className="w-full flex justify-center">
                         <label className="flex items-start">
                             <input
@@ -155,7 +150,6 @@ const RegisterForm = ({ setFormType }) => {
                         </label>
                     </div>
 
-                    {/* Register Button */}
                     <button
                         type="submit"
                         disabled={isLoading}
@@ -174,7 +168,6 @@ const RegisterForm = ({ setFormType }) => {
                         )}
                     </button>
 
-                    {/* Login Link */}
                     <div className="text-center w-ful flex justify-center">
                         <p className="text-gray-600">
                             Đã có tài khoản?{' '}
@@ -189,7 +182,6 @@ const RegisterForm = ({ setFormType }) => {
                         </p>
                     </div>
 
-                    {/* Security Note */}
                     <div className="w-full flex justify-center py-3 bg-blue-50 rounded-lg border border-blue-100">
                         <div className="flex items-center gap-3">
                             <i className="fa-solid fa-shield-alt text-blue-500"></i>

@@ -66,7 +66,6 @@ const CommentItem = ({ comment, userId, onReply, onDelete, level = 0 }) => {
                         )}
                     </div>
 
-                    {/* Show replies toggle */}
                     {comment?.children?.length > 0 && (
                         <button
                             onClick={handleToggleChildren}
@@ -82,7 +81,6 @@ const CommentItem = ({ comment, userId, onReply, onDelete, level = 0 }) => {
                 </div>
             </div>
 
-            {/* Reply input box */}
             {showReplyBox && (
                 <div className="ml-12 mt-3 flex items-center gap-3">
                     <div className="flex-1 relative">

@@ -18,7 +18,7 @@ const SuggestionCard = ({ index, item   }) => {
       const res = await handleSendFriendRequest(requesterId, item._id);
       if (res.Ec !== 0) toast.error(res.Mes);
     } catch (err) {
-      console.log(">>> Lỗi gửi lời mời:", err);
+      console.error(err);
     }
   };
 
@@ -27,7 +27,7 @@ const SuggestionCard = ({ index, item   }) => {
       const res = await handleRejectFriendRequest(requesterId, item._id);
       if (res.Ec !== 0) toast.error(res.Mes);
     } catch (err) {
-      console.log(">>> Lỗi hủy lời mời:", err);
+      console.error(err);
     }
   };
 
@@ -41,9 +41,6 @@ const SuggestionCard = ({ index, item   }) => {
 
       <div className="w-full flex flex-col item-center pt-2">
         <span className="text-[15px] font-semibold px-2">{item.name}</span>
-        <span className="text-[13px] px-2 opacity-50">
-          {item.mutualFriends} bạn chung
-        </span>
       </div>
 
       <div className="flex flex-col w-full items-center gap-2 text-[15px] mt-2 mb-2 px-2">

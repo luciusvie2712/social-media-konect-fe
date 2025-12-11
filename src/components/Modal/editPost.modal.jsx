@@ -65,17 +65,14 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-black/50 transition-opacity"
         onClick={onHide}
       />
       
-      {/* Modal container */}
       <div className="flex items-center justify-center p-4 w-screen h-screen">
         <div className="relative min-w-[500px] max-h-[90vh] transform overflow-auto rounded bg-white border border-gray-200 shadow-xl transition-all">
           
-          {/* Header */}
           <div className="w-full flex items-center justify-between border-b border-gray-300 py-3 px-3">
             <span className="text-xl font-semibold text-gray-900 flex items-center gap-2">
               <i className="fa-solid fa-pen text-blue-600"></i>
@@ -89,9 +86,7 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
             </button>
           </div>
 
-          {/* Body */}
           <div className="w-ful px-3 py-2 flex flex-col gap-2">
-            {/* Caption */}
             <div className="w-full mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nội dung bài viết
@@ -116,13 +111,11 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
               </div>
             </div>
 
-            {/* Visibility */}
             <div className="w-full flex flex-col pt-2">
               <label className="block text-sm font-medium text-gray-700 mb-2!">
                 Chế độ hiển thị
               </label>
               <div className="w-full flex flex-col rounded border border-gray-200 bg-gray-50">
-                {/* Public */}
                 <label className="flex! gap-2 items-center cursor-pointer p-3 rounded-lg hover:bg-white transition-colors">
                   <input
                     type="radio"
@@ -143,7 +136,6 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
                   </div>
                 </label>
 
-                {/* Friends */}
                 <label className="flex! gap-2 items-center cursor-pointer p-3 rounded-lg hover:bg-white transition-colors">
                   <input
                     type="radio"
@@ -164,7 +156,6 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
                   </div>
                 </label>
 
-                {/* Private */}
                 <label className="flex! gap-2 items-center cursor-pointer p-3 rounded-lg hover:bg-white transition-colors">
                   <input
                     type="radio"
@@ -187,7 +178,6 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
               </div>
             </div>
 
-            {/* Current post info */}
             <div className="w-full pt-1 flex justify-center items-center px-1">
               <div className="w-full flex items-center justify-between">
                 <div className="flex flex-col justify-center gap-1">
@@ -233,7 +223,6 @@ const ModalEditPost = ({ show, onHide, post, onUpdateSuccess }) => {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="w-full border-t border-gray-200 bg-gray-50 px-6 py-3">
             <div className="flex justify-end gap-2">
               <button

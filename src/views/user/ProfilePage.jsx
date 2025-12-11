@@ -50,7 +50,6 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
     }
   };
 
-  // Xử lý khi có data truyền vào từ props
   useEffect(() => {
     if (!data) return;
     const loadDataFromProps = async () => {
@@ -87,7 +86,6 @@ const ProfilePage = ({ data = null, type = null, compact }) => {
     loadDataFromProps();
   }, [data, type, user]);
 
-  // Xử lý khi không có data từ props, lấy từ URL params
   useEffect(() => {
     const loadProfileData = async () => {
       setLoading(true);

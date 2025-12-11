@@ -46,7 +46,6 @@ const PostDetail = () => {
                     setPostData(res.Data)
                     setLikesCount(res.Data.likes?.length || 0)
                     
-                    // Check if user liked the post
                     const isLiked = res.Data.likes?.some(like => {
                         if (typeof like === "string") return like === userId
                         if (typeof like === "object" && like._id) return like._id === userId
@@ -54,7 +53,6 @@ const PostDetail = () => {
                     })
                     setStatusLike(isLiked)
                     
-                    // Fetch comments
                     await fetchComments(res.Data._id)
                 } else {
                     toast.error("Bài viết không tồn tại")
@@ -93,7 +91,6 @@ const PostDetail = () => {
                 setStatusLike(!statusLike)
                 setLikesCount(prev => statusLike ? prev - 1 : prev + 1)
                 
-                // Update post data
                 setPostData(prev => ({
                     ...prev,
                     likes: statusLike 
@@ -127,7 +124,6 @@ const PostDetail = () => {
             if (success) {
                 setNewComment("")
                 await fetchComments(postData._id)
-                // Focus lại input
                 if (commentInputRef.current) {
                     commentInputRef.current.focus()
                 }
@@ -257,10 +253,8 @@ const PostDetail = () => {
             )
         }
 
-        // Multiple images - Slider
         return (
             <div className="relative w-full h-full bg-black overflow-hidden">
-                {/* Slider Container */}
                 <div 
                     ref={sliderRef}
                     className="flex transition-transform duration-300 ease-in-out h-full"
@@ -280,7 +274,6 @@ const PostDetail = () => {
                     ))}
                 </div>
 
-                {/* Navigation Buttons */}
                 {mediaList.length > 1 && (
                     <>
                         <button
@@ -296,7 +289,6 @@ const PostDetail = () => {
                             <i className="fas fa-chevron-right"></i>
                         </button>
 
-                        {/* Slide Indicators */}
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                             {mediaList.map((_, index) => (
                                 <button
@@ -311,7 +303,6 @@ const PostDetail = () => {
                             ))}
                         </div>
 
-                        {/* Slide Counter */}
                         <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
                             {currentSlide + 1} / {mediaList.length}
                         </div>
@@ -365,16 +356,13 @@ const PostDetail = () => {
         <>
             <div className="bg-gray-50 flex items-center justify-center w-full">
                 <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-lg flex flex-col md:flex-row h-[90vh]">
-                    {/* Media Container - Left Side */}
                     <div className="md:w-3/5 h-full bg-black flex items-center justify-center overflow-hidden">
                         <div className="w-full h-full">
                             {renderMedia()}
                         </div>
                     </div>
 
-                    {/* Detail Container - Right Side */}
                     <div className="md:w-2/5 h-full flex flex-col border-l border-gray-200">
-                        {/* Header */}
                         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
                             <div className="flex items-center space-x-3 gap-2">
                                 <img
@@ -405,7 +393,6 @@ const PostDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Menu */}
                             <div className="relative" ref={menuRef}>
                                 <button 
                                     className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
@@ -438,7 +425,6 @@ const PostDetail = () => {
                             </div>
                         </div>
 
-                        {/* Caption */}
                         {postData.caption && (
                             <div className="p-4 border-b border-gray-200">
                                 <p className="text-gray-800 whitespace-pre-wrap break-words">
@@ -447,7 +433,6 @@ const PostDetail = () => {
                             </div>
                         )}
 
-                        {/* Stats */}
                         <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between text-sm text-gray-600">
                             <div className="flex items-center space-x-4 gap-2">
                                 <div className="flex items-center space-x-1 gap-1">
@@ -461,7 +446,6 @@ const PostDetail = () => {
                             </div>
                         </div>
 
-                        {/* Interaction Buttons */}
                         <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-around">
                             <button 
                                 className={`flex-1 py-2 rounded-lg flex items-center justify-center space-x-2 transition-colors gap-2 ${
@@ -488,7 +472,6 @@ const PostDetail = () => {
                             </button>
                         </div>
 
-                        {/* Comments Section */}
                         <div className="flex-1 overflow-y-auto p-4">
                             <span className="font-semibold text-gray-900 mb-4">
                                 Bình luận ({comments.length})
@@ -520,7 +503,6 @@ const PostDetail = () => {
                             )}
                         </div>
 
-                        {/* Comment Input */}
                         <div className="p-4 border-t border-gray-200 bg-gray-50">
                             <div className="flex items-center gap-2">
                                 <img
@@ -558,7 +540,6 @@ const PostDetail = () => {
                 </div>
             </div>
 
-            {/* Delete Modal */}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-lg max-w-md w-full p-6">
@@ -584,7 +565,6 @@ const PostDetail = () => {
                 </div>
             )}
 
-            {/* Report Modal */}
             {showReportModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">

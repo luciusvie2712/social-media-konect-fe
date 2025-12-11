@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import store from '../store/ReduxStore'
 import actiontypes from '../store/Action/ActionTypes';
+
+const urlBackend = import.meta.env.VITE_URL_BACKEND
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/' //env
+    baseURL: urlBackend //env
 });
 let hasShown429Toast = false;
 // Add a request interceptor
@@ -35,7 +37,7 @@ instance.interceptors.response.use(function (response) {
 
         try {
             const res = await axios.post(
-                'http://localhost:8080/api/refresh-token', //env
+                `${urlBackend}/api/refresh-token`, //env
                 {},
                 {
                     headers: {

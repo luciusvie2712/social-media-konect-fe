@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import avatar from "../../assets/download.png";
 import { toast } from "react-toastify";
-import { updateAuser } from "../../utils/api.customize"; // Bạn cần tạo API này
+import { updateAuser } from "../../utils/api.customize";
 
 const Settings = () => {
   const user = useSelector((state) => state.user.account);
@@ -20,8 +20,8 @@ const Settings = () => {
       return;
     }
 
-    if (newPassword.length < 6) {
-      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự");
+    if (newPassword.length < 8) {
+      toast.error("Mật khẩu mới phải có ít nhất 8 ký tự");
       return;
     }
 
@@ -153,7 +153,7 @@ const Settings = () => {
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className="w-full pl-10! pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)"
+                                placeholder="Nhập mật khẩu mới (ít nhất 8 ký tự)"
                                 required
                                 disabled={isLoading}
                             />
@@ -164,18 +164,18 @@ const Settings = () => {
                                 <div className="text-xs text-gray-500 mb-1">
                                 Độ mạnh: 
                                 <span className={`ml-2 font-medium ${
-                                    newPassword.length >= 8 ? 'text-green-600' : 
-                                    newPassword.length >= 6 ? 'text-yellow-600' : 'text-red-600'
+                                    newPassword.length >= 10 ? 'text-green-600' : 
+                                    newPassword.length >= 8 ? 'text-yellow-600' : 'text-red-600'
                                 }`}>
-                                    {newPassword.length >= 8 ? 'Mạnh' : 
-                                    newPassword.length >= 6 ? 'Trung bình' : 'Yếu'}
+                                    {newPassword.length >= 10 ? 'Mạnh' : 
+                                    newPassword.length >= 8 ? 'Trung bình' : 'Yếu'}
                                 </span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                     <div 
                                         className={`h-2 rounded-full transition-all duration-300 ${
-                                        newPassword.length >= 8 ? 'bg-green-500' :
-                                        newPassword.length >= 6 ? 'bg-yellow-500' : 'bg-red-500'
+                                        newPassword.length >= 10 ? 'bg-green-500' :
+                                        newPassword.length >= 8 ? 'bg-yellow-500' : 'bg-red-500'
                                         }`}
                                         style={{ width: `${Math.min(newPassword.length * 12.5, 100)}%` }}
                                     ></div>

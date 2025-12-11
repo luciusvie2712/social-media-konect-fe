@@ -12,6 +12,7 @@ import {
   searchUserByName,
 } from "../../utils/api.customize";
 
+
 const NavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,7 +66,8 @@ const NavBar = () => {
       console.error(err);
     }
   };
-  const filelogo = logo ? `http://localhost:8080${logo}` : logoPicture; //env
+  const urlBackend = import.meta.env.VITE_URL_BACKEND
+  const filelogo = logo ? `${urlBackend}${logo}` : logoPicture;
   const clickInputSearch = async () => {
     if (showHistory) return;
 

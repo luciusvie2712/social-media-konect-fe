@@ -132,7 +132,6 @@ const ModalSharePost = ({shareModalShow, setShareModalShow, shareContent, setSha
   return (
     <div className=" w-screen h-screen fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-xl w-full max-w-[600px] mx-auto shadow-lg">
-        {/* Header */}
         <div className="border-b border-gray-200">
           <div className="flex items-center justify-between px-3 py-3">
             <div className="flex items-center gap-3">
@@ -157,9 +156,7 @@ const ModalSharePost = ({shareModalShow, setShareModalShow, shareContent, setSha
           </div>
         </div>
 
-        {/* Content */}
         <div className="max-h-[70vh] overflow-y-auto py-3 px-3">
-          {/* Người chia sẻ */}
           <div className="flex items-start gap-3 bg-gray-50 pb-2">
             <img
               src={user?.avatar || avatar}
@@ -184,7 +181,6 @@ const ModalSharePost = ({shareModalShow, setShareModalShow, shareContent, setSha
             </div>
           </div>
 
-          {/* Input caption */}
           <div className="mb-4 w-full">
             <div className="relative">
               <textarea
@@ -204,7 +200,6 @@ const ModalSharePost = ({shareModalShow, setShareModalShow, shareContent, setSha
             </div>
           </div>
 
-          {/* Preview bài viết gốc */}
           <div className="w-full ">
             <div className="flex items-center gap-2 mb-3">
               <i className="fas fa-eye text-gray-400"></i>
@@ -213,7 +208,6 @@ const ModalSharePost = ({shareModalShow, setShareModalShow, shareContent, setSha
             {renderOriginalPostPreview()}
           </div>
 
-          {/* CTA Button */}
           <div className="w-full flex flex-col items-center">
             <button
               onClick={handleConfirmSharePost}

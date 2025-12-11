@@ -101,7 +101,6 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
             </div>
           </div>
           
-          {/* Friends Card */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
               <span className="font-bold text-gray-900 text-[16px] lg:text-[17px] flex items-center gap-2">
@@ -145,11 +144,6 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
                         <p className="text-xs font-medium text-gray-900 text-center truncate w-full px-1">
                           {friend.name}
                         </p>
-                        {/* {friend.mutualFriends > 0 && (
-                          <p className="text-[10px] text-gray-500 text-center">
-                            {friend.mutualFriends} bạn chung
-                          </p>
-                        )} */}
                       </div>
                     ))}
                   </div>
@@ -159,9 +153,7 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
           </div>
         </div>
         
-        {/* Right content - Posts */}
         <div className="w-full xl:w-[60%] flex flex-col gap-3">
-          {/* Thêm mở modal create Post */}
           {mode === "owner" && (
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm px-2 py-3">
               <div className="flex items-center gap-3 px-4">
@@ -270,7 +262,6 @@ const PostActive = ({ userData, friends, posts, loadingPosts = false, mode = "st
         </div>
       </div>
 
-      {/* Modal tạo bài viết */}
       {isCreateOpen && (
         <CreatePostModal 
           isOpen={isCreateOpen}
